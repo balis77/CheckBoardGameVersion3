@@ -5,7 +5,7 @@ using ConsoleApp2.Logic.GameActions.Contracts;
 
 namespace ConsoleApp2.Logic.GameActions
 {
-    public class ActionCheaker //: IActionCheaker
+    public class ActionCheaker : IActionCheaker
     {
         public SetTeam Team { get; set; } = SetTeam.White;
 
@@ -14,15 +14,13 @@ namespace ConsoleApp2.Logic.GameActions
         {
             _actionCheckerValidator = new ActionCheckerValidator();
         }
-        public Dictionary<string, Cell> Battle(Dictionary<string, Cell> board, Cell clickCell)
+        public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
-            
-            
             if (clickCell.Checker != null)
             {
                 return board;
             }
-           
+
             string clickChecker = string.Empty;
 
             foreach (var cell in board)
@@ -33,55 +31,58 @@ namespace ConsoleApp2.Logic.GameActions
                 }
 
             }
-            Cell moveChecker = default;
+            Cell moveChecker = new Cell();
             if (clickChecker != "")
             {
                 moveChecker = board[clickChecker];
             }
 
-            var keyclickCell = board.FirstOrDefault(n => n.Value.X == clickCell.X && n.Value.Y == clickCell.Y).Key;
+            var keyclickCell = _actionCheckerValidator.GetCell(board, clickCell.X, clickCell.Y);
+
             if (clickCell.CanMove)
             {
-                board = BoardMove(board, moveChecker, keyclickCell);
+                board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
+                Team = _actionCheckerValidator.setTeam(Team);
             }
             if (clickCell.CanAttack)
             {
                 int jumpedRow = (moveChecker.X + clickCell.X) / 2;
                 int jumpedColumn = (moveChecker.Y + clickCell.Y) / 2;
-                var keyCheckerBeat = board.FirstOrDefault(n => n.Value.X == jumpedRow && n.Value.Y == jumpedColumn).Key;
-                board[keyCheckerBeat].Checker = null;
-                board = BoardMove(board, moveChecker, keyclickCell);
+                var keyCheckerBeat = _actionCheckerValidator.GetCell(board, jumpedRow, jumpedColumn);
+
+                board[keyCheckerBeat.Key].Checker = null;
+                board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
+                board = AnaliseCanMoveAndBeat(board, clickCell);
+                Team = _actionCheckerValidator.setTeam(Team);
             }
-            foreach (var item in board)
+            bool canAgainAttack = false;
+
+            foreach (var cell in board)
             {
-                board[item.Key].CanMove = false;
-                board[item.Key].ClickChecker = false;
-                board[item.Key].CanAttack = false;
+                if (cell.Value.CanAttack == true)
+                {
+                    canAgainAttack = true;
+                }
+                board[cell.Key].CanMove = false;
+                board[cell.Key].ClickChecker = false;
+
             }
-            Team = _actionCheckerValidator.setTeam(Team);
-            return board;
-
-        }
-
-        private static void NewMethod(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
-        {
-            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
-            board[moveChecker.Checker.InCellId].Checker = null;
-        }
-
-        private Dictionary<string, Cell> BoardMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
-        {
-            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
-            board[moveChecker.Checker.InCellId].Checker = null;
-            return board;
-        }
-
-        public Dictionary<string, Cell> AnaliseCanMove(Dictionary<string, Cell> board, Cell clickCell)
-        {
-            if (clickCell.Checker.Team != Team)
+            if (!canAgainAttack)
             {
                 return board;
             }
+       
+            return board;
+
+        }
+
+
+
+        public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickCell)
+        {
+            if (clickCell.Checker?.Team != Team)
+                return board;
+            
             foreach (var cell in board)
             {
                 board[cell.Key].CanMove = false;
@@ -89,57 +90,77 @@ namespace ConsoleApp2.Logic.GameActions
                 board[cell.Key].CanAttack = false;
             }
             var clickChecker = clickCell.Checker;
-            if (clickChecker != null)
+            if (clickChecker == null)
+                return board;
+            
+            if (clickCell.Checker == null)
+                return board;
+            
+            board[clickCell.Checker.InCellId].ClickChecker = true;
+
+            int moveCheckerRow = clickChecker.Color == CheckerColor.White ? -1 : 1;
+
+            int rowCheck = clickCell.X + moveCheckerRow;
+            int columnLeft = clickCell.Y - 1;
+            int columnRight = clickCell.Y + 1;
+
+            bool BorderBoardRow = _actionCheckerValidator.ValidaiteBackDask(rowCheck);
+            if (BorderBoardRow)
+                return board;
+
+            KeyValuePair<string, Cell> LeftPossisionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnLeft);
+            KeyValuePair<string, Cell> RigthPossicionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnRight);
+
+            bool BorderBoardColumnLeft = _actionCheckerValidator.ValidaiteBackDask(columnLeft);
+            bool BorderBoardColumnRight = _actionCheckerValidator.ValidaiteBackDask(columnRight);
+
+            board = _actionCheckerValidator.MoveChecker(board, LeftPossisionCell, BorderBoardColumnLeft);
+            board = _actionCheckerValidator.MoveChecker(board, RigthPossicionCell, BorderBoardColumnRight);
+
+
+            int beatCheckerRow = clickCell.Checker.Color == CheckerColor.White ? 1 : -1;
+            int rowBackCheck = clickCell.X + beatCheckerRow;
+
+            var leftPossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnLeft);
+            var RightpossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnRight);
+
+
+            int rowCheckBeat = rowCheck + (rowCheck - clickCell.X);
+            int rowBackCheckBeat = rowBackCheck + (rowBackCheck - clickCell.X);
+            int columnLeftPossibleMove = columnLeft + (columnLeft - clickCell.Y);
+            int columnRightPossibleMove = columnRight + (columnRight - clickCell.Y);
+
+
+            board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckBeat, columnLeftPossibleMove, LeftPossisionCell, columnLeft);
+
+
+            board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckBeat, columnRightPossibleMove, RigthPossicionCell, columnRight);
+
+            bool borderBoardBackRow = _actionCheckerValidator.ValidaiteBackDask(rowBackCheck);
+
+            if (borderBoardBackRow)
+                return board;
+
+            board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnLeftPossibleMove, leftPossicionBackCell, columnLeft);
+            board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnRightPossibleMove, RightpossicionBackCell, columnRight);
+
+            bool canAttack = false;
+
+            foreach (var cell in board)
             {
-                if (clickCell.Checker == null)
+                if (cell.Value.CanAttack == true)
                 {
-                    return board;
+                    canAttack = true;
                 }
-                board[clickCell.Checker.InCellId].ClickChecker = true;
-
-                int moveCheckerRow = clickChecker.Color == CheckerColor.White ? -1 : 1;
-
-                int rowCheck = clickCell.X + moveCheckerRow;
-                int columnLeft = clickCell.Y - 1;
-                int columnRight = clickCell.Y + 1;
-
-                bool BorderBoardRow = _actionCheckerValidator.ValidaiteBackDask(rowCheck);
-                if (BorderBoardRow)
-                 return board;
-                
-                KeyValuePair<string, Cell> LeftPossisionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnLeft);
-                KeyValuePair<string, Cell> RigthPossicionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnRight);
-
-                bool BorderBoardColumnLeft = _actionCheckerValidator.ValidaiteBackDask(columnLeft);
-                bool BorderBoardColumnRight = _actionCheckerValidator.ValidaiteBackDask(columnRight);
-
-                board = _actionCheckerValidator.MoveChecker(board, LeftPossisionCell, BorderBoardColumnLeft);
-                board = _actionCheckerValidator.MoveChecker(board, RigthPossicionCell, BorderBoardColumnRight);
-
-
-                int beatCheckerRow = clickCell.Checker.Color == CheckerColor.White ? 1 : -1;
-                int rowBackCheck = clickCell.X + beatCheckerRow;
-
-                var leftPossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnLeft);
-                var RightpossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnRight);
-
-
-                int rowCheckMove = rowCheck + (rowCheck - clickCell.X);
-                int rowBackCheckBeat = rowBackCheck + (rowBackCheck - clickCell.X);
-                int columnLeftPossibleMove = columnLeft + (columnLeft - clickCell.Y);
-                int columnRightPossibleMove = columnRight + (columnRight - clickCell.Y);
-
-                board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckMove, columnLeftPossibleMove, LeftPossisionCell, columnLeft);
-                board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckMove, columnRightPossibleMove, RigthPossicionCell, columnRight);
-
-                bool borderBoardBackRow = _actionCheckerValidator.ValidaiteBackDask(rowBackCheck);
-
-                if (borderBoardBackRow)
-                    return board;
-                
-                board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnLeftPossibleMove, leftPossicionBackCell, columnLeft);
-                board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnRightPossibleMove, RightpossicionBackCell, columnRight);
             }
+            if (canAttack)
+            {
+                foreach (var cell in board)
+                {
+                    board[cell.Key].CanMove = false;
+                }
+            }
+            
             return board;
         }
 

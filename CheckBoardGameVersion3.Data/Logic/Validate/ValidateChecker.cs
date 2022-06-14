@@ -11,28 +11,34 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
     {
         public const int LIMIT_BOARD_MAX_VALUE = 8;
         public const int LIMIT_BOARD_MIN_VALUE = 0;
-       
+
         public bool ValidaiteBackDask(int BoardBack)
         => BoardBack >= LIMIT_BOARD_MAX_VALUE || BoardBack < LIMIT_BOARD_MIN_VALUE;
-  
-        public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string,Cell> board,int row,int column, KeyValuePair<string, Cell> PossibleMoveBoard,int borderBoard)
+
+        public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string, Cell> board, int row, int column, KeyValuePair<string, Cell> PossibleMoveBoard, int borderBoard)
         {
-            if (PossibleMoveBoard.Value?.Checker != null
-                   && !ValidaiteBackDask(borderBoard))
+            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+            if ((PossibleMoveBoard.Value?.Checker != null
+                   && !ValidaiteBackDask(borderBoard)))
             {
-
-                var leftCell = board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
-
-                if (leftCell.Value?.Checker == null && leftCell.Key != null)
+                if (PossibleMoveBoard.Value?.Checker?.Color == checkerClick.Value?.Checker?.Color)
                 {
-                    board[leftCell.Key].CanAttack = true;
+                    return board;
                 }
+                var CellPossibleBeat = board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
+
+                if (CellPossibleBeat.Value?.Checker == null && CellPossibleBeat.Key != null)
+                {
+                    board[CellPossibleBeat.Key].CanAttack = true;
+                }
+
             }
+
             return board;
         }
         public KeyValuePair<string, Cell> GetCell(Dictionary<string, Cell> board, int row, int column)
         {
-          return  board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
+            return board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
         }
         public Dictionary<string, Cell> MoveChecker(Dictionary<string, Cell> board, KeyValuePair<string, Cell> PossisionCell, bool BorderBoardColumn)
         {
@@ -43,7 +49,22 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             }
             return board;
         }
-        public SetTeam setTeam(SetTeam team) 
+        public SetTeam setTeam(SetTeam team)
             => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
+        public Dictionary<string, Cell> CheckerMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
+        {
+            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
+            board[moveChecker.Checker.InCellId].Checker = null;
+            foreach (var cell in board)
+            {
+                board[cell.Key].CanMove = false;
+                board[cell.Key].ClickChecker = false;
+                board[cell.Key].CanAttack = false;
+            }
+            return board;
+        }
     }
+
+
+
 }

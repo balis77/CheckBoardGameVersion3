@@ -11,12 +11,11 @@ namespace CheckBoardGameVersion3.Client.Pages
         public   Dictionary<string,Cell> Board { get; set; }
         private RepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
-        private ActionCheckerValidator _validateChecker;
         
 
         protected override void OnInitialized()
         {
-            _validateChecker = new ActionCheckerValidator();
+            
             _actionCheaker = new ActionCheaker();
             _repositoryBoard = new RepositoryBoard();
             Board = _repositoryBoard.CreateDesk();

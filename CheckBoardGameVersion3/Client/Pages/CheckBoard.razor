@@ -1,0 +1,32 @@
+﻿@using CheckBoardGameVersion3.Data.RepositoryBoard;
+<h3>CheckBoard</h3>
+
+<div class="box" style="display:flex; justify-content:space-around">
+
+    <div class="chessboard">
+        @for (var i = 0; i < 8; i++)
+        {
+             int local_I = i;
+            var nameMarkup = markup.MarkupName[local_I];
+           
+            <div class="row">
+                @for (var j = 0; j < 8; j++)
+                {
+                      int local_J = j;
+                    var numberMakup = markup.MarkupNumber[local_J];
+                    string idCell = nameMarkup + numberMakup;
+                    var cell = _repositoryBoard.GetCell(idCell);
+                    bool CanMove = Board[idCell].CanMove;
+                    bool canBeat = Board[idCell].CanAttack;
+                    bool clickChecker = Board[idCell].ClickChecker;
+                    <div @onclick="()=>Board =_actionCheaker.Battle( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
+                        @if (cell.Checker != null)
+                        {
+                             <div @onclick = "()=>Board =_actionCheaker.AnaliseCanMove(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"")"></div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

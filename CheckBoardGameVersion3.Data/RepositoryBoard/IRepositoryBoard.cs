@@ -71,7 +71,9 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
                     Board[cordinateInTheDesk].Checker = new Checker
                     {
                         InCellId = cordinateInTheDesk,
-                        Color = CheckerColor.Black
+                        Color = CheckerColor.Black,
+                        Team = SetTeam.Black
+                        
                     };
                 }
             }
@@ -90,10 +92,12 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
                     Board[cordinateInTheDesk].Checker = new Checker
                     {
                         InCellId = cordinateInTheDesk,
-                        Color = CheckerColor.White
+                        Color = CheckerColor.White,
+                        Team = SetTeam.White
+
                     };
                 }
-            }
+            } 
         }
         #endregion
     }

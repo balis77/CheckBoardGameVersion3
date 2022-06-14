@@ -7,19 +7,22 @@ namespace ConsoleApp2.Logic.GameActions
 {
     public class ActionCheaker //: IActionCheaker
     {
+        public SetTeam Team { get; set; } = SetTeam.White;
+
         private ActionCheckerValidator _actionCheckerValidator;
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
         }
-        public Dictionary<string, Cell> Battle(Dictionary<string, Cell> board, Cell ClickCell)
+        public Dictionary<string, Cell> Battle(Dictionary<string, Cell> board, Cell clickCell)
         {
-
-
-            if (ClickCell.Checker != null)
+            
+            
+            if (clickCell.Checker != null)
             {
                 return board;
             }
+           
             string clickChecker = string.Empty;
 
             foreach (var cell in board)
@@ -30,26 +33,24 @@ namespace ConsoleApp2.Logic.GameActions
                 }
 
             }
-            Cell MoveChecker = default;
+            Cell moveChecker = default;
             if (clickChecker != "")
             {
-                MoveChecker = board[clickChecker];
+                moveChecker = board[clickChecker];
             }
 
-            var keyclickCell = board.FirstOrDefault(n => n.Value.X == ClickCell.X && n.Value.Y == ClickCell.Y).Key;
-            if (ClickCell.CanMove)
+            var keyclickCell = board.FirstOrDefault(n => n.Value.X == clickCell.X && n.Value.Y == clickCell.Y).Key;
+            if (clickCell.CanMove)
             {
-                board[keyclickCell].Checker = new Checker(keyclickCell, MoveChecker.Checker.Color);
-                board[MoveChecker.Checker.InCellId].Checker = null;
+                board = BoardMove(board, moveChecker, keyclickCell);
             }
-            if (ClickCell.CanAttack)
+            if (clickCell.CanAttack)
             {
-                int jumpedRow = (MoveChecker.X + ClickCell.X) / 2;
-                int jumpedColumn = (MoveChecker.Y + ClickCell.Y) / 2;
+                int jumpedRow = (moveChecker.X + clickCell.X) / 2;
+                int jumpedColumn = (moveChecker.Y + clickCell.Y) / 2;
                 var keyCheckerBeat = board.FirstOrDefault(n => n.Value.X == jumpedRow && n.Value.Y == jumpedColumn).Key;
                 board[keyCheckerBeat].Checker = null;
-                board[keyclickCell].Checker = new Checker(keyclickCell, MoveChecker.Checker.Color);
-                board[MoveChecker.Checker.InCellId].Checker = null;
+                board = BoardMove(board, moveChecker, keyclickCell);
             }
             foreach (var item in board)
             {
@@ -57,11 +58,30 @@ namespace ConsoleApp2.Logic.GameActions
                 board[item.Key].ClickChecker = false;
                 board[item.Key].CanAttack = false;
             }
+            Team = _actionCheckerValidator.setTeam(Team);
+            return board;
+
+        }
+
+        private static void NewMethod(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
+        {
+            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
+            board[moveChecker.Checker.InCellId].Checker = null;
+        }
+
+        private Dictionary<string, Cell> BoardMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
+        {
+            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
+            board[moveChecker.Checker.InCellId].Checker = null;
             return board;
         }
 
         public Dictionary<string, Cell> AnaliseCanMove(Dictionary<string, Cell> board, Cell clickCell)
         {
+            if (clickCell.Checker.Team != Team)
+            {
+                return board;
+            }
             foreach (var cell in board)
             {
                 board[cell.Key].CanMove = false;
@@ -102,7 +122,6 @@ namespace ConsoleApp2.Logic.GameActions
 
                 var leftPossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnLeft);
                 var RightpossicionBackCell = _actionCheckerValidator.GetCell(board, rowBackCheck, columnRight);
-                //кординати куди дивиться шашка при битті
 
 
                 int rowCheckMove = rowCheck + (rowCheck - clickCell.X);
@@ -123,12 +142,6 @@ namespace ConsoleApp2.Logic.GameActions
             }
             return board;
         }
-
-
-
-
-
-
 
     }
 }

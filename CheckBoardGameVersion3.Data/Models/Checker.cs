@@ -12,17 +12,16 @@ namespace CheckBoardGameVersion3.Data.Models
         //можна і бацнути енамом як вийде в ініцилізації
         public string InCellId { get; set; }
         public CheckerColor Color { get; set; } = CheckerColor.Empty;
-        
-        //public bool MostBeAttaking { get; set; }
-        public Checker()
-        {
+        public SetTeam Team { get; set; }
 
-        }
-        public Checker(string id,CheckerColor color)
+        //public bool MostBeAttaking { get; set; }
+        public Checker() { }
+        public Checker(string id,CheckerColor color, SetTeam team)
         {
             Color = color;
             InCellId = id;
+            Team = team;
         }
-        
+
     }
 }

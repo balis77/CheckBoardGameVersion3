@@ -17,7 +17,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
   
         public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string,Cell> board,int row,int column, KeyValuePair<string, Cell> PossibleMoveBoard,int borderBoard)
         {
-            if (PossibleMoveBoard.Value.Checker != null
+            if (PossibleMoveBoard.Value?.Checker != null
                    && !ValidaiteBackDask(borderBoard))
             {
 
@@ -43,5 +43,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             }
             return board;
         }
+        public SetTeam setTeam(SetTeam team) 
+            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
     }
 }

@@ -1,18 +1,21 @@
 ﻿using CheckBoardGameVersion3.Data.Logic.Validate;
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.Models.Enums;
+using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions.Contracts;
+using System.Linq;
 
 namespace ConsoleApp2.Logic.GameActions
 {
     public class ActionCheaker : IActionCheaker
     {
-        public SetTeam Team { get; set; } = SetTeam.White;
-
+        //public SetTeam Team { get; set; } = SetTeam.White;
+        private TeamCheckers _teamCheckers;
         private ActionCheckerValidator _actionCheckerValidator;
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
+            _teamCheckers = new TeamCheckers();
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
@@ -42,7 +45,8 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
-                Team = _actionCheckerValidator.setTeam(Team);
+                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+
             }
             if (clickCell.CanAttack)
             {
@@ -53,7 +57,7 @@ namespace ConsoleApp2.Logic.GameActions
                 board[keyCheckerBeat.Key].Checker = null;
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
                 board = AnaliseCanMoveAndBeat(board, clickCell);
-                Team = _actionCheckerValidator.setTeam(Team);
+                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
             }
             bool canAgainAttack = false;
 
@@ -64,41 +68,53 @@ namespace ConsoleApp2.Logic.GameActions
                     canAgainAttack = true;
                 }
                 board[cell.Key].CanMove = false;
-                board[cell.Key].ClickChecker = false;
+
 
             }
             if (!canAgainAttack)
             {
                 return board;
             }
-       
+
             return board;
 
         }
+        public Dictionary<string, Cell> AnaliseBeatAllCheckers(Dictionary<string, Cell> board)
+        {
 
+
+            return board;
+        }
 
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickCell)
         {
-            if (clickCell.Checker?.Team != Team)
+
+
+            if (clickCell.Checker?.Team != TeamCheckers.Team)
                 return board;
-            
+
             foreach (var cell in board)
             {
                 board[cell.Key].CanMove = false;
                 board[cell.Key].ClickChecker = false;
                 board[cell.Key].CanAttack = false;
             }
-            var clickChecker = clickCell.Checker;
-            if (clickChecker == null)
-                return board;
-            
+
+
             if (clickCell.Checker == null)
                 return board;
-            
+            if (clickCell.X == 7 && (clickCell.Checker.Color == CheckerColor.Black))
+            {
+                board[clickCell.Checker.InCellId].Checker.Color = CheckerColor.BlackKing;
+            }
+            if (/*clickCell.X == 0 && */(clickCell.Checker.Color == CheckerColor.White))
+            {
+                board[clickCell.Checker.InCellId].Checker.Color = CheckerColor.WhiteKing;
+            }
             board[clickCell.Checker.InCellId].ClickChecker = true;
 
-            int moveCheckerRow = clickChecker.Color == CheckerColor.White ? -1 : 1;
+            int moveCheckerRow = clickCell.Checker.Color == CheckerColor.White ? -1 : 1;
 
             int rowCheck = clickCell.X + moveCheckerRow;
             int columnLeft = clickCell.Y - 1;
@@ -132,8 +148,6 @@ namespace ConsoleApp2.Logic.GameActions
 
 
             board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckBeat, columnLeftPossibleMove, LeftPossisionCell, columnLeft);
-
-
             board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowCheckBeat, columnRightPossibleMove, RigthPossicionCell, columnRight);
 
             bool borderBoardBackRow = _actionCheckerValidator.ValidaiteBackDask(rowBackCheck);
@@ -145,14 +159,8 @@ namespace ConsoleApp2.Logic.GameActions
             board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnRightPossibleMove, RightpossicionBackCell, columnRight);
 
             bool canAttack = false;
-
-            foreach (var cell in board)
-            {
-                if (cell.Value.CanAttack == true)
-                {
-                    canAttack = true;
-                }
-            }
+            
+            
             if (canAttack)
             {
                 foreach (var cell in board)
@@ -160,8 +168,45 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].CanMove = false;
                 }
             }
-            
+
             return board;
+        }
+        public Dictionary<string, Cell> CreateCopyDictionary(Dictionary<string, Cell> board)
+        {
+            Dictionary<string, Cell> copyDictionary = new Dictionary<string, Cell>();
+
+            for (int i = 0; i < 8; i++)
+            {
+                string _nameMarkup = markup.MarkupName[i];
+                for (int j = 0; j < 8; j++)
+                {
+                    Checker zatichka = null;
+                    int _numberMarkup = markup.MarkupNumber[j];
+                    var markups = _nameMarkup + _numberMarkup;
+                    if (board[markups].Checker != null)
+                    {
+                        zatichka = new Checker
+                        {
+                            Color = board[markups].Checker.Color,
+                            InCellId = board[markups].Checker.InCellId,
+                            Team = board[markups].Checker.Team,
+                        };
+                    }
+                    copyDictionary.Add(_nameMarkup + _numberMarkup, new Cell
+                    {
+                        X = board[markups].X,
+                        Y = board[markups].Y,
+                        AgainAttack = board[markups].AgainAttack,
+                        CanAttack = board[markups].CanAttack,
+                        CanMove = board[markups].CanMove,
+                        ClickChecker = board[markups].ClickChecker,
+                        LockChecker = board[markups].LockChecker,
+                        Checker = zatichka,
+
+                    });
+                }
+            }
+            return copyDictionary;
         }
 
     }

@@ -13,8 +13,6 @@ namespace CheckBoardGameVersion3.Data.Models
         public string InCellId { get; set; }
         public CheckerColor Color { get; set; } = CheckerColor.Empty;
         public SetTeam Team { get; set; }
-
-        //public bool MostBeAttaking { get; set; }
         public Checker() { }
         public Checker(string id,CheckerColor color, SetTeam team)
         {

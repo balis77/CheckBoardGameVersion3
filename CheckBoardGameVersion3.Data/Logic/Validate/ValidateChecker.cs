@@ -49,8 +49,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             }
             return board;
         }
-        public SetTeam setTeam(SetTeam team)
-            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
+       
         public Dictionary<string, Cell> CheckerMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
         {
             board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);

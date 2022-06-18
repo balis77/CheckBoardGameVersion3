@@ -13,9 +13,40 @@ namespace ConsoleApp2.Logic.GameActions
             _validateCheckerQueen = new ValidateCheckerQueen();
         }
         
-        public Dictionary<string, Cell> Battle(Dictionary<string, Cell> board, Cell clickQueen)
+        public Dictionary<string, Cell> Battle(Dictionary<string, Cell> board, Cell clickCell)
         {
-            throw new System.NotImplementedException();
+            if (clickCell.Checker != null)
+            {
+                return board;
+            }
+            string clickChecker = string.Empty;
+
+            foreach (var cell in board)
+            {
+                if (cell.Value.ClickChecker == true)
+                {
+                    clickChecker = cell.Key;
+                }
+
+            }
+            Cell moveChecker = new Cell();
+            if (clickChecker != "")
+            {
+                moveChecker = board[clickChecker];
+            }
+
+            var keycclickQueen = _validateCheckerQueen.GetCell(board, clickCell.X, clickCell.Y);
+            if (clickCell.CanMove)
+            {
+                board = _validateCheckerQueen.QueenMove(board, moveChecker, keycclickQueen.Key);
+                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+
+            }
+            if (clickCell.CanAttack)
+            {
+
+            }
+            return board;
         }
 
         public Dictionary<string, Cell> MoveQueen(Dictionary<string, Cell> board, Cell clickQueen)
@@ -51,6 +82,10 @@ namespace ConsoleApp2.Logic.GameActions
                 var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
                 if (nextCellMove.Value?.Checker != null)
                 {
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    {
+                        break;
+                    }
                     for (int counterBeat = 1; nextCellMove.Value.X + counterBeat <= 8 && nextCellMove.Value.Y + counterBeat <= 8; counterBeat++)
                     {
                         int rowCheckBeat = nextCellMove.Value.X + counterBeat;
@@ -73,6 +108,10 @@ namespace ConsoleApp2.Logic.GameActions
                 var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
                 if (nextCellMove.Value?.Checker != null)
                 {
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    {
+                        break;
+                    }
                     for (int counterBeat = 1; nextCellMove.Value.X - counterBeat >= 0 && nextCellMove.Value.Y - counterBeat >= 0; counterBeat++)
                     {
                         int rowCheckBeat = nextCellMove.Value.X - counterBeat;
@@ -93,6 +132,10 @@ namespace ConsoleApp2.Logic.GameActions
                 KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
                 if (nextCellMove.Value?.Checker != null)
                 {
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    {
+                        break;
+                    }
                     for (int counterBeat = 1; nextCellMove.Value.X + counterBeat <= 8 && nextCellMove.Value.Y - counterBeat >= 0; counterBeat++)
                     {
                         int rowCheckBeat = nextCellMove.Value.X + counterBeat;
@@ -113,6 +156,10 @@ namespace ConsoleApp2.Logic.GameActions
                 KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
                 if (nextCellMove.Value?.Checker != null)
                 {
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    {
+                        break;
+                    }
                     for (int counterBeat = 1; nextCellMove.Value.X - counterBeat >= 0 && nextCellMove.Value.Y + counterBeat <= 8; counterBeat++)
                     {
                         int rowCheckBeat = nextCellMove.Value.X - counterBeat;
@@ -131,7 +178,7 @@ namespace ConsoleApp2.Logic.GameActions
         private Dictionary<string, Cell> PossbileBeatChecker(Dictionary<string, Cell> board, int rowCheckBeat, int columnCheckBeat)
         {
             KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(board, rowCheckBeat, columnCheckBeat);
-
+            
             if (nextBeatCell.Value?.Checker == null && nextBeatCell.Key != null)
             {
                 board[nextBeatCell.Key].CanAttack = true;

@@ -20,15 +20,28 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         }
         public Dictionary<string, Cell> MoveQueenPossible(Dictionary<string, Cell> board, KeyValuePair<string, Cell> nextCellMove, Cell clickQueen)
         {
+            
             if (nextCellMove.Value == null || clickQueen.Checker == null)
             {
                 return board;
             }
-            if (nextCellMove.Value.Checker?.Color == clickQueen.Checker.Color)
+            if (nextCellMove.Value.Checker?.Team == clickQueen.Checker.Team)
             {
                 return board;
             }
             board[nextCellMove.Key].CanMove = true;
+            return board;
+        }
+        public Dictionary<string, Cell> QueenMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
+        {
+            board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
+            board[moveChecker.Checker.InCellId].Checker = null;
+            foreach (var cell in board)
+            {
+                board[cell.Key].CanMove = false;
+                board[cell.Key].ClickChecker = false;
+                board[cell.Key].CanAttack = false;
+            }
             return board;
         }
     }

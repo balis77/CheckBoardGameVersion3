@@ -21,7 +21,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             if ((PossibleMoveBoard.Value?.Checker != null
                    && !ValidaiteBackDask(borderBoard)))
             {
-                if (PossibleMoveBoard.Value?.Checker?.Color == checkerClick.Value?.Checker?.Color)
+                if (PossibleMoveBoard.Value?.Checker?.Team == TeamCheckers.Team)
                 {
                     return board;
                 }

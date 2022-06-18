@@ -68,8 +68,6 @@ namespace ConsoleApp2.Logic.GameActions
                     canAgainAttack = true;
                 }
                 board[cell.Key].CanMove = false;
-
-
             }
             if (!canAgainAttack)
             {
@@ -78,12 +76,6 @@ namespace ConsoleApp2.Logic.GameActions
 
             return board;
 
-        }
-        public Dictionary<string, Cell> AnaliseBeatAllCheckers(Dictionary<string, Cell> board)
-        {
-
-
-            return board;
         }
 
 
@@ -158,10 +150,10 @@ namespace ConsoleApp2.Logic.GameActions
             board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnLeftPossibleMove, leftPossicionBackCell, columnLeft);
             board = _actionCheckerValidator.ValidatePossibleBeatTheChecker(board, rowBackCheckBeat, columnRightPossibleMove, RightpossicionBackCell, columnRight);
 
-            bool canAttack = false;
+            var canAttack = board.FirstOrDefault(n=>n.Value.CanAttack == true);
             
             
-            if (canAttack)
+            if (canAttack.Value != null)
             {
                 foreach (var cell in board)
                 {

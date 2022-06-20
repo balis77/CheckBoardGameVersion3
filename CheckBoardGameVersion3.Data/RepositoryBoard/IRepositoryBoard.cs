@@ -22,10 +22,10 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
         {
             Board = new Dictionary<string, Cell>();
 
-            for (int i = 0; i < 8; i++)
+            for (byte i = 0; i < 8; i++)
             {
                 string _nameMarkup = markup.MarkupName[i];
-                for (int j = 0; j < 8; j++)
+                for (byte j = 0; j < 8; j++)
                 {
                     int _numberMarkup = markup.MarkupNumber[j];
                     Board.Add(_nameMarkup + _numberMarkup, new Cell 

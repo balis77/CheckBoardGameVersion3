@@ -1,5 +1,6 @@
 ﻿using CheckBoardGameVersion3.Data.Logic.Validate;
 using CheckBoardGameVersion3.Data.Models;
+using CheckBoardGameVersion3.Data.Models.Enums;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions;
 
@@ -21,19 +22,38 @@ namespace CheckBoardGameVersion3.Client.Pages
             _repositoryBoard = new RepositoryBoard();
             Board = _repositoryBoard.CreateDesk();
         }
-        public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickCell)
+        public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
-            if (clickCell.Checker.Color == Data.Models.Enums.CheckerColor.BlackKing 
-                || clickCell.Checker.Color == Data.Models.Enums.CheckerColor.WhiteKing)
+            if (clickChecker.Checker.Color == CheckerColor.BlackKing
+                || clickChecker.Checker.Color == CheckerColor.WhiteKing)
             {
-                board = _queenCheaker.MoveQueen(Board, clickCell);
+                board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, clickChecker);
             }
             else
             {
-                board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickCell);
+                board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
-           
-           
+
+
+            return board;
+        }
+        public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
+        {
+           var checkerClick = board.FirstOrDefault(n=>n.Value.ClickChecker == true);
+            if (clickCell.Checker != null|| checkerClick.Key == null)
+            {
+                return board;
+            }
+            if (checkerClick.Value.Checker.Color == CheckerColor.BlackKing 
+                || checkerClick.Value.Checker.Color == CheckerColor.WhiteKing)
+            {
+                board = _queenCheaker.MoveAndBeatQueen(Board, clickCell);
+            }
+            else
+            {
+                board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
+
+            }
             return board;
         }
     }

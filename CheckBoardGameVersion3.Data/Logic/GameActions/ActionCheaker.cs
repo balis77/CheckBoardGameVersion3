@@ -9,21 +9,13 @@ namespace ConsoleApp2.Logic.GameActions
 {
     public class ActionCheaker : IActionCheaker
     {
-        //public SetTeam Team { get; set; } = SetTeam.White;
-        private TeamCheckers _teamCheckers;
         private ActionCheckerValidator _actionCheckerValidator;
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
-            _teamCheckers = new TeamCheckers();
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
-            if (clickCell.Checker != null)
-            {
-                return board;
-            }
-
             string clickChecker = string.Empty;
 
             foreach (var cell in board)
@@ -162,43 +154,6 @@ namespace ConsoleApp2.Logic.GameActions
             }
 
             return board;
-        }
-        public Dictionary<string, Cell> CreateCopyDictionary(Dictionary<string, Cell> board)
-        {
-            Dictionary<string, Cell> copyDictionary = new Dictionary<string, Cell>();
-
-            for (int i = 0; i < 8; i++)
-            {
-                string _nameMarkup = markup.MarkupName[i];
-                for (int j = 0; j < 8; j++)
-                {
-                    Checker zatichka = null;
-                    int _numberMarkup = markup.MarkupNumber[j];
-                    var markups = _nameMarkup + _numberMarkup;
-                    if (board[markups].Checker != null)
-                    {
-                        zatichka = new Checker
-                        {
-                            Color = board[markups].Checker.Color,
-                            InCellId = board[markups].Checker.InCellId,
-                            Team = board[markups].Checker.Team,
-                        };
-                    }
-                    copyDictionary.Add(_nameMarkup + _numberMarkup, new Cell
-                    {
-                        X = board[markups].X,
-                        Y = board[markups].Y,
-                        AgainAttack = board[markups].AgainAttack,
-                        CanAttack = board[markups].CanAttack,
-                        CanMove = board[markups].CanMove,
-                        ClickChecker = board[markups].ClickChecker,
-                        LockChecker = board[markups].LockChecker,
-                        Checker = zatichka,
-
-                    });
-                }
-            }
-            return copyDictionary;
         }
 
     }

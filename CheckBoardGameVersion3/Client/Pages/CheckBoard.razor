@@ -19,7 +19,7 @@
                     bool CanMove = Board[idCell].CanMove;
                     bool canBeat = Board[idCell].CanAttack;
                     bool clickChecker = Board[idCell].ClickChecker;
-                    <div @onclick="()=>Board =_actionCheaker.MoveAndBeatCheckers( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
+                    <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
                         @if (cell.Checker != null)
                         {
                              <div @onclick = "()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"")"></div>

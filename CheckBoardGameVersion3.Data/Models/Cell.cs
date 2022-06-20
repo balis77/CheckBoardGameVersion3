@@ -15,8 +15,6 @@ namespace CheckBoardGameVersion3.Data.Models
         public bool CanMove { get; set; } = false;
         public bool CanAttack { get; set; } = false;
         public bool ClickChecker { get; set; } = false;
-        public bool AgainAttack { get; set; } = false;
-        public bool LockChecker { get; set; } = false;//щяс попробуєм 
         public Cell(byte x,byte y,Checker checker,bool canMove,bool canAttack,bool clickChecker)
         {
             X = x;

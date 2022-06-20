@@ -48,28 +48,26 @@ namespace ConsoleApp2.Logic.GameActions
 
                 board[keyCheckerBeat.Key].Checker = null;
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
-                board = AnaliseCanMoveAndBeat(board, clickCell);
+                board = AnaliseCanMoveAndBeat(board, board[keyclickCell.Key]);
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
             }
-            bool canAgainAttack = false;
+            
 
             foreach (var cell in board)
             {
                 if (cell.Value.CanAttack == true)
                 {
-                    canAgainAttack = true;
+                    
+                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
                 }
                 board[cell.Key].CanMove = false;
             }
-            if (!canAgainAttack)
-            {
-                return board;
-            }
+           
 
             return board;
 
         }
-
+        
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickCell)
         {
@@ -92,7 +90,7 @@ namespace ConsoleApp2.Logic.GameActions
             {
                 board[clickCell.Checker.InCellId].Checker.Color = CheckerColor.BlackKing;
             }
-            if (/*clickCell.X == 0 && */(clickCell.Checker.Color == CheckerColor.White))
+            if (/*clickCell.X == 0 &&*/ (clickCell.Checker.Color == CheckerColor.White))
             {
                 board[clickCell.Checker.InCellId].Checker.Color = CheckerColor.WhiteKing;
             }

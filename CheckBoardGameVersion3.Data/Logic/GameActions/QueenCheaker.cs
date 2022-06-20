@@ -5,6 +5,23 @@ using ConsoleApp2.Logic.GameActions.Contracts;
 
 namespace ConsoleApp2.Logic.GameActions
 {
+    public class BoardModel
+    {
+        //Dictionary<string, Cell> board, Cell clickQueen, string keyClickCell, int xQueen, int yQueen, ref Checker RemoveChecker
+        public Dictionary<string, Cell> board { get; set; }
+        public Cell clickQueen { get; set; }
+        public string keyClickCell { get; set; }
+        public int xQueen { get; set; }
+        public int yQueen { get; set; }
+        public BoardModel(Dictionary<string, Cell> _board, Cell _clickQueen, string _keyClickCell, int _xQueen, int _yQueen)
+        {
+            this.board = _board;
+            this.clickQueen = _clickQueen;
+            this.keyClickCell = _keyClickCell;
+            this.xQueen = _xQueen;
+            this.yQueen = _yQueen;
+        }
+    }
     public class QueenCheaker //: IQueenCheaker
     {
         private ValidateCheckerQueen _validateCheckerQueen;
@@ -32,171 +49,120 @@ namespace ConsoleApp2.Logic.GameActions
                 clickQueen = board[clickCheckerKey];
             }
 
-            var keyClickCell = _validateCheckerQueen.GetCell(board, clickCell.X, clickCell.Y);
+            var keyClickCell = _validateCheckerQueen.GetKey(board, clickCell.X, clickCell.Y);
 
             int xQueen = clickCell.X;
             int yQueen = clickCell.Y;
             Checker RemoveChecker = new Checker();
             if (clickCell.CanAttack)
             {
-                foreach (var cell in board)
-                {
-                    board[cell.Key].CanMove = false;
-                }
-                for (int count = 1; xQueen + count <= 8 && yQueen + count <= 8; count++)
-                {
-                   
-                    int row = xQueen + count;
-                    int column = yQueen + count;
-                    KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
-                    if (nextCellMove.Value?.Checker != null)
-                    {
-                        if ((nextCellMove.Value.Checker.Team == TeamCheckers.Team)&& nextCellMove.Value.Checker.Color != clickQueen.Checker.Color)
-                        {
-                            continue;
-                        }
-                        if (row != clickQueen.X && column != clickQueen.Y)
-                        {
-                            RemoveChecker = nextCellMove.Value?.Checker;
-                        }
-                    }
-                    if (row == clickQueen.X&& column == clickQueen.Y)
-                    {
-                        board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
-                        board[RemoveChecker.InCellId].Checker = null;
-                        board[clickQueen.Checker.InCellId].Checker = null;
-                        foreach (var cell in board)
-                        {
-                            board[cell.Key].CanMove = false;
-                            board[cell.Key].ClickChecker = false;
-                            board[cell.Key].CanAttack = false;
-                        }
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                        return board;
-                    }
-
-                }
-                for (int count = 1; xQueen - count >= 0 && yQueen - count >= 0; count++)
-                {
-                    int row = xQueen + count;
-                    int column = yQueen + count;
-                    KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
-                    if (nextCellMove.Value?.Checker != null)
-                    {
-                        if ((nextCellMove.Value.Checker.Team == TeamCheckers.Team) && nextCellMove.Value.Checker.Color != clickQueen.Checker.Color)
-                        {
-                            continue;
-                        }
-                        if (row != clickQueen.X && column != clickQueen.Y)
-                        {
-                            RemoveChecker = nextCellMove.Value?.Checker;
-                        }
-                    }
-                    if (row == clickQueen.X && column == clickQueen.Y)
-                    {
-                        board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
-                        board[RemoveChecker.InCellId].Checker = null;
-                        board[clickQueen.Checker.InCellId].Checker = null;
-                        foreach (var cell in board)
-                        {
-                            board[cell.Key].CanMove = false;
-                            board[cell.Key].ClickChecker = false;
-                            board[cell.Key].CanAttack = false;
-                        }
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                        return board;
-                    }
-
-
-
-
-
-                }
-                for (int count = 1; xQueen + count <= 8 && yQueen - count >= 0; count++)
-                {
-                    int row = xQueen + count;
-                    int column = yQueen + count;
-                    KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
-                    if (nextCellMove.Value?.Checker != null)
-                    {
-                        if ((nextCellMove.Value.Checker.Team == TeamCheckers.Team) && nextCellMove.Value.Checker.Color != clickQueen.Checker.Color)
-                        {
-                            continue;
-                        }
-                        if (row != clickQueen.X && column != clickQueen.Y)
-                        {
-                            RemoveChecker = nextCellMove.Value?.Checker;
-                        }
-                    }
-                    if (row == clickQueen.X && column == clickQueen.Y)
-                    {
-                        board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
-                        board[RemoveChecker.InCellId].Checker = null;
-                        board[clickQueen.Checker.InCellId].Checker = null;
-                        foreach (var cell in board)
-                        {
-                            board[cell.Key].CanMove = false;
-                            board[cell.Key].ClickChecker = false;
-                            board[cell.Key].CanAttack = false;
-                        }
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                        return board;
-                    }
-
-
-
-
-                }
-                for (int count = 1; xQueen - count >= 0 && yQueen + count <= 8; count++)
-                {
-                    int row = xQueen + count;
-                    int column = yQueen + count;
-                    KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
-                    if (nextCellMove.Value?.Checker != null)
-                    {
-                        if ((nextCellMove.Value.Checker.Team == TeamCheckers.Team) && nextCellMove.Value.Checker.Color != clickQueen.Checker.Color)
-                        {
-                            continue;
-                        }
-                        if (row != clickQueen.X && column != clickQueen.Y)
-                        {
-                            RemoveChecker = nextCellMove.Value?.Checker;
-                        }
-                    }
-                    if (row == clickQueen.X && column == clickQueen.Y)
-                    {
-                        board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
-                        board[RemoveChecker.InCellId].Checker = null;
-                        board[clickQueen.Checker.InCellId].Checker = null;
-                        foreach (var cell in board)
-                        {
-                            board[cell.Key].CanMove = false;
-                            board[cell.Key].ClickChecker = false;
-                            board[cell.Key].CanAttack = false;
-                        }
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                        return board;
-                    }
-                }
-               
-
+                BoardModel boardModel = new BoardModel(board, clickQueen, keyClickCell, xQueen, yQueen);
+                board = BottonRight(board, clickQueen, keyClickCell, xQueen, yQueen, ref RemoveChecker);
+                board = TopLeft(board, clickQueen, keyClickCell, xQueen, yQueen, ref RemoveChecker);
+                board = BottonLeft(board, clickQueen, keyClickCell, xQueen, yQueen, ref RemoveChecker);
+                board = TopRight(board, clickQueen, keyClickCell, xQueen, yQueen, ref RemoveChecker);
             }
             if (clickCell.CanMove)
             {
-                board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
+                board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell);
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-
+            }
+            return board;
+        }
+        #region PrivateMethods BeatChecker
+        private Dictionary<string, Cell> TopRight(Dictionary<string, Cell> board, Cell clickQueen, string keyClickCell, int xQueen, int yQueen, ref Checker RemoveChecker)
+        {
+            for (int count = 1; xQueen - count >= 0 && yQueen + count <= 8; count++)
+            {
+                int row = xQueen - count;
+                int column = yQueen + count;
+                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
+                bool cordinate = _validateCheckerQueen.CheckerByCordinate(clickQueen, row, column);
+                if (nextCellMove.Value?.Checker != null)
+                {
+                    if (!cordinate)
+                    {
+                        RemoveChecker = nextCellMove.Value?.Checker;
+                    }
+                }
+                if (cordinate)
+                {
+                    board = _validateCheckerQueen.BeatChecker(board, clickQueen, keyClickCell, RemoveChecker);
+                }
             }
             return board;
         }
 
-        private static Dictionary<string, Cell> removeChecker(Dictionary<string, Cell> board, Cell clickQueen, KeyValuePair<string, Cell> ClickCell, KeyValuePair<string, Cell> nextCellMove)
+        private Dictionary<string, Cell> BottonLeft(Dictionary<string, Cell> board, Cell clickQueen, string keyClickCell, int xQueen, int yQueen, ref Checker RemoveChecker)
         {
+            for (int count = 1; xQueen + count <= 8 && yQueen - count >= 0; count++)
+            {
+                int row = xQueen + count;
+                int column = yQueen - count;
+                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
+                bool cordinate = _validateCheckerQueen.CheckerByCordinate(clickQueen, row, column);
+                if (nextCellMove.Value?.Checker != null)
+                {
+                    if (!cordinate)
+                    {
+                        RemoveChecker = nextCellMove.Value?.Checker;
+                    }
+                }
+                if (cordinate)
+                {
+                    board = _validateCheckerQueen.BeatChecker(board, clickQueen, keyClickCell, RemoveChecker);
+
+                }
+            }
             return board;
-            
-           
         }
 
+        private Dictionary<string, Cell> TopLeft(Dictionary<string, Cell> board, Cell clickQueen, string keyClickCell, int xQueen, int yQueen, ref Checker RemoveChecker)
+        {
+            for (int count = 1; xQueen - count >= 0 && yQueen - count >= 0; count++)
+            {
+                int row = xQueen - count;
+                int column = yQueen - count;
+                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
+                bool cordinate = _validateCheckerQueen.CheckerByCordinate(clickQueen, row, column);
+                if (nextCellMove.Value?.Checker != null)
+                {
+                    if (!cordinate)
+                    {
+                        RemoveChecker = nextCellMove.Value?.Checker;
+                    }
+                }
+                if (cordinate)
+                {
+                    board = _validateCheckerQueen.BeatChecker(board, clickQueen, keyClickCell, RemoveChecker);
+                }
+            }
+            return board;
+        }
+
+        private Dictionary<string, Cell> BottonRight(Dictionary<string, Cell> board, Cell clickQueen, string keyClickCell, int xQueen, int yQueen, ref Checker RemoveChecker)
+        {
+            for (int count = 1; xQueen + count <= 8 && yQueen + count <= 8; count++)
+            {
+                int row = xQueen + count;
+                int column = yQueen + count;
+                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(board, row, column);
+                bool cordinate = _validateCheckerQueen.CheckerByCordinate(clickQueen, row, column);
+                if (nextCellMove.Value?.Checker != null)
+                {
+                    if (!cordinate)
+                    {
+                        RemoveChecker = nextCellMove.Value?.Checker;
+                    }
+                }
+                if (cordinate)
+                {
+                    board = _validateCheckerQueen.BeatChecker(board, clickQueen, keyClickCell, RemoveChecker);
+                }
+            }
+            return board;
+        }
+        #endregion
         public Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickQueen)
         {
             if (clickQueen.Checker?.Team != TeamCheckers.Team)

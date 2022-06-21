@@ -49,9 +49,9 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             return board;
         }
        
-        public Dictionary<string, Cell> BeatChecker(Dictionary<string, Cell> board, Cell clickQueen,string keyClickCell, Checker RemoveChecker)
+        public Dictionary<string, Cell> BeatChecker(Dictionary<string, Cell> board, Cell clickQueen, KeyValuePair<string, Cell> keyClickCell, Checker RemoveChecker)
         {
-            board[keyClickCell].Checker = new Checker(keyClickCell, clickQueen.Checker.Color, clickQueen.Checker.Team);
+            board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
             board[RemoveChecker.InCellId].Checker = null;
             board[clickQueen.Checker.InCellId].Checker = null;
 
@@ -62,6 +62,16 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
                 board[cell.Key].CanAttack = false;
             }
             TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+            return board;
+        }
+        public Dictionary<string, Cell> PossbileBeatChecker(Dictionary<string, Cell> board, int rowCheckBeat, int columnCheckBeat)
+        {
+            KeyValuePair<string, Cell> nextBeatCell = GetCell(board, rowCheckBeat, columnCheckBeat);
+
+            if (nextBeatCell.Value?.Checker == null && nextBeatCell.Key != null)
+            {
+                board[nextBeatCell.Key].CanAttack = true;
+            }
             return board;
         }
         public bool CheckerByCordinate(Cell clickQueen, int row, int column)

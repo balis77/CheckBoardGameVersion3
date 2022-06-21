@@ -61,6 +61,7 @@ namespace ConsoleApp2.Logic.GameActions
                     TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
                 }
                 board[cell.Key].CanMove = false;
+                board[cell.Key].ClickChecker = false;
             }
            
 

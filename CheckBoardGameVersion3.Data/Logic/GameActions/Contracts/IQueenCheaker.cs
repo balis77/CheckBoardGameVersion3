@@ -1,8 +1,10 @@
-﻿namespace ConsoleApp2.Logic.GameActions.Contracts
+﻿using CheckBoardGameVersion3.Data.Models;
+
+namespace ConsoleApp2.Logic.GameActions.Contracts
 {
     public interface IQueenCheaker
     {
-        public void Battle();
-        public void Move();
+        Dictionary<string, Cell> MoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickCell);
+        Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickCell);
     }
 }

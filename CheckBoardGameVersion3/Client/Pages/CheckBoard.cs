@@ -1,4 +1,5 @@
 ﻿using CheckBoardGameVersion3.Data.Logic.Validate;
+using CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard;
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.Models.Enums;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
@@ -12,7 +13,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         private RepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
-
+        private ValidateBoard _validateBoard;
 
         protected override void OnInitialized()
         {
@@ -20,6 +21,7 @@ namespace CheckBoardGameVersion3.Client.Pages
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new RepositoryBoard();
+            _validateBoard = new ValidateBoard();
             Board = _repositoryBoard.CreateDesk();
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
@@ -39,6 +41,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
+          
            var checkerClick = board.FirstOrDefault(n=>n.Value.ClickChecker == true);
             if (clickCell.Checker != null|| checkerClick.Key == null)
             {
@@ -54,6 +57,7 @@ namespace CheckBoardGameVersion3.Client.Pages
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
 
             }
+            board = _validateBoard.ValidateFullBoard(board);
             return board;
         }
     }

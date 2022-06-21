@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckBoardGameVersion3.Data.Logic.Validate
+namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
 {
     public class ActionCheckerValidator
     {
@@ -16,7 +16,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         public bool ValidaiteBackDask(int BoardBack)
         => BoardBack >= LIMIT_BOARD_MAX_VALUE || BoardBack < LIMIT_BOARD_MIN_VALUE;
 
-        public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string, Cell> board, int row, int column, KeyValuePair<string, Cell> PossibleMoveBoard, int borderBoard,Cell clickChecker = null)
+        public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string, Cell> board, int row, int column, KeyValuePair<string, Cell> PossibleMoveBoard, int borderBoard, Cell clickChecker = null)
         {
             int moveCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? -1 : 1;
             int rowCheck = clickChecker.X + moveCheckerRow;
@@ -26,12 +26,12 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             int beatCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? 1 : -1;
             int rowBackCheck = clickChecker.X + beatCheckerRow;
             int rowBackCheckBeat = rowBackCheck + (rowBackCheck - clickChecker.X);
-           
+
             int columnLeftPossibleMove = columnLeft + (columnLeft - clickChecker.Y);
             int columnRightPossibleMove = columnRight + (columnRight - clickChecker.Y);
             var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
-            if ((PossibleMoveBoard.Value?.Checker != null
-                   && !ValidaiteBackDask(borderBoard)))
+            if (PossibleMoveBoard.Value?.Checker != null
+                   && !ValidaiteBackDask(borderBoard))
             {
                 if (PossibleMoveBoard.Value?.Checker?.Team == TeamCheckers.Team)
                 {
@@ -60,7 +60,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             }
             return board;
         }
-       
+
         public Dictionary<string, Cell> CheckerMove(Dictionary<string, Cell> board, Cell moveChecker, string keyclickCell)
         {
             board[keyclickCell].Checker = new Checker(keyclickCell, moveChecker.Checker.Color, moveChecker.Checker.Team);
@@ -76,7 +76,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
 
         public Dictionary<string, Cell> BeatChecker(Dictionary<string, Cell> board, Cell clickChecker, int row, int column)
         {
-            var biba = GetCell(board,row,column);
+            var biba = GetCell(board, row, column);
             if (biba.Value != null)
             {
                 if (biba.Value.Checker != null)
@@ -86,7 +86,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
                         return board;
                     }
                     int rowCheckBeat = row + (row - clickChecker.X);
-                    int columnCheckBeat= column + (column - clickChecker.Y);
+                    int columnCheckBeat = column + (column - clickChecker.Y);
                     var CellPossibleBeat = board.FirstOrDefault(n => n.Value.X == rowCheckBeat && n.Value.Y == columnCheckBeat);
                     if (CellPossibleBeat.Value?.Checker == null && CellPossibleBeat.Key != null)
                     {

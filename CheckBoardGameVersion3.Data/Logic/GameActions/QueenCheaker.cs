@@ -1,4 +1,6 @@
 ﻿using CheckBoardGameVersion3.Data.Logic.Validate;
+using CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker;
+using CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen;
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions.Contracts;

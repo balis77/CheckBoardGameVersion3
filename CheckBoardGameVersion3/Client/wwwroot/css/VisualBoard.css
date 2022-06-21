@@ -33,6 +33,9 @@
 .checker.active{
    border:2px solid green;
 }
+.checker.lock{
+    border:2px solid red;
+}
 
 .row:nth-child(2n) .cell:nth-child(2n+1) {
     /*background: #eee;*/

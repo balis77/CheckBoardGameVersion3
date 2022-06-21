@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckBoardGameVersion3.Data.Logic.Validate
+namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
 {
     public class ValidateCheckerQueen
     {
@@ -24,7 +24,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         }
         public Dictionary<string, Cell> MoveQueenPossible(Dictionary<string, Cell> board, KeyValuePair<string, Cell> nextCellMove, Cell clickQueen)
         {
-            
+
             if (nextCellMove.Value == null || clickQueen.Checker == null)
             {
                 return board;
@@ -48,7 +48,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             }
             return board;
         }
-       
+
         public Dictionary<string, Cell> BeatChecker(Dictionary<string, Cell> board, Cell clickQueen, KeyValuePair<string, Cell> keyClickCell, Checker RemoveChecker)
         {
             board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);

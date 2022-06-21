@@ -1,6 +1,6 @@
 ﻿using CheckBoardGameVersion3.Data.Models;
 
-namespace CheckBoardGameVersion3.Data.Logic.Validate
+namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
 {
     public class DataQueenMoveAndBeat
     {

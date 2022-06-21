@@ -1,13 +1,14 @@
-﻿using CheckBoardGameVersion3.Data.Models;
+﻿using CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen;
+using CheckBoardGameVersion3.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckBoardGameVersion3.Data.Logic.Validate
+namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
 {
-    public  class ValidateMoveAndBeatChecker
+    public class ValidateMoveAndBeatChecker
     {
         private Dictionary<string, Cell> _board;
         private ValidateCheckerQueen _validateCheckerQueen;
@@ -18,7 +19,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
             _validateCheckerQueen = new ValidateCheckerQueen();
         }
 
-        public Dictionary<string,Cell> MoveAndBeatChecker(DataQueenMoveAndBeat parametr)
+        public Dictionary<string, Cell> MoveAndBeatChecker(DataQueenMoveAndBeat parametr)
         {
             CheckTopRight(parametr);
             CheckTopLeft(parametr);

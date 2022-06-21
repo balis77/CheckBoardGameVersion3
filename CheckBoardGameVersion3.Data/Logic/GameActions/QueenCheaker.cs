@@ -48,9 +48,7 @@ namespace ConsoleApp2.Logic.GameActions
             }
             return board;
         }
-        #region PrivateMethods BeatChecker
-       
-        #endregion
+    
         public Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickQueen)
         {
             if (clickQueen.Checker?.Team != TeamCheckers.Team)
@@ -77,34 +75,5 @@ namespace ConsoleApp2.Logic.GameActions
             }
             return board;
         }
-
-        //private Dictionary<string, Cell> AnaliseCanPossibleMoveAndAttack(Dictionary<string, Cell> board, Cell clickQueen)
-        //{
-
-        //    int xQueen = clickQueen.X;
-        //    int yQueen = clickQueen.Y;
-        //    //bottom right
-        //    //board = BottomRight(board, clickQueen);
-        //    ////top left
-        //    //board = TopLeft(board, clickQueen);
-        //    ////bottom left
-        //    //board = BottomLeft(board, clickQueen);
-        //    ////top right
-        //    //board = TopRight(board, clickQueen);
-        //    var canAttack = board.FirstOrDefault(n => n.Value.CanAttack == true);
-        //    if (canAttack.Value != null)
-        //    {
-        //        foreach (var cell in board)
-        //        {
-        //            board[cell.Key].CanMove = false;
-        //        }
-        //    }
-
-        //    return board;
-        //}
-
-       
-
-       
     }
 }

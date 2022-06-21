@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CheckBoardGameVersion3.Data.Logic.Validate
 {
-    internal class ValidateMoveAndBeatChecker
+    public  class ValidateMoveAndBeatChecker
     {
         private Dictionary<string, Cell> _board;
         private ValidateCheckerQueen _validateCheckerQueen;

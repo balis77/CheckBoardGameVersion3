@@ -8,7 +8,6 @@ namespace CheckBoardGameVersion3.Data.Models
 {
     public class Cell
     {
-       
         public byte X { get; set; }
         public byte Y { get; set; }
         public Checker? Checker { get; set; }

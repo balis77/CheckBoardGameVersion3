@@ -18,13 +18,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             return board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
         }
-        public string GetKey(Dictionary<string, Cell> board, int row, int column)
-        {
-            return board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column).Key;
-        }
         public Dictionary<string, Cell> MoveQueenPossible(Dictionary<string, Cell> board, KeyValuePair<string, Cell> nextCellMove, Cell clickQueen)
         {
-
             if (nextCellMove.Value == null || clickQueen.Checker == null)
             {
                 return board;

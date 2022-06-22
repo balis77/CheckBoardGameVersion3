@@ -46,7 +46,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
-                        
                     }
                 }
                 else
@@ -88,7 +87,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
-                        
                     }
                 }
                 else
@@ -130,7 +128,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
-                        
                     }
                 }
                 else
@@ -173,7 +170,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
-                        
                     }
                 }
                 else
@@ -184,7 +180,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 {
                     break;
                 }
-
             }
 
             _board = data.board;

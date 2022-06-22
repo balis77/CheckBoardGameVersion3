@@ -9,7 +9,6 @@ namespace CheckBoardGameVersion3.Data.Models
 {
     public class Checker
     {
-        //можна і бацнути енамом як вийде в ініцилізації
         public string InCellId { get; set; }
         public CheckerColor Color { get; set; } = CheckerColor.Empty;
         public SetTeam Team { get; set; }

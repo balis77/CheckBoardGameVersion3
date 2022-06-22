@@ -26,8 +26,8 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
-            if (clickChecker.Checker.Color == CheckerColor.BlackKing
-                || clickChecker.Checker.Color == CheckerColor.WhiteKing)
+            if (clickChecker.Checker.Color == CheckerColor.BlackQueen
+                || clickChecker.Checker.Color == CheckerColor.WhiteQueen)
             {
                 board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, clickChecker);
             }
@@ -46,8 +46,8 @@ namespace CheckBoardGameVersion3.Client.Pages
             {
                 return board;
             }
-            if (checkerClick.Value.Checker.Color == CheckerColor.BlackKing 
-                || checkerClick.Value.Checker.Color == CheckerColor.WhiteKing)
+            if (checkerClick.Value.Checker.Color == CheckerColor.BlackQueen 
+                || checkerClick.Value.Checker.Color == CheckerColor.WhiteQueen)
             {
                 board = _queenCheaker.MoveAndBeatQueen(Board, clickCell);
             }

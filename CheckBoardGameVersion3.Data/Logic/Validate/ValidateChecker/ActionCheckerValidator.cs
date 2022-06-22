@@ -16,38 +16,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
         public bool ValidaiteBackDask(int BoardBack)
         => BoardBack >= LIMIT_BOARD_MAX_VALUE || BoardBack < LIMIT_BOARD_MIN_VALUE;
 
-        public Dictionary<string, Cell> ValidatePossibleBeatTheChecker(Dictionary<string, Cell> board, int row, int column, KeyValuePair<string, Cell> PossibleMoveBoard, int borderBoard, Cell clickChecker = null)
-        {
-            int moveCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? -1 : 1;
-            int rowCheck = clickChecker.X + moveCheckerRow;
-            int columnLeft = clickChecker.Y - 1;
-            int columnRight = clickChecker.Y + 1;
-            int rowCheckBeat = rowCheck + (rowCheck - clickChecker.X);
-            int beatCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? 1 : -1;
-            int rowBackCheck = clickChecker.X + beatCheckerRow;
-            int rowBackCheckBeat = rowBackCheck + (rowBackCheck - clickChecker.X);
-
-            int columnLeftPossibleMove = columnLeft + (columnLeft - clickChecker.Y);
-            int columnRightPossibleMove = columnRight + (columnRight - clickChecker.Y);
-            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
-            if (PossibleMoveBoard.Value?.Checker != null
-                   && !ValidaiteBackDask(borderBoard))
-            {
-                if (PossibleMoveBoard.Value?.Checker?.Team == TeamCheckers.Team)
-                {
-                    return board;
-                }
-                var CellPossibleBeat = board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
-
-                if (CellPossibleBeat.Value?.Checker == null && CellPossibleBeat.Key != null)
-                {
-                    board[CellPossibleBeat.Key].CanAttack = true;
-                }
-
-            }
-
-            return board;
-        }
         public KeyValuePair<string, Cell> GetCell(Dictionary<string, Cell> board, int row, int column)
         {
             return board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);

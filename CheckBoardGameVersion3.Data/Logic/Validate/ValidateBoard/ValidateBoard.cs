@@ -34,7 +34,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
                     continue;
                 }
                 
-                if (cell.Value.Checker.Color == Models.Enums.CheckerColor.BlackKing || cell.Value.Checker.Color == Models.Enums.CheckerColor.WhiteKing)
+                if (cell.Value.Checker.Color == Models.Enums.CheckerColor.BlackQueen || cell.Value.Checker.Color == Models.Enums.CheckerColor.WhiteQueen)
                 {
                    board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
                     

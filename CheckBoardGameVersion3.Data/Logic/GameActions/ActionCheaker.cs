@@ -96,11 +96,11 @@ namespace ConsoleApp2.Logic.GameActions
                 return board;
             if (clickChecker.X == 7 && (clickChecker.Checker.Color == CheckerColor.Black))
             {
-                board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.BlackKing;
+                board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.BlackQueen;
             }
-            if (/*clickChecker.X == 0 &&*/ (clickChecker.Checker.Color == CheckerColor.White))
+            if (clickChecker.X == 0 && (clickChecker.Checker.Color == CheckerColor.White))
             {
-                board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteKing;
+                board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteQueen;
             }
             board[clickChecker.Checker.InCellId].ClickChecker = true;
 
@@ -131,7 +131,6 @@ namespace ConsoleApp2.Logic.GameActions
 
         private Dictionary<string, Cell> BeatLogicChecker(Dictionary<string, Cell> board, Cell clickChecker)
         {
-         
             int moveCheckerRow = clickChecker.Checker?.Color == CheckerColor.White ? -1 : 1;
             int rowCheck = clickChecker.X + moveCheckerRow;
             int columnLeft = clickChecker.Y - 1;
@@ -174,7 +173,6 @@ namespace ConsoleApp2.Logic.GameActions
                 board = _actionCheckerValidator.MoveChecker(board, RigthPossicionCell);
 
             }
-
             return board;
         }
     }

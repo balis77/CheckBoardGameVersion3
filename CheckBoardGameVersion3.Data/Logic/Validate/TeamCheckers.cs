@@ -14,10 +14,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         {
             Team = setTeam;
         }
-        public TeamCheckers()
-        {
-
-        }
+        public TeamCheckers() { }
         public static SetTeam setTeam(SetTeam team)
            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
     }

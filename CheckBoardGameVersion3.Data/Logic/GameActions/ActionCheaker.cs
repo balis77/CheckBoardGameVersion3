@@ -84,13 +84,15 @@ namespace ConsoleApp2.Logic.GameActions
 
             if (clickChecker.Checker?.Team != TeamCheckers.Team)
                 return board;
-
-            foreach (var cell in board)
-            {
-                board[cell.Key].CanMove = false;
-                board[cell.Key].ClickChecker = false;
-                board[cell.Key].CanAttack = false;
-            }
+            
+                foreach (var cell in board)
+                {
+                    board[cell.Key].CanMove = false;
+                    board[cell.Key].ClickChecker = false;
+                    board[cell.Key].CanAttack = false;
+                }
+            
+           
 
             if (clickChecker.Checker == null)
                 return board;

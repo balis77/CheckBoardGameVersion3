@@ -35,19 +35,24 @@ namespace ConsoleApp2.Logic.GameActions
             }
 
             KeyValuePair<string, Cell> keyClickCell = _validateCheckerQueen.GetCell(board, clickCell.X, clickCell.Y);
-
-           
             if (clickCell.CanAttack)
             {
                 ValidateMoveAndBeatChecker validate = new ValidateMoveAndBeatChecker(board);
                 DataQueenMoveAndBeat parametrs = new DataQueenMoveAndBeat(board, clickQueen, keyClickCell);
                 board = validate.MoveAndBeatChecker(parametrs);
+                board = AnaliseMoveAndBeatQueen(board, keyClickCell.Value);
+                var biba = board.FirstOrDefault(n => n.Value.CanAttack == true);
+                if (biba.Key == null)
+                {
+                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                }
             }
             if (clickCell.CanMove)
             {
                 board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+               
             }
+            TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
             return board;
         }
     

@@ -41,7 +41,6 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
-          
            var checkerClick = board.FirstOrDefault(n=>n.Value.ClickChecker == true);
             if (clickCell.Checker != null|| checkerClick.Key == null)
             {
@@ -57,7 +56,7 @@ namespace CheckBoardGameVersion3.Client.Pages
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
 
             }
-            board = _validateBoard.ValidateFullBoard(board);
+            //board = _validateBoard.ValidateFullBoard(board);
             return board;
         }
     }

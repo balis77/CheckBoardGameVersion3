@@ -1,4 +1,4 @@
-﻿using CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen;
+﻿using CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker;
 using CheckBoardGameVersion3.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
+namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
 {
     public class ValidateMoveAndBeatChecker
     {

@@ -98,7 +98,7 @@ namespace ConsoleApp2.Logic.GameActions
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.BlackKing;
             }
-            if (clickChecker.X == 0 && (clickChecker.Checker.Color == CheckerColor.White))
+            if (/*clickChecker.X == 0 &&*/ (clickChecker.Checker.Color == CheckerColor.White))
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteKing;
             }

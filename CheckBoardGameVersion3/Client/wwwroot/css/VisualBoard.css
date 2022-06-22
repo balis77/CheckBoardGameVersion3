@@ -19,9 +19,11 @@
 .cell.active {
     border: 2px solid blue;
 }
-.cell.beat{
-    border:2px solid red;
+
+.cell.beat {
+    border: 2px solid red;
 }
+
 .checker.Black {
     background: #000;
     color: #fff;
@@ -30,29 +32,35 @@
 .checker.White {
     background: #fff;
 }
-.checker.active{
-   border:2px solid green;
+
+.checker.active {
+    border: 2px solid green;
 }
-.checker.lock{
-    border:2px solid red;
+
+.checker.lock {
+    border: 2px solid red;
+}
+
+.checker.WhiteKing {
+    background: #FBCEB1
+}
+
+.checker.BlackKing {
+    background: #1E213D
 }
 
 .row:nth-child(2n) .cell:nth-child(2n+1) {
-    /*background: #eee;*/
     background-color: #999
 }
 
 .row:nth-child(2n) .cell:nth-child(2n) {
-    /*background: tan;*/
     background-color: #fff;
 }
 
 .row:nth-child(2n+1) .cell:nth-child(2n+1) {
-    /*background: tan;*/
     background-color: #fff;
 }
 
 .row:nth-child(2n+1) .cell:nth-child(2n) {
-    /*background: #eee;*/
     background-color: #999
 }

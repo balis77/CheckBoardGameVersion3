@@ -24,10 +24,12 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X - count >= 0 && data.clickQueen.Y + count <= 8; count++)
             {
+                bool OneMoreBeatChecker = false;
+
                 int row = data.clickQueen.X - count;
                 int column = data.clickQueen.Y + count;
-
-                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
+                
+                var nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
                 if (nextCellMove.Value?.Checker != null)
                 {
                     if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
@@ -37,12 +39,23 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                     {
                         int rowCheckBeat = nextCellMove.Value.X - counterBeat;
                         int columnCheckBeat = nextCellMove.Value.Y + counterBeat;
+                        KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
+                        if (nextBeatCell.Value?.Checker != null)
+                        {
+                            OneMoreBeatChecker = true;
+                            break;
+                        }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
+                        
                     }
                 }
                 else
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
+                }
+                if (OneMoreBeatChecker)
+                {
+                    break;
                 }
             }
 
@@ -53,25 +66,38 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X + count <= 8 && data.clickQueen.Y - count >= 0; count++)
             {
+                bool OneMoreBeatChecker = false;
+
                 int row = data.clickQueen.X + count;
                 int column = data.clickQueen.Y - count;
-
-                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
+                
+                var nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
+               
                 if (nextCellMove.Value?.Checker != null)
                 {
                     if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
                         break;
-
                     for (int counterBeat = 1; nextCellMove.Value.X + counterBeat <= 8 && nextCellMove.Value.Y - counterBeat >= 0; counterBeat++)
                     {
                         int rowCheckBeat = nextCellMove.Value.X + counterBeat;
                         int columnCheckBeat = nextCellMove.Value.Y - counterBeat;
+                        KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
+                        if (nextBeatCell.Value?.Checker != null)
+                        {
+                            OneMoreBeatChecker = true;
+                            break;
+                        }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
+                        
                     }
                 }
                 else
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
+                }
+                if (OneMoreBeatChecker)
+                {
+                    break;
                 }
             }
 
@@ -82,10 +108,11 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X - count >= 0 && data.clickQueen.Y - count >= 0; count++)
             {
+                bool OneMoreBeatChecker = false;
                 int row = data.clickQueen.X - count;
                 int column = data.clickQueen.Y - count;
-
-                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
+                
+                var nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
                 var checkerClick = data.board.FirstOrDefault(n => n.Value.ClickChecker == true);
                 if (nextCellMove.Value?.Checker != null)
                 {
@@ -96,12 +123,23 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                     {
                         int rowCheckBeat = nextCellMove.Value.X - counterBeat;
                         int columnCheckBeat = nextCellMove.Value.Y - counterBeat;
+                        KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
+                        if (nextBeatCell.Value?.Checker != null)
+                        {
+                            OneMoreBeatChecker = true;
+                            break;
+                        }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
+                        
                     }
                 }
                 else
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
+                }
+                if (OneMoreBeatChecker)
+                {
+                    break;
                 }
             }
 
@@ -112,11 +150,12 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X + count <= 8 && data.clickQueen.Y + count <= 8; count++)
             {
+                bool OneMoreBeatChecker = false;
 
                 int row = data.clickQueen.X + count;
                 int column = data.clickQueen.Y + count;
 
-                KeyValuePair<string, Cell> nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
+                var nextCellMove = _validateCheckerQueen.GetCell(data.board, row, column);
                 var checkerClick = data.board.FirstOrDefault(n => n.Value.ClickChecker == true);
                 if (nextCellMove.Value?.Checker != null)
                 {
@@ -127,12 +166,23 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                     {
                         int rowCheckBeat = nextCellMove.Value.X + counterBeat;
                         int columnCheckBeat = nextCellMove.Value.Y + counterBeat;
+                        KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
+                        if (nextBeatCell.Value?.Checker != null)
+                        {
+                            OneMoreBeatChecker = true;
+                            break;
+                        }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
+                        
                     }
                 }
                 else
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
+                }
+                if (OneMoreBeatChecker)
+                {
+                    break;
                 }
 
             }

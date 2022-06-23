@@ -5,12 +5,7 @@ using ConsoleApp2.Logic.GameActions;
 
 namespace CheckBoardGameVersion3.Data.Logic.Bot
 {
-    /// <summary>
-    /// берем всі чорні шашки
-    /// проганяєм через форік з використанням обичної проверки ходьби
-    /// потім ми берем лібо рандом походити,лібо обов'язково побити
-    /// все це рандомиться к чортовій матері і тоді шашка на чілі собі ходить
-    /// </summary>
+    
     public class BotBlackChecker
     {
         private Dictionary<string, Cell> _board;

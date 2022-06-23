@@ -18,14 +18,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
         }
-        //прімерна логіка хука,ми провіряєм всіма кліками,чи є на дошці десь canAttack якщо вона є треба залочити шашку
-        //булова лок якщо є на боарді лок тру ,і це не нажата шашка ,то нас вертає к чорту і не запускають проверки і бити теж залочено ,тільки тими хто може ходити 
-        //окей начить тре лібо форіч лібо обичних два форіка для пробівки
-        //якщо є шашка і яка,тіпа обична і дамка,якщо видає десь
-        //
-        //
-        //.
-        // .
+        
         public Dictionary<string, Cell> ValidateFullBoard(Dictionary<string, Cell> board)
         {
            

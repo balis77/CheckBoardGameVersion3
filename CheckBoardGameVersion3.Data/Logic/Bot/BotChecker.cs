@@ -21,15 +21,16 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
         }
         public Dictionary<string, Cell> LogicBotMove(Dictionary<string, Cell> board)
         {
-            Dictionary<string, Cell> CheckersMove = new Dictionary<string, Cell>();
-            Dictionary<string, Cell> CheckersBeat = new Dictionary<string, Cell>();
-            ChargingAllBotCheckers(board, CheckersMove, CheckersBeat);
-            LogicMoveAndBeatBot(board, CheckersMove, CheckersBeat);
+            Dictionary<string, Cell> checkersMove = new Dictionary<string, Cell>();
+            Dictionary<string, Cell> checkersBeat = new Dictionary<string, Cell>();
+
+            ChargingAllBotCheckers(board, checkersMove, checkersBeat);
+            LogicMoveAndBeatBot(board, checkersMove, checkersBeat);
 
             return _board;
         }
         #region PrivateMethod
-        private void ChargingAllBotCheckers(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersMove, Dictionary<string, Cell> CheckersBeat)
+        private void ChargingAllBotCheckers(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersMove, Dictionary<string, Cell> checkersBeat)
         {
             foreach (var cell in board)
             {
@@ -57,29 +58,33 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                     var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker);
                     if (moveChecker.Key != null)
                     {
-                        CheckersMove.Add(clickChecker.Key, clickChecker.Value);
+                        checkersMove.Add(clickChecker.Key, clickChecker.Value);
                     }
                     if (beatChecker.Key != null)
                     {
-                        CheckersBeat.Add(clickChecker.Key, clickChecker.Value);
+                        checkersBeat.Add(clickChecker.Key, clickChecker.Value);
                     }
                 }
             }
             _board = board;
         }
 
-        private void LogicMoveAndBeatBot(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersMove, Dictionary<string, Cell> CheckersBeat)
+        private void LogicMoveAndBeatBot(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersMove, Dictionary<string, Cell> checkersBeat)
         {
-            if (CheckersBeat.Any())
+            if (checkersBeat.Any())
             {
-                PickAnaliseChecker(board, CheckersBeat);
+                PickAnaliseChecker(board, checkersBeat);
+
                 var beatCellMove = board.Where(n => n.Value.CanAttack).ToList();
+
                 PickRandomMoveAndBeat(board, beatCellMove);
             }
-            if (CheckersBeat.Any() == false && CheckersMove.Any())
+            if (checkersBeat.Any() == false && checkersMove.Any())
             {
-                PickAnaliseChecker(board, CheckersMove);
+                PickAnaliseChecker(board, checkersMove);
+
                 var moveCell = board.Where(n => n.Value.CanMove).ToList();
+
                 PickRandomMoveAndBeat(board, moveCell);
             }
             _board = board;
@@ -97,9 +102,9 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
         }
 
 
-        private void PickAnaliseChecker(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersBeat)
+        private void PickAnaliseChecker(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersBeat)
         {
-            var checkerClick = choiseRandomChecker(board, CheckersBeat);
+            var checkerClick = choiseRandomChecker(checkersBeat);
 
             if (checkerClick.Checker?.Color == CheckerColor.BlackQueen || checkerClick.Checker?.Color == CheckerColor.WhiteQueen)
             {
@@ -134,14 +139,16 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
 
         }
 
-        private Cell choiseRandomChecker(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersMoveAndBeat)
+        private Cell choiseRandomChecker(Dictionary<string, Cell> checkersMoveAndBeat)
         {
             Random random = new Random();
             List<string> keyCordinateCheckers = new List<string>();
+
             foreach (var checker in checkersMoveAndBeat)
             {
                 keyCordinateCheckers.Add(checker.Key);
             }
+
             int randomCordinate = random.Next(0, keyCordinateCheckers.Count);
             string keyMoveCheckers = keyCordinateCheckers[randomCordinate];
             var checkerClick = checkersMoveAndBeat[keyMoveCheckers];

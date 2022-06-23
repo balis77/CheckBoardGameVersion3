@@ -24,7 +24,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X - count >= 0 && data.clickQueen.Y + count <= 8; count++)
             {
-                bool OneMoreBeatChecker = false;
+                bool oneMoreBeatChecker = false;
 
                 int row = data.clickQueen.X - count;
                 int column = data.clickQueen.Y + count;
@@ -42,7 +42,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                         KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
                         if (nextBeatCell.Value?.Checker != null)
                         {
-                            OneMoreBeatChecker = true;
+                            oneMoreBeatChecker = true;
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
@@ -52,7 +52,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
                 }
-                if (OneMoreBeatChecker)
+                if (oneMoreBeatChecker)
                 {
                     break;
                 }
@@ -65,7 +65,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X + count <= 8 && data.clickQueen.Y - count >= 0; count++)
             {
-                bool OneMoreBeatChecker = false;
+                bool oneMoreBeatChecker = false;
 
                 int row = data.clickQueen.X + count;
                 int column = data.clickQueen.Y - count;
@@ -83,7 +83,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                         KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
                         if (nextBeatCell.Value?.Checker != null)
                         {
-                            OneMoreBeatChecker = true;
+                            oneMoreBeatChecker = true;
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
@@ -93,7 +93,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
                 }
-                if (OneMoreBeatChecker)
+                if (oneMoreBeatChecker)
                 {
                     break;
                 }
@@ -106,7 +106,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.clickQueen.X - count >= 0 && data.clickQueen.Y - count >= 0; count++)
             {
-                bool OneMoreBeatChecker = false;
+                bool oneMoreBeatChecker = false;
                 int row = data.clickQueen.X - count;
                 int column = data.clickQueen.Y - count;
                 
@@ -124,7 +124,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                         KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.board, rowCheckBeat, columnCheckBeat);
                         if (nextBeatCell.Value?.Checker != null)
                         {
-                            OneMoreBeatChecker = true;
+                            oneMoreBeatChecker = true;
                             break;
                         }
                         data.board = _validateCheckerQueen.PossbileBeatChecker(data.board, rowCheckBeat, columnCheckBeat);
@@ -134,7 +134,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 {
                     data.board = _validateCheckerQueen.MoveQueenPossible(data.board, nextCellMove, data.clickQueen);
                 }
-                if (OneMoreBeatChecker)
+                if (oneMoreBeatChecker)
                 {
                     break;
                 }

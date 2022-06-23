@@ -41,18 +41,30 @@ namespace ConsoleApp2.Logic.GameActions
                 DataQueenMoveAndBeat parametrs = new DataQueenMoveAndBeat(board, clickQueen, keyClickCell);
                 board = validate.MoveAndBeatChecker(parametrs);
                 board = AnaliseMoveAndBeatQueen(board, keyClickCell.Value);
-                var biba = board.FirstOrDefault(n => n.Value.CanAttack == true);
-                if (biba.Key == null)
-                {
-                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                }
+                //var biba = board.FirstOrDefault(n => n.Value.CanAttack == true);
+                //if (biba.Key == null)
+                //{
+                //    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                //}
+                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+
             }
             if (clickCell.CanMove)
             {
                 board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
-               
+                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+
             }
-            TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+            foreach (var cell in board)
+            {
+                board[cell.Key].CanMove = false;
+
+                if (cell.Value.CanAttack == true)
+                {
+                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                    board[keyClickCell.Key].ClickChecker = true;
+                }
+            }
             return board;
         }
     
@@ -80,6 +92,7 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].CanMove = false;
                 }
             }
+
             return board;
         }
     }

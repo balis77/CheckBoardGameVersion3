@@ -1,4 +1,5 @@
 ﻿using CheckBoardGameVersion3.Data.Models;
+using CheckBoardGameVersion3.Data.Models.Enums;
 using ConsoleApp2.Logic.GameActions;
 using System;
 using System.Collections.Generic;
@@ -27,32 +28,44 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
         // .
         public Dictionary<string, Cell> ValidateFullBoard(Dictionary<string, Cell> board)
         {
+           
+
+            foreach (var boardEntry in board)
+            {
+                board[boardEntry.Key].LockChecker = false;
+            }
             foreach (var cell in board)
             {
-                if (cell.Value.Checker == null)
-                {
+                if (cell.Value.Checker?.Team != TeamCheckers.Team)
                     continue;
-                }
-                
-                if (cell.Value.Checker.Color == Models.Enums.CheckerColor.BlackQueen || cell.Value.Checker.Color == Models.Enums.CheckerColor.WhiteQueen)
+                if (cell.Value.Checker == null)
+                    continue;
+                if (cell.Value.Checker.Team == SetTeam.White)
                 {
-                   board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
-                    
-                }
-                else
-                {
-                  board =  _actionCheaker.AnaliseCanMoveAndBeat(board,cell.Value);
-                }
-                
-                foreach (var cells in board)
-                {
-                    if (cells.Value.CanAttack == true)
+                    if (cell.Value.Checker?.Color == CheckerColor.WhiteQueen)
                     {
-                        var biba =  board.FirstOrDefault(n=>n.Value.ClickChecker == true).Key;
-                        board[biba].LockChecker = true;
+                        board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
+                    }
+                    if (cell.Value.Checker?.Color == CheckerColor.White)
+                    {
+                        board = _actionCheaker.AnaliseCanMoveAndBeat(board, cell.Value);
+                    }
+
+                    
+                    var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack == true);
+                    var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+                    
+                    if (beatChecker.Key != null)
+                    {
+                       
+                        board[clickChecker.Key].LockChecker = true;
+                        board[clickChecker.Key].ClickChecker = true;
+
                     }
                 }
+                
             }
+           
             return board;
         }
     }

@@ -19,7 +19,6 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         protected override void OnInitialized()
         {
-
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new RepositoryBoard();
@@ -29,37 +28,62 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
-           
-           
+            board = _validateBoard.ValidateFullBoard(board);
+            
             if (clickChecker.Checker?.Color == CheckerColor.BlackQueen
                 || clickChecker.Checker?.Color == CheckerColor.WhiteQueen)
             {
+                foreach (var cell in board)
+                {
+                    if (cell.Value.LockChecker && clickChecker.ClickChecker == false)
+                    {
+                        board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, cell.Value);
+                        
+                    }
+                }
+                
+                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker == true);
+                if (lockchecker.Key != null)
+                {
+                    return board;
+                }
                 board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, clickChecker);
             }
             else
             {
+                foreach (var cell in board)
+                {
+                    if (cell.Value.LockChecker && clickChecker.ClickChecker == false)
+                    {
+                        board = _actionCheaker.AnaliseCanMoveAndBeat(Board, cell.Value);
+                        
+                    }
+                }
+                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker == true);
+                if (lockchecker.Key != null)
+                {
+                    return board;
+                }
                 board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
-            if (clickChecker.Checker?.Team == SetTeam.Black && clickChecker.Checker?.Team == TeamCheckers.Team)
-            {
-                _botBlackChecker = new BotBlackChecker(board);
-                _botBlackChecker.LogicBotMove(board);
-            }
-
+           
+           
+           
             return board;
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
-            
-          
+           
+
             var checkerClick = board.FirstOrDefault(n=>n.Value.ClickChecker == true);
+           
             if (clickCell.Checker != null|| checkerClick.Key == null)
             {
                 return board;
             }
             
-            if (checkerClick.Value.Checker.Color == CheckerColor.BlackQueen 
-                || checkerClick.Value.Checker.Color == CheckerColor.WhiteQueen)
+            if (checkerClick.Value?.Checker?.Color == CheckerColor.BlackQueen 
+                || checkerClick.Value?.Checker?.Color == CheckerColor.WhiteQueen)
             {
                 board = _queenCheaker.MoveAndBeatQueen(Board, clickCell);
             }
@@ -68,6 +92,9 @@ namespace CheckBoardGameVersion3.Client.Pages
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
 
             }
+            
+                _botBlackChecker = new BotBlackChecker(board);
+                board = _botBlackChecker.LogicBotMove(board);
             
             return board;
         }

@@ -1,4 +1,6 @@
-﻿using CheckBoardGameVersion3.Data.Logic.Validate;
+﻿using CheckBoardGameVersion3.Data.Logic.Bot;
+using CheckBoardGameVersion3.Data.Logic.Validate;
+using CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard;
 using CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker;
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.Models.Enums;
@@ -11,9 +13,11 @@ namespace ConsoleApp2.Logic.GameActions
     public class ActionCheaker : IActionCheaker
     {
         private ActionCheckerValidator _actionCheckerValidator;
+        //private ValidateBoard _validateBoard;
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
+            //_validateBoard = new ValidateBoard();
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
@@ -26,7 +30,6 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].CanAttack = false;
                 }
                 return board;
-                
             }
             string clickChecker = string.Empty;
 
@@ -81,7 +84,8 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickChecker)
         {
-
+           
+            
             if (clickChecker.Checker?.Team != TeamCheckers.Team)
                 return board;
             
@@ -91,6 +95,7 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].ClickChecker = false;
                     board[cell.Key].CanAttack = false;
                 }
+
             
            
 
@@ -105,7 +110,7 @@ namespace ConsoleApp2.Logic.GameActions
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteQueen;
             }
             board[clickChecker.Checker.InCellId].ClickChecker = true;
-
+            
             int moveCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? -1 : 1;
 
             int rowCheck = clickChecker.X + moveCheckerRow;

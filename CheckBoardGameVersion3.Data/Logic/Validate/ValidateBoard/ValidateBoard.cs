@@ -18,7 +18,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
         }
-        
+         
         public Dictionary<string, Cell> ValidateFullBoard(Dictionary<string, Cell> board)
         {
            

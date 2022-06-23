@@ -15,7 +15,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
-        private BotBlackChecker _botBlackChecker;
+        private BotChecker _botBlackChecker;
 
         protected override void OnInitialized()
         {
@@ -23,11 +23,12 @@ namespace CheckBoardGameVersion3.Client.Pages
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new RepositoryBoard();
             _validateBoard = new ValidateBoard();
-            
+            TeamCheckers.SetPlayerGame(SetTeam.Black);
             Board = _repositoryBoard.CreateDesk();
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
+            
             board = _validateBoard.ValidateFullBoard(board);
             
             if (clickChecker.Checker?.Color == CheckerColor.BlackQueen
@@ -73,8 +74,6 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
-           
-
             var checkerClick = board.FirstOrDefault(n=>n.Value.ClickChecker == true);
            
             if (clickCell.Checker != null|| checkerClick.Key == null)
@@ -93,7 +92,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             }
             
-                _botBlackChecker = new BotBlackChecker(board);
+                _botBlackChecker = new BotChecker(board);
                 board = _botBlackChecker.LogicBotMove(board);
             
             return board;

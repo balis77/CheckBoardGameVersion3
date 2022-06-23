@@ -6,13 +6,13 @@ using ConsoleApp2.Logic.GameActions;
 namespace CheckBoardGameVersion3.Data.Logic.Bot
 {
     
-    public class BotBlackChecker
+    public class BotChecker
     {
         private Dictionary<string, Cell> _board;
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
 
-        public BotBlackChecker(Dictionary<string, Cell> board)
+        public BotChecker(Dictionary<string, Cell> board)
         {
             _board = board;
 
@@ -23,28 +23,38 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
         {
             Dictionary<string, Cell> CheckersMove = new Dictionary<string, Cell>();
             Dictionary<string, Cell> CheckersBeat = new Dictionary<string, Cell>();
+            ChargingAllBotCheckers(board, CheckersMove, CheckersBeat);
+            LogicMoveAndBeatBot(board, CheckersMove, CheckersBeat);
 
+            return _board;
+        }
+        #region PrivateMethod
+        private void ChargingAllBotCheckers(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersMove, Dictionary<string, Cell> CheckersBeat)
+        {
             foreach (var cell in board)
             {
-                
+
                 if (cell.Value.Checker == null)
                     continue;
-                if (cell.Value.Checker.Team == SetTeam.Black)
+
+                if (cell.Value.Checker.Team == TeamCheckers.Bot)
                 {
                     if (cell.Value.Checker?.Team != TeamCheckers.Team)
                         break;
-                    if (cell.Value.Checker?.Color == CheckerColor.BlackQueen)
+
+                    if (cell.Value.Checker?.Color == CheckerColor.BlackQueen|| cell.Value.Checker?.Color == CheckerColor.WhiteQueen)
                     {
                         board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
                     }
-                    if (cell.Value.Checker?.Color == CheckerColor.Black)
+
+                    if (cell.Value.Checker?.Color == CheckerColor.Black|| cell.Value.Checker?.Color == CheckerColor.White)
                     {
                         board = _actionCheaker.AnaliseCanMoveAndBeat(board, cell.Value);
                     }
 
-                    var moveChecker = board.FirstOrDefault(n => n.Value.CanMove == true);
-                    var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack == true);
-                    var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+                    var moveChecker = board.FirstOrDefault(n => n.Value.CanMove);
+                    var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack);
+                    var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker);
                     if (moveChecker.Key != null)
                     {
                         CheckersMove.Add(clickChecker.Key, clickChecker.Value);
@@ -55,50 +65,58 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                     }
                 }
             }
+            _board = board;
+        }
+
+        private void LogicMoveAndBeatBot(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersMove, Dictionary<string, Cell> CheckersBeat)
+        {
             if (CheckersBeat.Any())
             {
-
-                var checkerClick = RandomCheckerClick(board, CheckersBeat);
-                if (checkerClick.Checker?.Color == CheckerColor.BlackQueen)
-                {
-                    board = _queenCheaker.AnaliseMoveAndBeatQueen(board, checkerClick);
-                }
-                if (checkerClick.Checker?.Color == CheckerColor.Black)
-                {
-                    board = _actionCheaker.AnaliseCanMoveAndBeat(board, checkerClick);
-                }
-                var beatCellMove = board.Where(n => n.Value.CanAttack == true).ToList();
-                Random random = new Random();
-                int randomCordinate = random.Next(0, beatCellMove.Count());
-                var randomMove = beatCellMove.ElementAt(randomCordinate);
-                board = MoveAndBeatChecker(board, randomMove);
-
-
+                PickAnaliseChecker(board, CheckersBeat);
+                var beatCellMove = board.Where(n => n.Value.CanAttack).ToList();
+                PickRandomMoveAndBeat(board, beatCellMove);
             }
             if (CheckersBeat.Any() == false && CheckersMove.Any())
             {
-                var checkerClick = RandomCheckerClick(board, CheckersMove);
-                if (checkerClick.Checker?.Color == CheckerColor.BlackQueen)
-                {
-                    board = _queenCheaker.AnaliseMoveAndBeatQueen(board, checkerClick);
-                }
-                if (checkerClick.Checker?.Color == CheckerColor.Black)
-                {
-                    board = _actionCheaker.AnaliseCanMoveAndBeat(board, checkerClick);
-                }
-                var moveCell = board.Where(n => n.Value.CanMove == true).ToList();
-                Random random = new Random();
-                int randomCordinate = random.Next(0, moveCell.Count());
-                var randomMove = moveCell.ElementAt(randomCordinate);
-                board = MoveAndBeatChecker(board, randomMove);
+                PickAnaliseChecker(board, CheckersMove);
+                var moveCell = board.Where(n => n.Value.CanMove).ToList();
+                PickRandomMoveAndBeat(board, moveCell);
             }
-
-            return _board = board;
+            _board = board;
         }
 
-        private Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, KeyValuePair<string, Cell> moveCell)
+        private void PickRandomMoveAndBeat(Dictionary<string, Cell> board, List<KeyValuePair<string, Cell>> moveCell)
         {
-            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+            Random random = new Random();
+            int randomCordinate = random.Next(0, moveCell.Count());
+            var randomMove = moveCell.ElementAt(randomCordinate);
+
+            MoveAndBeatChecker(board, randomMove);
+
+            _board = board;
+        }
+
+
+        private void PickAnaliseChecker(Dictionary<string, Cell> board, Dictionary<string, Cell> CheckersBeat)
+        {
+            var checkerClick = choiseRandomChecker(board, CheckersBeat);
+
+            if (checkerClick.Checker?.Color == CheckerColor.BlackQueen || checkerClick.Checker?.Color == CheckerColor.WhiteQueen)
+            {
+                board = _queenCheaker.AnaliseMoveAndBeatQueen(board, checkerClick);
+            }
+
+            if (checkerClick.Checker?.Color == CheckerColor.Black || checkerClick.Checker?.Color == CheckerColor.White)
+            {
+                board = _actionCheaker.AnaliseCanMoveAndBeat(board, checkerClick);
+            }
+
+            _board = board;
+        }
+
+        private void MoveAndBeatChecker(Dictionary<string, Cell> board, KeyValuePair<string, Cell> moveCell)
+        {
+            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker);
             if (moveCell.Value.Checker == null || checkerClick.Key != null)
             {
 
@@ -106,19 +124,17 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                    || checkerClick.Value.Checker.Color == CheckerColor.WhiteQueen)
                 {
                     board = _queenCheaker.MoveAndBeatQueen(board, moveCell.Value);
-
                 }
                 else
                 {
                     board = _actionCheaker.MoveAndBeatCheckers(board, moveCell.Value);
-
                 }
             }
-            return board;
+            _board = board;
 
         }
 
-        private Cell RandomCheckerClick(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersMoveAndBeat)
+        private Cell choiseRandomChecker(Dictionary<string, Cell> board, Dictionary<string, Cell> checkersMoveAndBeat)
         {
             Random random = new Random();
             List<string> keyCordinateCheckers = new List<string>();
@@ -130,11 +146,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
             string keyMoveCheckers = keyCordinateCheckers[randomCordinate];
             var checkerClick = checkersMoveAndBeat[keyMoveCheckers];
 
-
             return checkerClick;
-
         }
-
-
+        #endregion
     }
 }

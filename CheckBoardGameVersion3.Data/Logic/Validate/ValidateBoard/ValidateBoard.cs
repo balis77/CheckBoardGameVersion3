@@ -21,11 +21,9 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
          
         public Dictionary<string, Cell> ValidateFullBoard(Dictionary<string, Cell> board)
         {
-           
-
-            foreach (var boardEntry in board)
+            foreach (var cell in board)
             {
-                board[boardEntry.Key].LockChecker = false;
+                board[cell.Key].LockChecker = false;
             }
             foreach (var cell in board)
             {
@@ -39,21 +37,19 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
                     {
                         board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
                     }
+
                     if (cell.Value.Checker?.Color == CheckerColor.White)
                     {
                         board = _actionCheaker.AnaliseCanMoveAndBeat(board, cell.Value);
                     }
 
-                    
                     var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack == true);
                     var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker == true);
                     
                     if (beatChecker.Key != null)
                     {
-                       
                         board[clickChecker.Key].LockChecker = true;
                         board[clickChecker.Key].ClickChecker = true;
-
                     }
                 }
                 

@@ -56,10 +56,12 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                     var moveChecker = board.FirstOrDefault(n => n.Value.CanMove);
                     var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack);
                     var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker);
+
                     if (moveChecker.Key != null)
                     {
                         checkersMove.Add(clickChecker.Key, clickChecker.Value);
                     }
+
                     if (beatChecker.Key != null)
                     {
                         checkersBeat.Add(clickChecker.Key, clickChecker.Value);
@@ -79,6 +81,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
 
                 PickRandomMoveAndBeat(board, beatCellMove);
             }
+
             if (checkersBeat.Any() == false && checkersMove.Any())
             {
                 PickAnaliseChecker(board, checkersMove);
@@ -87,6 +90,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
 
                 PickRandomMoveAndBeat(board, moveCell);
             }
+
             _board = board;
         }
 
@@ -122,6 +126,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
         private void MoveAndBeatChecker(Dictionary<string, Cell> board, KeyValuePair<string, Cell> moveCell)
         {
             var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker);
+
             if (moveCell.Value.Checker == null || checkerClick.Key != null)
             {
 

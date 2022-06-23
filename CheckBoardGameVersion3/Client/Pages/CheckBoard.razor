@@ -6,14 +6,14 @@
     <div class="chessboard">
         @for (var i = 0; i < 8; i++)
         {
-             int local_I = i;
-            var nameMarkup = markup.MarkupName[local_I];
+            int local_I = i;
+            var nameMarkup = Markup.MarkupName[local_I];
            
             <div class="row">
                 @for (var j = 0; j < 8; j++)
                 {
-                      int local_J = j;
-                    var numberMakup = markup.MarkupNumber[local_J];
+                    int local_J = j;
+                    var numberMakup = Markup.MarkupNumber[local_J];
                     string idCell = nameMarkup + numberMakup;
                     var cell = _repositoryBoard.GetCell(idCell);
                     bool CanMove = Board[idCell].CanMove;
@@ -22,10 +22,12 @@
                     bool lockChecker = Board[idCell].LockChecker;
 
                     <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
+
                         @if (cell.Checker != null)
                         {
                              <div @onclick = "()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
                         }
+
                     </div>
                 }
             </div>

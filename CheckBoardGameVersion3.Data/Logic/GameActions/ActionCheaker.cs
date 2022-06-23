@@ -13,11 +13,11 @@ namespace ConsoleApp2.Logic.GameActions
     public class ActionCheaker : IActionCheaker
     {
         private ActionCheckerValidator _actionCheckerValidator;
-        //private ValidateBoard _validateBoard;
+       
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
-            //_validateBoard = new ValidateBoard();
+           
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
@@ -31,6 +31,7 @@ namespace ConsoleApp2.Logic.GameActions
                 }
                 return board;
             }
+
             string clickChecker = string.Empty;
 
             foreach (var cell in board)
@@ -41,7 +42,9 @@ namespace ConsoleApp2.Logic.GameActions
                 }
 
             }
+
             Cell moveChecker = new Cell();
+
             if (clickChecker != "")
             {
                 moveChecker = board[clickChecker];
@@ -52,17 +55,22 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
+
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
 
             }
+
             if (clickCell.CanAttack)
             {
                 int jumpedRow = (moveChecker.X + clickCell.X) / 2;
                 int jumpedColumn = (moveChecker.Y + clickCell.Y) / 2;
+
                 var keyCheckerBeat = _actionCheckerValidator.GetCell(board, jumpedRow, jumpedColumn);
 
                 board[keyCheckerBeat.Key].Checker = null;
+
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
+
                 board = AnaliseCanMoveAndBeat(board, board[keyclickCell.Key]);
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
             }
@@ -84,8 +92,6 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickChecker)
         {
-           
-            
             if (clickChecker.Checker?.Team != TeamCheckers.Team)
                 return board;
             
@@ -96,28 +102,26 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].CanAttack = false;
                 }
 
-            
-           
-
             if (clickChecker.Checker == null)
                 return board;
+
             if (clickChecker.X == 7 && (clickChecker.Checker.Color == CheckerColor.Black))
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.BlackQueen;
             }
+
             if (clickChecker.X == 0 && (clickChecker.Checker.Color == CheckerColor.White))
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteQueen;
             }
+
             board[clickChecker.Checker.InCellId].ClickChecker = true;
             
             int moveCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? -1 : 1;
-
             int rowCheck = clickChecker.X + moveCheckerRow;
-            int columnLeft = clickChecker.Y - 1;
-            int columnRight = clickChecker.Y + 1;
-
+           
             bool BorderBoardRow = _actionCheckerValidator.ValidaiteBackDask(rowCheck);
+
             if (BorderBoardRow)
                 return board;
 
@@ -133,6 +137,7 @@ namespace ConsoleApp2.Logic.GameActions
                     board[cell.Key].CanMove = false;
                 }
             }
+
             return board;
         }
 
@@ -148,6 +153,7 @@ namespace ConsoleApp2.Logic.GameActions
             List<int> rowsPossible = new List<int>();
             rowsPossible.Add(rowCheck);
             rowsPossible.Add(rowBackCheck);
+
             foreach (var row in rowsPossible)
             {
                 
@@ -166,18 +172,18 @@ namespace ConsoleApp2.Logic.GameActions
             int columnLeft = clickChecker.Y - 1;
             int columnRight = clickChecker.Y + 1;
 
-            KeyValuePair<string, Cell> LeftPossisionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnLeft);
-            KeyValuePair<string, Cell> RigthPossicionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnRight);
+            KeyValuePair<string, Cell> leftPossisionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnLeft);
+            KeyValuePair<string, Cell> rigthPossicionCell = _actionCheckerValidator.GetCell(board, rowCheck, columnRight);
 
-            bool BorderBoardColumnLeft = _actionCheckerValidator.ValidaiteBackDask(columnLeft);
-            bool BorderBoardColumnRight = _actionCheckerValidator.ValidaiteBackDask(columnRight);
-            if (!BorderBoardColumnLeft)
+            bool borderBoardColumnLeft = _actionCheckerValidator.ValidaiteBackDask(columnLeft);
+            bool borderBoardColumnRight = _actionCheckerValidator.ValidaiteBackDask(columnRight);
+            if (!borderBoardColumnLeft)
             {
-                board = _actionCheckerValidator.MoveChecker(board, LeftPossisionCell);
+                board = _actionCheckerValidator.MoveChecker(board, leftPossisionCell);
             }
-            if (!BorderBoardColumnRight)
+            if (!borderBoardColumnRight)
             {
-                board = _actionCheckerValidator.MoveChecker(board, RigthPossicionCell);
+                board = _actionCheckerValidator.MoveChecker(board, rigthPossicionCell);
 
             }
             return board;

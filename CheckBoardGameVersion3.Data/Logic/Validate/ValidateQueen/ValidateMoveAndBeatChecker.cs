@@ -25,6 +25,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
             CheckTopLeft(parametr);
             CheckBottomRight(parametr);
             CheckBottomLeft(parametr);
+
             return _board;
         }
         private void CheckTopRight(DataQueenMoveAndBeat parametr)

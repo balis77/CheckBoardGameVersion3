@@ -1,13 +1,23 @@
+using CheckBoardGameVersion3.common.Helpers;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.FileProviders;
+
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration; // allows both to access and to set up the config
+IWebHostEnvironment environment = builder.Environment;
+
+
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+
 var app = builder.Build();
+
+NoltFolderManager.InitializeFolderManager(environment.ContentRootPath);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,6 +35,12 @@ app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/Files",
+    FileProvider = new PhysicalFileProvider(Path.Combine(environment.ContentRootPath, "Files"))
+});
 
 app.UseRouting();
 

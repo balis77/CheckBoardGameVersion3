@@ -177,10 +177,12 @@ namespace ConsoleApp2.Logic.GameActions
 
             bool borderBoardColumnLeft = _actionCheckerValidator.ValidaiteBackDask(columnLeft);
             bool borderBoardColumnRight = _actionCheckerValidator.ValidaiteBackDask(columnRight);
+
             if (!borderBoardColumnLeft)
             {
                 board = _actionCheckerValidator.MoveChecker(board, leftPossisionCell);
             }
+
             if (!borderBoardColumnRight)
             {
                 board = _actionCheckerValidator.MoveChecker(board, rigthPossicionCell);

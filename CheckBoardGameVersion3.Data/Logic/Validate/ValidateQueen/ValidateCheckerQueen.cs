@@ -12,8 +12,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         public const int LIMIT_BOARD_MAX_VALUE = 8;
         public const int LIMIT_BOARD_MIN_VALUE = 0;
 
-        public bool ValidaiteBackDask(int BoardBack)
-        => BoardBack >= LIMIT_BOARD_MAX_VALUE || BoardBack < LIMIT_BOARD_MIN_VALUE;
+        public bool ValidaiteBackDask(int boardBack)
+        => boardBack >= LIMIT_BOARD_MAX_VALUE || boardBack < LIMIT_BOARD_MIN_VALUE;
         public KeyValuePair<string, Cell> GetCell(Dictionary<string, Cell> board, int row, int column) 
             => board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
         public Dictionary<string, Cell> MoveQueenPossible(Dictionary<string, Cell> board, KeyValuePair<string, Cell> nextCellMove, Cell clickQueen)

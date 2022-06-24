@@ -90,6 +90,7 @@ namespace ConsoleApp2.Logic.GameActions
             board = validate.CanPossibleMoveAndAttack(data);
 
             var canAttack = board.FirstOrDefault(n => n.Value.CanAttack == true);
+
             if (canAttack.Value != null)
             {
                 foreach (var cell in board)

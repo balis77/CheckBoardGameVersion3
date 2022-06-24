@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CheckBoardGameVersion3.common\CheckBoardGameVersion3.common.csproj" />
     <ProjectReference Include="..\Client\CheckBoardGameVersion3.Client.csproj" />
     <ProjectReference Include="..\Shared\CheckBoardGameVersion3.Shared.csproj" />
   </ItemGroup>

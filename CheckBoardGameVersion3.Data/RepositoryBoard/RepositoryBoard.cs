@@ -45,7 +45,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
         #region PrivateMethod
         private void CreateCheckers()
         {
-            BlackChecker();
+            //BlackChecker();
             WhiteChecker();
         }
 

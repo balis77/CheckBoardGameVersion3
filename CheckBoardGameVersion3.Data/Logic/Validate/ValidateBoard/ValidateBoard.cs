@@ -27,10 +27,13 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
             }
             foreach (var cell in board)
             {
+
                 if (cell.Value.Checker?.Team != TeamCheckers.Team)
                     continue;
+
                 if (cell.Value.Checker == null)
                     continue;
+
                 if (cell.Value.Checker.Team == SetTeam.White)
                 {
                     if (cell.Value.Checker?.Color == CheckerColor.WhiteQueen)

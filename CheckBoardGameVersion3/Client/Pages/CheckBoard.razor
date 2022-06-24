@@ -1,6 +1,8 @@
-﻿@using CheckBoardGameVersion3.Data.RepositoryBoard;
+﻿@using CheckBoardGameVersion3.Data.Logic.Validate
+@using CheckBoardGameVersion3.Data.RepositoryBoard;
 <h3>CheckBoard</h3>
 
+<div style="text-align:center">Бот @_boardInformation.CountBlack : @_boardInformation.CountWhite  Игрок</div>
 <div class="box" style="display:flex; justify-content:space-around">
 
     <div class="chessboard">
@@ -8,7 +10,7 @@
         {
             int local_I = i;
             var nameMarkup = Markup.MarkupName[local_I];
-           
+
             <div class="row">
                 @for (var j = 0; j < 8; j++)
                 {
@@ -25,7 +27,7 @@
 
                         @if (cell.Checker != null)
                         {
-                             <div @onclick = "()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
+                            <div @onclick="()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
                         }
 
                     </div>
@@ -33,4 +35,13 @@
             </div>
         }
     </div>
+
 </div>
+<div style="text-align:center">
+    <div>Сейчас Ход : @TeamCheckers.Team </div>
+    <div>Количество черных шашек : @_boardInformation.AmountBlackCheckers(Board) </div>
+    <div>Количество белых шашек : @_boardInformation.AmountWhiteCheckers(Board)</div>
+    <div>Количество черных дамок шашек :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
+    <div>Количество белых дамок шашек :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
+</div>
+

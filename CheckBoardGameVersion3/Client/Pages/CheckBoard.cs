@@ -1,10 +1,13 @@
-﻿using CheckBoardGameVersion3.Data.Logic.Bot;
+﻿using CheckBoardGameVersion3.common.Helpers;
+using CheckBoardGameVersion3.Data.InformationDask;
+using CheckBoardGameVersion3.Data.Logic.Bot;
 using CheckBoardGameVersion3.Data.Logic.Validate;
 using CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard;
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.Models.Enums;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions;
+using System.Text.Json;
 
 namespace CheckBoardGameVersion3.Client.Pages
 {
@@ -16,6 +19,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
         private BotChecker _botBlackChecker;
+        private BoardInformation _boardInformation;
 
         protected override void OnInitialized()
         {
@@ -23,12 +27,30 @@ namespace CheckBoardGameVersion3.Client.Pages
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new RepositoryBoard();
             _validateBoard = new ValidateBoard();
-            TeamCheckers.SetPlayerGame(SetTeam.Black);
+            _boardInformation = new BoardInformation();
+            TeamCheckers.SetPlayerGame(SetTeam.White);
             Board = _repositoryBoard.CreateDesk();
+
+        }
+        public Dictionary<string, Cell> Deserizate(Dictionary<string, Cell> board)
+        {
+            string json = JsonSerializer.Serialize(board);
+            var path = NoltFolderManager.GetFilesFolderPath();
+            File.WriteAllText(path, json);
+            return board;
+        }
+        public async void Serializejson()
+        {
+            const string filepath = @"D:\test\sukablyat.json";
+            using (FileStream fs = new FileStream(filepath, FileMode.OpenOrCreate))
+            {
+                await JsonSerializer.SerializeAsync(fs, Board);
+                fs.Close();
+            }
+
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
-
             board = _validateBoard.ValidateFullBoard(board);
 
             if (clickChecker.Checker?.Color == CheckerColor.BlackQueen
@@ -71,13 +93,11 @@ namespace CheckBoardGameVersion3.Client.Pages
 
                 board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
-
-
-
             return board;
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
+            _boardInformation.GameOver(Board);
             var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
 
             if (clickCell.Checker != null || checkerClick.Key == null)

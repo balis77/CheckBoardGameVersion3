@@ -1,5 +1,6 @@
 ﻿@using CheckBoardGameVersion3.Data.Logic.Validate
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
+@inject IJSRuntime JSRuntime
 <h3>CheckBoard</h3>
 
 <div style="text-align:center">Бот @_boardInformation.CountBlack : @_boardInformation.CountWhite  Игрок</div>
@@ -16,8 +17,10 @@
                 {
                     int local_J = j;
                     var numberMakup = Markup.MarkupNumber[local_J];
+
                     string idCell = nameMarkup + numberMakup;
-                    var cell = _repositoryBoard.GetCell(idCell);
+                    var cell = _repositoryBoard.GetCell(idCell,Board);
+
                     bool CanMove = Board[idCell].CanMove;
                     bool canBeat = Board[idCell].CanAttack;
                     bool clickChecker = Board[idCell].ClickChecker;
@@ -38,10 +41,11 @@
 
 </div>
 <div style="text-align:center">
-    <div>Сейчас Ход : @TeamCheckers.Team </div>
-    <div>Количество черных шашек : @_boardInformation.AmountBlackCheckers(Board) </div>
-    <div>Количество белых шашек : @_boardInformation.AmountWhiteCheckers(Board)</div>
-    <div>Количество черных дамок шашек :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
-    <div>Количество белых дамок шашек :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
+    <div>Player Move : @TeamCheckers.Team </div>
+    <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
+    <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
+    <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
+    <div>Amount white Queen :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
 </div>
+<button class="btn btn-secondary" @onclick="Delete">Delete Сurrent game</button>
 

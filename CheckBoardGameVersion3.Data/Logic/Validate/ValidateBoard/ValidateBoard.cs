@@ -41,7 +41,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
                         board = _queenCheaker.AnaliseMoveAndBeatQueen(board, cell.Value);
                     }
 
-                    if (cell.Value.Checker?.Color == CheckerColor.White)
+                    if (cell.Value.Checker?.Color == CheckerColor.White )
                     {
                         board = _actionCheaker.AnaliseCanMoveAndBeat(board, cell.Value);
                     }

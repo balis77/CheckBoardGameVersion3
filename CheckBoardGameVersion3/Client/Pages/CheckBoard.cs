@@ -7,21 +7,23 @@ using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Data.Models.Enums;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+
 using System.Text.Json;
 
 namespace CheckBoardGameVersion3.Client.Pages
 {
     public partial class CheckBoard
     {
-        public Dictionary<string, Cell> Board { get; set; }
+       [Parameter] public Dictionary<string, Cell> Board { get; set; } = new Dictionary<string, Cell>();
         private RepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
-        private BotChecker _botBlackChecker;
+        private BotChecker _botChecker;
         private BoardInformation _boardInformation;
-
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
@@ -29,27 +31,16 @@ namespace CheckBoardGameVersion3.Client.Pages
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
             TeamCheckers.SetPlayerGame(SetTeam.White);
-            Board = _repositoryBoard.CreateDesk();
+            
+            
+                Board = _repositoryBoard.CreateDesk();
+            await Read();
+
 
         }
-        public Dictionary<string, Cell> Deserizate(Dictionary<string, Cell> board)
-        {
-            string json = JsonSerializer.Serialize(board);
-            var path = NoltFolderManager.GetFilesFolderPath();
-            File.WriteAllText(path, json);
-            return board;
-        }
-        public async void Serializejson()
-        {
-            const string filepath = @"D:\test\sukablyat.json";
-            using (FileStream fs = new FileStream(filepath, FileMode.OpenOrCreate))
-            {
-                await JsonSerializer.SerializeAsync(fs, Board);
-                fs.Close();
-            }
+       
 
-        }
-        public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
+        public  Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
             board = _validateBoard.ValidateFullBoard(board);
 
@@ -93,6 +84,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
                 board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
+           
             return board;
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
@@ -116,10 +108,40 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             }
 
-            _botBlackChecker = new BotChecker(board);
-            board = _botBlackChecker.LogicBotMove(board);
+            _botChecker = new BotChecker(board);
+            board = _botChecker.LogicBotMove(board);
+
+            Save();
 
             return board;
         }
+        static string currentInputValue { get; set; }
+
+        public async Task Save()
+        {
+            string jsonFileBoard = JsonSerializer.Serialize(Board);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "CheckBoard", jsonFileBoard);
+        }
+
+        public async Task Read()
+        {
+            currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
+
+            if (currentInputValue.Equals(null))
+                return;
+            
+            var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,Cell>>(currentInputValue);
+
+            if (!jsonFileBoard.Equals(null))
+                Board = jsonFileBoard;
+        }
+
+        public async Task Delete()
+        {
+            await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
+        }
     }
+
+    
+
 }

@@ -10,8 +10,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
 {
     public class ActionCheckerValidator
     {
-        public const int LIMIT_BOARD_MAX_VALUE = 8;
-        public const int LIMIT_BOARD_MIN_VALUE = 0;
+        private const int LIMIT_BOARD_MAX_VALUE = 8;
+        private const int LIMIT_BOARD_MIN_VALUE = 0;
 
         public bool ValidaiteBackDask(int boardBack)
         => boardBack >= LIMIT_BOARD_MAX_VALUE || boardBack < LIMIT_BOARD_MIN_VALUE;

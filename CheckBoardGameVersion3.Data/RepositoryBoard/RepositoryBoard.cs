@@ -30,12 +30,12 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
 
             return Board;
         }
-        public Cell GetCell(string Id)
+        public Cell GetCell(string Id,Dictionary<string,Cell> board)
         {
             Cell? cell = null;
-            if (Board != null)
+            if (board != null)
             {
-                cell = Board[Id];
+                cell = board[Id];
             }
               
             
@@ -45,7 +45,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
         #region PrivateMethod
         private void CreateCheckers()
         {
-            //BlackChecker();
+            BlackChecker();
             WhiteChecker();
         }
 
@@ -85,7 +85,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
                     Board[cordinateInTheDesk].Checker = new Checker
                     {
                         InCellId = cordinateInTheDesk,
-                        Color = CheckerColor.White,
+                        Color = CheckerColor.WhiteQueen,
                         Team = SetTeam.White
 
                     };

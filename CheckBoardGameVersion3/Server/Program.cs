@@ -1,4 +1,4 @@
-using CheckBoardGameVersion3.common.Helpers;
+
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
 
@@ -17,7 +17,7 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-NoltFolderManager.InitializeFolderManager(environment.ContentRootPath);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

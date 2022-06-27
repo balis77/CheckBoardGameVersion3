@@ -1,4 +1,4 @@
-﻿using CheckBoardGameVersion3.common.Helpers;
+﻿
 using CheckBoardGameVersion3.Data.InformationDask;
 using CheckBoardGameVersion3.Data.Logic.Bot;
 using CheckBoardGameVersion3.Data.Logic.Validate;
@@ -115,7 +115,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             return board;
         }
-        static string currentInputValue { get; set; }
+      
 
         public async Task Save()
         {
@@ -125,9 +125,9 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         public async Task Read()
         {
-            currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
+          string currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
 
-            if (currentInputValue.Equals(null))
+            if (currentInputValue == null)
                 return;
             
             var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,Cell>>(currentInputValue);

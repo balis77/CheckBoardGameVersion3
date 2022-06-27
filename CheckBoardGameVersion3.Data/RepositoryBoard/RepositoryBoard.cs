@@ -85,7 +85,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
                     Board[cordinateInTheDesk].Checker = new Checker
                     {
                         InCellId = cordinateInTheDesk,
-                        Color = CheckerColor.WhiteQueen,
+                        Color = CheckerColor.White,
                         Team = SetTeam.White
 
                     };

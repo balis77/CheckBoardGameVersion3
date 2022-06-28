@@ -42,8 +42,9 @@ namespace ConsoleApp2.Logic.GameActions
             {
                 board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                return board;
             }
-
+            
             if (clickCell.CanAttack)
             {
                 ValidateMoveAndBeatChecker validate = new ValidateMoveAndBeatChecker(board);

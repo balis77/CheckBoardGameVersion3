@@ -3,7 +3,7 @@ using CheckBoardGameVersion3.Data.Models.Enums;
 
 namespace CheckBoardGameVersion3.Data.RepositoryBoard
 {
-    public sealed class RepositoryBoard : IRepositoryBoard
+    public  class MockRepositoryBoard : IRepositoryBoard
     {
         private Dictionary<string, Cell>? Board = new Dictionary<string, Cell>();
 
@@ -30,6 +30,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
 
             return Board;
         }
+
         public Cell GetCell(string Id,Dictionary<string,Cell> board)
         {
             Cell? cell = null;
@@ -42,6 +43,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
             
             return cell;
         }
+
         #region PrivateMethod
         private void CreateCheckers()
         {

@@ -12,16 +12,18 @@ namespace ConsoleApp2.Logic.GameActions
 {
     public class ActionCheaker : IActionCheaker
     {
+        private const int BOARD_END = 7;
+        private const int BOARD_START = 0;
         private ActionCheckerValidator _actionCheckerValidator;
-       
+
         public ActionCheaker()
         {
             _actionCheckerValidator = new ActionCheckerValidator();
-           
+
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
-            if (clickCell.CanMove == false&&clickCell.CanAttack ==false)
+            if (!clickCell.CanMove && !clickCell.CanAttack)
             {
                 foreach (var cell in board)
                 {
@@ -36,7 +38,7 @@ namespace ConsoleApp2.Logic.GameActions
 
             foreach (var cell in board)
             {
-                if (cell.Value.ClickChecker == true)
+                if (cell.Value.ClickChecker)
                 {
                     clickChecker = cell.Key;
                 }
@@ -45,13 +47,14 @@ namespace ConsoleApp2.Logic.GameActions
 
             Cell moveChecker = new Cell();
 
-            if (clickChecker != "")
+            if (clickChecker != string.Empty)
             {
                 moveChecker = board[clickChecker];
             }
 
             var keyclickCell = _actionCheckerValidator.GetCell(board, clickCell.X, clickCell.Y);
 
+            
             if (clickCell.CanMove)
             {
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
@@ -73,19 +76,18 @@ namespace ConsoleApp2.Logic.GameActions
 
                 board = AnaliseCanMoveAndBeat(board, board[keyclickCell.Key]);
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-            }
 
-            foreach (var cell in board)
-            {
-                board[cell.Key].CanMove = false;
-               
-                if (cell.Value.CanAttack == true)
+                foreach (var cell in board)
                 {
-                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                    board[keyclickCell.Key].ClickChecker = true;
+                    board[cell.Key].CanMove = false;
+
+                    if (cell.Value.CanAttack)
+                    {
+                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                        board[keyclickCell.Key].ClickChecker = true;
+                    }
                 }
             }
-
             return board;
         }
 
@@ -94,32 +96,32 @@ namespace ConsoleApp2.Logic.GameActions
         {
             if (clickChecker.Checker?.Team != TeamCheckers.Team)
                 return board;
-            
-                foreach (var cell in board)
-                {
-                    board[cell.Key].CanMove = false;
-                    board[cell.Key].ClickChecker = false;
-                    board[cell.Key].CanAttack = false;
-                }
+
+            foreach (var cell in board)
+            {
+                board[cell.Key].CanMove = false;
+                board[cell.Key].ClickChecker = false;
+                board[cell.Key].CanAttack = false;
+            }
 
             if (clickChecker.Checker == null)
                 return board;
 
-            if (clickChecker.X == 7 && (clickChecker.Checker.Color == CheckerColor.Black))
+            if (clickChecker.X == BOARD_END && (clickChecker.Checker.Color == CheckerColor.Black))
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.BlackQueen;
             }
 
-            if (clickChecker.X == 0 && (clickChecker.Checker.Color == CheckerColor.White))
+            if (clickChecker.X == BOARD_START && (clickChecker.Checker.Color == CheckerColor.White))
             {
                 board[clickChecker.Checker.InCellId].Checker.Color = CheckerColor.WhiteQueen;
             }
 
             board[clickChecker.Checker.InCellId].ClickChecker = true;
-            
+
             int moveCheckerRow = clickChecker.Checker.Color == CheckerColor.White ? -1 : 1;
             int rowCheck = clickChecker.X + moveCheckerRow;
-           
+
             bool BorderBoardRow = _actionCheckerValidator.ValidaiteBackDask(rowCheck);
 
             if (BorderBoardRow)
@@ -150,19 +152,19 @@ namespace ConsoleApp2.Logic.GameActions
 
             int beatCheckerRow = clickChecker.Checker?.Color == CheckerColor.White ? 1 : -1;
             int rowBackCheck = clickChecker.X + beatCheckerRow;
+
             List<int> rowsPossible = new List<int>();
             rowsPossible.Add(rowCheck);
             rowsPossible.Add(rowBackCheck);
 
             foreach (var row in rowsPossible)
             {
-                
+
                 board = _actionCheckerValidator.BeatChecker(board, clickChecker, row, columnLeft);
                 board = _actionCheckerValidator.BeatChecker(board, clickChecker, row, columnRight);
             }
             return board;
         }
-       
 
         private Dictionary<string, Cell> MovelogicChecker(Dictionary<string, Cell> board, Cell clickChecker)
         {

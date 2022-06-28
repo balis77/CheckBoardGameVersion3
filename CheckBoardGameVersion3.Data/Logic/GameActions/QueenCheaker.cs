@@ -22,7 +22,7 @@ namespace ConsoleApp2.Logic.GameActions
 
             foreach (var cell in board)
             {
-                if (cell.Value.ClickChecker == true)
+                if (cell.Value.ClickChecker)
                 {
                     clickCheckerKey = cell.Key;
                 }
@@ -31,12 +31,18 @@ namespace ConsoleApp2.Logic.GameActions
 
             Cell clickQueen = new Cell();
 
-            if (clickCheckerKey != "")
+            if (clickCheckerKey != string.Empty)
             {
                 clickQueen = board[clickCheckerKey];
             }
 
             KeyValuePair<string, Cell> keyClickCell = _validateCheckerQueen.GetCell(board, clickCell.X, clickCell.Y);
+
+            if (clickCell.CanMove)
+            {
+                board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
+                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+            }
 
             if (clickCell.CanAttack)
             {
@@ -47,23 +53,15 @@ namespace ConsoleApp2.Logic.GameActions
                 board = AnaliseMoveAndBeatQueen(board, keyClickCell.Value);
 
                 TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-
-            }
-
-            if (clickCell.CanMove)
-            {
-                board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-            }
-
-            foreach (var cell in board)
-            {
-                board[cell.Key].CanMove = false;
-
-                if (cell.Value.CanAttack == true)
+                foreach (var cell in board)
                 {
-                    TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                    board[keyClickCell.Key].ClickChecker = true;
+                    board[cell.Key].CanMove = false;
+
+                    if (cell.Value.CanAttack)
+                    {
+                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                        board[keyClickCell.Key].ClickChecker = true;
+                    }
                 }
             }
 
@@ -89,7 +87,7 @@ namespace ConsoleApp2.Logic.GameActions
 
             board = validate.CanPossibleMoveAndAttack(data);
 
-            var canAttack = board.FirstOrDefault(n => n.Value.CanAttack == true);
+            var canAttack = board.FirstOrDefault(n => n.Value.CanAttack);
 
             if (canAttack.Value != null)
             {

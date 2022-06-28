@@ -118,6 +118,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
             for (int count = 1; data.ClickQueen.X - count >= 0 && data.ClickQueen.Y - count >= 0; count++)
             {
                 bool oneMoreBeatChecker = false;
+
                 int row = data.ClickQueen.X - count;
                 int column = data.ClickQueen.Y - count;
                 
@@ -160,7 +161,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         {
             for (int count = 1; data.ClickQueen.X + count <= 8 && data.ClickQueen.Y + count <= 8; count++)
             {
-                bool OneMoreBeatChecker = false;
+                bool oneMoreBeatChecker = false;
 
                 int row = data.ClickQueen.X + count;
                 int column = data.ClickQueen.Y + count;
@@ -180,7 +181,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                         KeyValuePair<string, Cell> nextBeatCell = _validateCheckerQueen.GetCell(data.Board, rowCheckBeat, columnCheckBeat);
                         if (nextBeatCell.Value?.Checker != null)
                         {
-                            OneMoreBeatChecker = true;
+                            oneMoreBeatChecker = true;
                             break;
                         }
                         data.Board = _validateCheckerQueen.PossbileBeatChecker(data.Board, rowCheckBeat, columnCheckBeat);
@@ -191,7 +192,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                     data.Board = _validateCheckerQueen.MoveQueenPossible(data.Board, nextCellMove, data.ClickQueen);
                 }
 
-                if (OneMoreBeatChecker)
+                if (oneMoreBeatChecker)
                 {
                     break;
                 }

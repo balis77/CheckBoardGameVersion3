@@ -16,27 +16,30 @@ namespace CheckBoardGameVersion3.Client.Pages
     public partial class CheckBoard
     {
         public Dictionary<string, Cell> Board { get; set; } = new Dictionary<string, Cell>();
-        private RepositoryBoard _repositoryBoard;
+        private MockRepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
         private BotChecker _botChecker;
         private BoardInformation _boardInformation;
+
         protected override async Task OnInitializedAsync()
         {
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
-            _repositoryBoard = new RepositoryBoard();
+            _repositoryBoard = new MockRepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
             TeamCheckers.SetPlayerGame(player);
             Board = _repositoryBoard.CreateDesk();
             await Read();
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await Save();
         }
+
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
             board = _validateBoard.ValidateFullBoard(board);
@@ -46,14 +49,14 @@ namespace CheckBoardGameVersion3.Client.Pages
             {
                 foreach (var cell in board)
                 {
-                    if (cell.Value.LockChecker && clickChecker.ClickChecker == false)
+                    if (cell.Value.LockChecker && !clickChecker.ClickChecker)
                     {
                         board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, cell.Value);
 
                     }
                 }
 
-                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker == true);
+                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker);
 
                 if (lockchecker.Key != null)
                 {
@@ -66,13 +69,13 @@ namespace CheckBoardGameVersion3.Client.Pages
             {
                 foreach (var cell in board)
                 {
-                    if (cell.Value.LockChecker && clickChecker.ClickChecker == false)
+                    if (cell.Value.LockChecker && !clickChecker.ClickChecker)
                     {
                         board = _actionCheaker.AnaliseCanMoveAndBeat(Board, cell.Value);
 
                     }
                 }
-                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker == true);
+                var lockchecker = board.FirstOrDefault(n => n.Value.LockChecker);
 
                 if (lockchecker.Key != null)
                 {
@@ -84,10 +87,11 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             return board;
         }
+
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
-            _boardInformation.GameOver(Board);
-            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+            board = _boardInformation.GameOver(Board);
+            var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker);
 
             if (clickCell.Checker != null || checkerClick.Key == null)
             {

@@ -38,8 +38,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                 if (cell.Value.Checker == null)
                     continue;
 
-                if (cell.Value.Checker.Team == TeamCheckers.Bot)
-                {
                     if (cell.Value.Checker?.Team != TeamCheckers.Team)
                         break;
 
@@ -66,7 +64,6 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                     {
                         checkersBeat.Add(clickChecker.Key, clickChecker.Value);
                     }
-                }
             }
             _board = board;
         }

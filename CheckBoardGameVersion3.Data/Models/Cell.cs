@@ -15,7 +15,7 @@ namespace CheckBoardGameVersion3.Data.Models
         public bool CanAttack { get; set; } = false;
         public bool ClickChecker { get; set; } = false;
         public bool LockChecker { get; set; } = false;
-        public Cell(byte x,byte y,Checker checker,bool canMove,bool canAttack,bool clickChecker)
+        public Cell(byte x, byte y, Checker checker, bool canMove, bool canAttack, bool clickChecker)
         {
             X = x;
             Y = y;
@@ -24,10 +24,7 @@ namespace CheckBoardGameVersion3.Data.Models
             CanAttack = canAttack;
             ClickChecker = clickChecker;
         }
-        public Cell()
-        {
+        public Cell() { }
 
-        }
-        
     }
 }

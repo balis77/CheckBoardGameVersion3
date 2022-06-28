@@ -20,6 +20,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
         {
             return board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
         }
+
         public Dictionary<string, Cell> MoveChecker(Dictionary<string, Cell> board, KeyValuePair<string, Cell> possisionCell)
         {
             if (possisionCell.Value?.Checker == null)
@@ -48,25 +49,29 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
         {
             var cellMove = GetCell(board, row, column);
 
-            if (cellMove.Value != null)
+            if (cellMove.Value == null)
             {
-                if (cellMove.Value.Checker != null)
-                {
-                    if (cellMove.Value?.Checker?.Team == TeamCheckers.Team)
-                    {
-                        return board;
-                    }
-
-                    int rowCheckBeat = row + (row - clickChecker.X);
-                    int columnCheckBeat = column + (column - clickChecker.Y);
-                    var cellPossibleBeat = board.FirstOrDefault(n => n.Value.X == rowCheckBeat && n.Value.Y == columnCheckBeat);
-
-                    if (cellPossibleBeat.Value?.Checker == null && cellPossibleBeat.Key != null)
-                    {
-                        board[cellPossibleBeat.Key].CanAttack = true;
-                    }
-                }
+                return board;
             }
+            if (cellMove.Value.Checker == null)
+            {
+                return board;
+            }
+            if (cellMove.Value?.Checker?.Team == TeamCheckers.Team)
+            {
+                return board;
+            }
+
+            int rowCheckBeat = row + (row - clickChecker.X);
+            int columnCheckBeat = column + (column - clickChecker.Y);
+            var cellPossibleBeat = board.FirstOrDefault(n => n.Value.X == rowCheckBeat && n.Value.Y == columnCheckBeat);
+
+            if (cellPossibleBeat.Value?.Checker == null && cellPossibleBeat.Key != null)
+            {
+                board[cellPossibleBeat.Key].CanAttack = true;
+            }
+
+
             return board;
         }
     }

@@ -6,6 +6,5 @@ namespace ConsoleApp2.Logic.GameActions.Contracts
     {
         Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell);
         Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickCell);
-
     }
 }

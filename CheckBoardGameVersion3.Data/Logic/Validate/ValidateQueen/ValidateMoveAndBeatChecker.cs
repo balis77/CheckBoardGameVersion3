@@ -28,6 +28,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
 
             return _board;
         }
+
         private void CheckTopRight(DataQueenMoveAndBeat parametr)
         {
             Checker removeChecker = new Checker();

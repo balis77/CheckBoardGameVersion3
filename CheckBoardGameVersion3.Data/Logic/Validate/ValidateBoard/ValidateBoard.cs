@@ -45,8 +45,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
                     board = _actionCheaker.AnaliseCanMoveAndBeat(board, cell.Value);
                 }
 
-                var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack == true);
-                var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker == true);
+                var beatChecker = board.FirstOrDefault(n => n.Value.CanAttack);
+                var clickChecker = board.FirstOrDefault(n => n.Value.ClickChecker);
 
                 if (beatChecker.Key != null)
                 {

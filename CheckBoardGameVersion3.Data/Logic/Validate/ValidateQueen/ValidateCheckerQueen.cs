@@ -14,7 +14,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
 
         public bool ValidaiteBackDask(int boardBack)
         => boardBack >= LIMIT_BOARD_MAX_VALUE || boardBack < LIMIT_BOARD_MIN_VALUE;
-        public KeyValuePair<string, Cell> GetCell(Dictionary<string, Cell> board, int row, int column) 
+        public KeyValuePair<string, Cell> GetCell(Dictionary<string, Cell> board, int row, int column)
             => board.FirstOrDefault(n => n.Value.X == row && n.Value.Y == column);
         public Dictionary<string, Cell> MoveQueenPossible(Dictionary<string, Cell> board, KeyValuePair<string, Cell> nextCellMove, Cell clickQueen)
         {
@@ -48,7 +48,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
         public Dictionary<string, Cell> BeatChecker(Dictionary<string, Cell> board, Cell clickQueen, KeyValuePair<string, Cell> keyClickCell, Checker removeChecker)
         {
             board[keyClickCell.Key].Checker = new Checker(keyClickCell.Key, clickQueen.Checker.Color, clickQueen.Checker.Team);
-           
+
             board[removeChecker.InCellId].Checker = null;
             board[clickQueen.Checker.InCellId].Checker = null;
 
@@ -60,13 +60,13 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
             }
 
             board[keyClickCell.Key].ClickChecker = true;
-            
+
             return board;
         }
         public Dictionary<string, Cell> PossbileBeatChecker(Dictionary<string, Cell> board, int rowCheckBeat, int columnCheckBeat)
         {
             KeyValuePair<string, Cell> nextBeatCell = GetCell(board, rowCheckBeat, columnCheckBeat);
-            
+
             if (nextBeatCell.Value?.Checker == null && nextBeatCell.Key != null)
             {
                 board[nextBeatCell.Key].CanAttack = true;

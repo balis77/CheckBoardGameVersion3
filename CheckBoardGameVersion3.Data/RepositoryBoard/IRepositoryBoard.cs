@@ -10,6 +10,5 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
     public interface IRepositoryBoard
     {
         Dictionary<string, Cell> CreateDesk();
-        
     }
 }

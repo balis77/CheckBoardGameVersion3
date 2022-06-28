@@ -18,13 +18,21 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         }
         public TeamCheckers() { }
 
-        public static void SetPlayerGame(SetTeam team)
+        public static void SetPlayerGame(string set)
         {
-            SetTeam setBot = SetTeam.White == team ? SetTeam.Black : SetTeam.White;
-            Team = team;
-            Bot = setBot;
+            if (set == "1")
+            {
+                Team = SetTeam.White;
+                Bot = SetTeam.Black;
+            }
+            else
+            {
+                Team = SetTeam.Black;
+                Bot = SetTeam.White;
+            }
         }
         public static SetTeam setTeam(SetTeam team)
            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
+        
     }
 }

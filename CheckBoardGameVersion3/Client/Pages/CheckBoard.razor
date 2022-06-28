@@ -1,8 +1,9 @@
 ﻿@using CheckBoardGameVersion3.Data.Logic.Validate
+@using CheckBoardGameVersion3.Data.Models
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
 @inject IJSRuntime JSRuntime
 <h3>CheckBoard</h3>
-
+@page "/CheckerBoard/{player}"
 <div style="text-align:center">Бот @_boardInformation.CountBlack : @_boardInformation.CountWhite  Игрок</div>
 <div class="box" style="display:flex; justify-content:space-around">
 
@@ -19,7 +20,7 @@
                     var numberMakup = Markup.MarkupNumber[local_J];
 
                     string idCell = nameMarkup + numberMakup;
-                    var cell = _repositoryBoard.GetCell(idCell,Board);
+                    var cell = _repositoryBoard.GetCell(idCell, Board);
 
                     bool CanMove = Board[idCell].CanMove;
                     bool canBeat = Board[idCell].CanAttack;
@@ -49,3 +50,8 @@
 </div>
 <button class="btn btn-secondary" @onclick="Delete">Delete Сurrent game</button>
 
+@code {
+    [Parameter]
+    public string player { get; set; }
+
+}

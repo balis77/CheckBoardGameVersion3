@@ -1,5 +1,4 @@
-﻿
-using CheckBoardGameVersion3.Data.InformationDask;
+﻿using CheckBoardGameVersion3.Data.InformationDask;
 using CheckBoardGameVersion3.Data.Logic.Bot;
 using CheckBoardGameVersion3.Data.Logic.Validate;
 using CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard;
@@ -16,7 +15,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 {
     public partial class CheckBoard
     {
-       [Parameter] public Dictionary<string, Cell> Board { get; set; } = new Dictionary<string, Cell>();
+        public Dictionary<string, Cell> Board { get; set; } = new Dictionary<string, Cell>();
         private RepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
@@ -30,17 +29,15 @@ namespace CheckBoardGameVersion3.Client.Pages
             _repositoryBoard = new RepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
-            TeamCheckers.SetPlayerGame(SetTeam.White);
-            
-            
-                Board = _repositoryBoard.CreateDesk();
+            TeamCheckers.SetPlayerGame(player);
+            Board = _repositoryBoard.CreateDesk();
             await Read();
-
-
         }
-       
-
-        public  Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await Save();
+        }
+        public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
             board = _validateBoard.ValidateFullBoard(board);
 
@@ -84,7 +81,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
                 board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
-           
+
             return board;
         }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
@@ -111,11 +108,11 @@ namespace CheckBoardGameVersion3.Client.Pages
             _botChecker = new BotChecker(board);
             board = _botChecker.LogicBotMove(board);
 
-            Save();
+
 
             return board;
         }
-      
+
 
         public async Task Save()
         {
@@ -125,12 +122,12 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         public async Task Read()
         {
-          string currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
+            string currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
 
             if (currentInputValue == null)
                 return;
-            
-            var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,Cell>>(currentInputValue);
+
+            var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Cell>>(currentInputValue);
 
             if (!jsonFileBoard.Equals(null))
                 Board = jsonFileBoard;
@@ -139,9 +136,10 @@ namespace CheckBoardGameVersion3.Client.Pages
         public async Task Delete()
         {
             await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
+            Board = _repositoryBoard.CreateDesk();
         }
     }
 
-    
+
 
 }

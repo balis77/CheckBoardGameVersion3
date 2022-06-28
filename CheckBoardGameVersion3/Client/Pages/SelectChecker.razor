@@ -1,0 +1,32 @@
+﻿
+<div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleLabel">Employee Quick Add</h5>
+
+            </div>
+            <div class="modal-body" style="align-self: center">
+                <button class="btn btn-secondary" @onclick="SetWhite"> White</button>
+                <button class="btn btn-secondary" @onclick="SetBlack">Black</button>
+            </div>
+            <div class="modal-body" style="align-self: center">
+                <a href="/CheckerBoard/@Player.ToString()">Играть</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    public static int Player { get; set; }
+    public void SetWhite()
+    {
+        Player = 1;
+    }
+    public void SetBlack()
+    {
+        Player = 2;
+    }
+    }
+
+

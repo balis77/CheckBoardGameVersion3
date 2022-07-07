@@ -26,9 +26,15 @@ namespace ConsoleApp2.Logic.GameActions
                 {
                     clickCheckerKey = cell.Key;
                 }
-
             }
-
+            if (board.Where(n => n.Value.CanAttack).Any())
+            {
+                foreach (var cell in board)
+                {
+                    cell.Value.CanMove = false;
+                }
+            }
+           
             Cell clickQueen = new Cell();
 
             if (clickCheckerKey != string.Empty)
@@ -41,7 +47,7 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
                 return board;
             }
             
@@ -53,16 +59,15 @@ namespace ConsoleApp2.Logic.GameActions
                 board = validate.MoveAndBeatChecker(parametrs);
                 board = AnaliseMoveAndBeatQueen(board, keyClickCell.Value);
 
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
                 foreach (var cell in board)
                 {
                     board[cell.Key].CanMove = false;
-
-                    if (cell.Value.CanAttack)
-                    {
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-                        board[keyClickCell.Key].ClickChecker = true;
-                    }
+                }
+                if (board.Where(n => n.Value.CanAttack).Any())
+                {
+                    TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                    board[keyClickCell.Key].ClickChecker = true;
                 }
             }
 
@@ -71,7 +76,7 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickQueen)
         {
-            if (clickQueen.Checker?.Team != TeamCheckers.Team)
+            if (clickQueen.Checker?.Team != TeamCheckers.Player1)
                 return board;
 
             foreach (var cell in board)

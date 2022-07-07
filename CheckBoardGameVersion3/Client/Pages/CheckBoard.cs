@@ -7,6 +7,7 @@ using CheckBoardGameVersion3.Data.Models.Enums;
 using CheckBoardGameVersion3.Data.RepositoryBoard;
 using ConsoleApp2.Logic.GameActions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 
 using System.Text.Json;
@@ -20,9 +21,31 @@ namespace CheckBoardGameVersion3.Client.Pages
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
-        private BotChecker _botChecker;
+       // private BotChecker _botChecker;
         private BoardInformation _boardInformation;
 
+
+        private HubConnection? hubConnection;
+
+
+        private async Task Send()
+        {
+            if (hubConnection is not null)
+            {
+                await hubConnection.SendAsync("SendMessage", Board,TeamCheckers.Player2,TeamCheckers.DaskOpponent);
+            }
+        }
+
+        public bool IsConnected =>
+            hubConnection?.State == HubConnectionState.Connected;
+
+        public async ValueTask DisposeAsync()
+        {
+            if (hubConnection is not null)
+            {
+                await hubConnection.DisposeAsync();
+            }
+        }
         protected override async Task OnInitializedAsync()
         {
             _actionCheaker = new ActionCheaker();
@@ -33,6 +56,20 @@ namespace CheckBoardGameVersion3.Client.Pages
             TeamCheckers.SetPlayerGame(player);
             Board = _repositoryBoard.CreateDesk();
             await Read();
+            hubConnection = new HubConnectionBuilder()
+          .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
+          .Build();
+            
+            hubConnection.On<Dictionary<string, Cell>, SetTeam,SetTeam>("ReceiveMessage", (Board,player,dask) =>
+            {
+                this.Board = Board;
+                TeamCheckers.Player1 = player;
+                TeamCheckers.Dask = dask;
+                InvokeAsync(StateHasChanged);
+            });
+            
+            await hubConnection.StartAsync();
+
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -106,14 +143,15 @@ namespace CheckBoardGameVersion3.Client.Pages
             else
             {
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
-
+               
             }
-
-            _botChecker = new BotChecker(board);
-            board = _botChecker.LogicBotMove(board);
-
-
-
+            if (TeamCheckers.Player1 == TeamCheckers.Player2)
+            {
+                //_botChecker = new BotChecker(board);
+                //board = _botChecker.LogicBotMove(board);
+              
+            }
+            Send();
             return board;
         }
 

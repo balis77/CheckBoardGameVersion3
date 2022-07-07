@@ -38,8 +38,8 @@ namespace CheckBoardGameVersion3.Data.Logic.Bot
                 if (cell.Value.Checker == null)
                     continue;
 
-                    if (cell.Value.Checker?.Team != TeamCheckers.Team)
-                        break;
+                    if (cell.Value.Checker?.Team != TeamCheckers.Player1)
+                        continue;
 
                     if (cell.Value.Checker?.Color == CheckerColor.BlackQueen|| cell.Value.Checker?.Color == CheckerColor.WhiteQueen)
                     {

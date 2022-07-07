@@ -2,8 +2,11 @@
 @using CheckBoardGameVersion3.Data.Models
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
 @inject IJSRuntime JSRuntime
-<h3>CheckBoard</h3>
 @page "/CheckerBoard/{player}"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+<h3>CheckBoard</h3>
 <div style="text-align:center">Bot @_boardInformation.CountBlack : @_boardInformation.CountWhite  Player</div>
 <div class="box" style="display:flex; justify-content:space-around">
 
@@ -42,7 +45,8 @@
 
 </div>
 <div style="text-align:center">
-    <div>Player Move : @TeamCheckers.Team </div>
+    <div> Move : @TeamCheckers.Player1 </div>
+    <div>Playing for : @TeamCheckers.Dask</div>
     <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
     <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
     <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
@@ -55,3 +59,8 @@
     public string player { get; set; }
 
 }
+
+
+<PageTitle>Index</PageTitle>
+
+

@@ -57,7 +57,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateChecker
             {
                 return board;
             }
-            if (cellMove.Value?.Checker?.Team == TeamCheckers.Team)
+            if (cellMove.Value?.Checker?.Team == TeamCheckers.Player1)
             {
                 return board;
             }

@@ -28,7 +28,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
             foreach (var cell in board)
             {
 
-                if (cell.Value.Checker?.Team != TeamCheckers.Team)
+                if (cell.Value.Checker?.Team != TeamCheckers.Player1)
                     continue;
 
                 if (cell.Value.Checker == null)
@@ -53,8 +53,15 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
                     board[clickChecker.Key].LockChecker = true;
                     board[clickChecker.Key].ClickChecker = true;
                 }
+                else
+                {
+                    board[clickChecker.Key].ClickChecker = false;
+                }
             }
-
+            foreach (var cell in board)
+            {
+                board[cell.Key].CanMove = false; 
+            }
             return board;
         }
     }

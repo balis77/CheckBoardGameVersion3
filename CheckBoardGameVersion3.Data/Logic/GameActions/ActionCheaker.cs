@@ -23,6 +23,7 @@ namespace ConsoleApp2.Logic.GameActions
         }
         public Dictionary<string, Cell> MoveAndBeatCheckers(Dictionary<string, Cell> board, Cell clickCell)
         {
+            
             if (!clickCell.CanMove && !clickCell.CanAttack)
             {
                 foreach (var cell in board)
@@ -58,9 +59,9 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
-
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
-
+                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                
+                return board;
             }
 
             if (clickCell.CanAttack)
@@ -75,7 +76,7 @@ namespace ConsoleApp2.Logic.GameActions
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
 
                 board = AnaliseCanMoveAndBeat(board, board[keyclickCell.Key]);
-                TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
 
                 foreach (var cell in board)
                 {
@@ -83,7 +84,7 @@ namespace ConsoleApp2.Logic.GameActions
 
                     if (cell.Value.CanAttack)
                     {
-                        TeamCheckers.Team = TeamCheckers.setTeam(TeamCheckers.Team);
+                        TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
                         board[keyclickCell.Key].ClickChecker = true;
                     }
                 }
@@ -94,7 +95,7 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickChecker)
         {
-            if (clickChecker.Checker?.Team != TeamCheckers.Team)
+            if (clickChecker.Checker?.Team != TeamCheckers.Player1)
                 return board;
 
             foreach (var cell in board)

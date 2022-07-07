@@ -9,12 +9,13 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
 {
     public  class TeamCheckers
     {
-        public static SetTeam Team { get; set; } 
-        public static SetTeam Player { get; set; }
-        public static SetTeam Bot { get; set; }
+        public static SetTeam Dask { get; set; }
+        public static SetTeam DaskOpponent { get; set; }
+        public static SetTeam Player1 { get; set; } 
+        public static SetTeam Player2 { get; set; }
         public TeamCheckers(SetTeam setTeam)
         {
-            Team = setTeam;
+            Player1 = setTeam;
         }
         public TeamCheckers() { }
 
@@ -22,13 +23,17 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         {
             if (set == "1")
             {
-                Team = SetTeam.White;
-                Bot = SetTeam.Black;
+                Player1 = SetTeam.White;
+                Dask = SetTeam.White;
+                DaskOpponent = SetTeam.Black;
+                Player2 = SetTeam.Black;
             }
             else
             {
-                Team = SetTeam.Black;
-                Bot = SetTeam.White;
+                Player1 = SetTeam.Black;
+                Dask = SetTeam.Black;
+                DaskOpponent = SetTeam.White;
+                Player2 = SetTeam.White;
             }
         }
         public static SetTeam setTeam(SetTeam team)

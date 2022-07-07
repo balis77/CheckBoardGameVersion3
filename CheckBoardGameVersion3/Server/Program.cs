@@ -1,4 +1,5 @@
 
+using CheckBoardGameVersion3.Server.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
 
@@ -13,6 +14,12 @@ IWebHostEnvironment environment = builder.Environment;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
 
 
 var app = builder.Build();
@@ -42,11 +49,18 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(environment.ContentRootPath, "Files"))
 });
 
+
+app.UseHttpsRedirection();
+
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
 app.UseRouting();
 
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapBlazorHub();
+app.MapHub<BoardHub>("/chathub");
 app.MapFallbackToFile("index.html");
 
 app.Run();

@@ -33,7 +33,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
 
                 if (nextCellMove.Value?.Checker != null)
                 {
-                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Player1)
                         break;
 
                     for (int counterBeat = 1; nextCellMove.Value.X - counterBeat >= 0 && nextCellMove.Value.Y + counterBeat <= 8; counterBeat++)
@@ -80,7 +80,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 if (nextCellMove.Value?.Checker != null)
                 {
 
-                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Player1)
                         break;
 
                     for (int counterBeat = 1; nextCellMove.Value.X + counterBeat <= 8 && nextCellMove.Value.Y - counterBeat >= 0; counterBeat++)
@@ -127,7 +127,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 if (nextCellMove.Value?.Checker != null)
                 {
 
-                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Player1)
                         break;
 
                     for (int counterBeat = 1; nextCellMove.Value.X - counterBeat >= 0 && nextCellMove.Value.Y - counterBeat >= 0; counterBeat++)
@@ -171,7 +171,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateQueen
                 if (nextCellMove.Value?.Checker != null)
                 {
 
-                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Team)
+                    if (nextCellMove.Value?.Checker.Team == TeamCheckers.Player1)
                         break;
 
                     for (int counterBeat = 1; nextCellMove.Value.X + counterBeat <= 8 && nextCellMove.Value.Y + counterBeat <= 8; counterBeat++)

@@ -1,5 +1,7 @@
-﻿
-<div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@if (!PlayGame)
+{
+   <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,15 +13,20 @@
                 <button class="btn btn-secondary" @onclick="SetBlack">Black</button>
             </div>
             <div class="modal-body" style="align-self: center">
-                <a href="/CheckerBoard/@Player.ToString()">Играть</a>
-
+                <button @onclick="StartGame">Play</button>
             </div>
         </div>
     </div>
-</div>
+</div> 
+}
+else
+{
+    <CheckBoard hubsConnection="hubsConnection" TableId="TableId" player="Player"></CheckBoard>
+}
+
 @code {
     public static int Player { get; set; }
-
+    public bool PlayGame;
     public void SetWhite()
     {
         Player = 1;
@@ -29,6 +36,16 @@
     {
         Player = 2;
     }
+    public void StartGame()
+    {
+        if (Player.Equals(2)||Player.Equals(1))
+        {
+            PlayGame = true;
+        }
+    }
+    [Parameter] public HubConnection hubsConnection { get; set; }
+    [Parameter] public string TableId { get; set; }
+}
     }
 
 

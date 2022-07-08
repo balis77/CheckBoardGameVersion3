@@ -1,10 +1,14 @@
 ﻿@using Microsoft.AspNetCore.SignalR.Client;
 @inject NavigationManager NavigationManager
 
-
-@if (inGame)
+@if (inBoard)
 {
     <CheckBoard hubsConnection="hubConnection" TableId="@tableId"></CheckBoard>
+}
+@if (inGame)
+{
+    <SelectChecker hubsConnection="hubConnection" TableId="@tableId"></SelectChecker>
+    
 }
 else
 {
@@ -17,6 +21,7 @@ else
 
 @code {
     bool inGame;
+    bool inBoard;
     HubConnection  hubConnection = new HubConnectionBuilder()
            .WithUrl("https://localhost:7065/connect")
            .Build();
@@ -35,7 +40,7 @@ else
         await hubConnection.StartAsync();
         this.tableId = tableId;
         await hubConnection.SendAsync("JoinTable", tableId);
-        inGame = true;
+        inBoard = true;
     }
 
     async Task RefreshTables()

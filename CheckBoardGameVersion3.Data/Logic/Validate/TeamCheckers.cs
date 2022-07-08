@@ -21,6 +21,11 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
 
         public static void SetPlayerGame(string set)
         {
+            if (set == default)
+            {
+                Player1 = SetTeam.Black;
+                Dask = SetTeam.Black;
+            }
             if (set == "1")
             {
                 Player1 = SetTeam.White;

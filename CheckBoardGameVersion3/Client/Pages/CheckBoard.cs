@@ -23,10 +23,6 @@ namespace CheckBoardGameVersion3.Client.Pages
        // private BotChecker _botChecker;
         private BoardInformation _boardInformation;
 
-
-       
-
-
         //private async Task Send()
         //{
         //    if (hubConnection is not null)
@@ -45,7 +41,7 @@ namespace CheckBoardGameVersion3.Client.Pages
             _repositoryBoard = new MockRepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
-            TeamCheckers.SetPlayerGame("1");
+            TeamCheckers.SetPlayerGame(player);
             Board = _repositoryBoard.CreateDesk();
             await Read();
             //  hubConnection = new HubConnectionBuilder()

@@ -1,4 +1,5 @@
 
+using CheckBoardGameVersion3.Server.Data;
 using CheckBoardGameVersion3.Server.Hubs;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
@@ -14,6 +15,8 @@ IWebHostEnvironment environment = builder.Environment;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<TableManager>();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddResponseCompression(opts =>
 {
@@ -60,7 +63,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapBlazorHub();
-app.MapHub<BoardHub>("/chathub");
+app.MapHub<BoardHub>("/connect");
 app.MapFallbackToFile("index.html");
 
 app.Run();

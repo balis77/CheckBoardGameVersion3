@@ -2,10 +2,8 @@
 @using CheckBoardGameVersion3.Data.Models
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
 @inject IJSRuntime JSRuntime
-@page "/CheckerBoard/{player}"
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
-@implements IAsyncDisposable
 <h3>CheckBoard</h3>
 <div style="text-align:center">Bot @_boardInformation.CountBlack : @_boardInformation.CountWhite  Player</div>
 <div class="box" style="display:flex; justify-content:space-around">
@@ -55,9 +53,9 @@
 <button class="btn btn-secondary" @onclick="Delete">Delete Сurrent game</button>
 
 @code {
-    [Parameter]
-    public string player { get; set; }
-
+    [Parameter] public string player { get; set; }
+    [Parameter] public HubConnection hubsConnection { get; set; }
+    [Parameter] public string TableId { get; set; }
 }
 
 

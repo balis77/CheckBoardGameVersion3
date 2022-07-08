@@ -9,7 +9,6 @@ using ConsoleApp2.Logic.GameActions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
-
 using System.Text.Json;
 
 namespace CheckBoardGameVersion3.Client.Pages
@@ -25,27 +24,20 @@ namespace CheckBoardGameVersion3.Client.Pages
         private BoardInformation _boardInformation;
 
 
-        private HubConnection? hubConnection;
+       
 
 
-        private async Task Send()
-        {
-            if (hubConnection is not null)
-            {
-                await hubConnection.SendAsync("SendMessage", Board,TeamCheckers.Player2,TeamCheckers.DaskOpponent);
-            }
-        }
+        //private async Task Send()
+        //{
+        //    if (hubConnection is not null)
+        //    {
+        //        await hubConnection.SendAsync("SendMessage", Board,TeamCheckers.Player2,TeamCheckers.DaskOpponent);
+        //    }
+        //}
 
-        public bool IsConnected =>
-            hubConnection?.State == HubConnectionState.Connected;
+        //public bool IsConnected =>
+        //    hubConnection?.State == HubConnectionState.Connected;
 
-        public async ValueTask DisposeAsync()
-        {
-            if (hubConnection is not null)
-            {
-                await hubConnection.DisposeAsync();
-            }
-        }
         protected override async Task OnInitializedAsync()
         {
             _actionCheaker = new ActionCheaker();
@@ -53,23 +45,18 @@ namespace CheckBoardGameVersion3.Client.Pages
             _repositoryBoard = new MockRepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
-            TeamCheckers.SetPlayerGame(player);
+            TeamCheckers.SetPlayerGame("1");
             Board = _repositoryBoard.CreateDesk();
             await Read();
-            hubConnection = new HubConnectionBuilder()
-          .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
-          .Build();
-            
-            hubConnection.On<Dictionary<string, Cell>, SetTeam,SetTeam>("ReceiveMessage", (Board,player,dask) =>
+            //  hubConnection = new HubConnectionBuilder()
+            //.WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
+            //.Build();
+
+            hubsConnection.On<Dictionary<string, Cell>>("Move", (board) =>
             {
-                this.Board = Board;
-                TeamCheckers.Player1 = player;
-                TeamCheckers.Dask = dask;
+                Board = board;
                 InvokeAsync(StateHasChanged);
             });
-            
-            await hubConnection.StartAsync();
-
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -151,7 +138,8 @@ namespace CheckBoardGameVersion3.Client.Pages
                 //board = _botChecker.LogicBotMove(board);
               
             }
-            Send();
+            hubsConnection.SendAsync("Move",TableId, Board);
+            //Send();
             return board;
         }
 
@@ -179,6 +167,8 @@ namespace CheckBoardGameVersion3.Client.Pages
         {
             await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
             Board = _repositoryBoard.CreateDesk();
+            await hubsConnection.SendAsync("Move", TableId, Board);
+
         }
     }
 

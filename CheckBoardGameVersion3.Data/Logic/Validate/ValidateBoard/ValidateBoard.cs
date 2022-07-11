@@ -28,7 +28,7 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate.ValidateBoard
             foreach (var cell in board)
             {
 
-                if (cell.Value.Checker?.Team != TeamCheckers.Player1)
+                if (cell.Value.Checker?.Team != TeamCheckers.PlayerMove)
                     continue;
 
                 if (cell.Value.Checker == null)

@@ -47,7 +47,7 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _validateCheckerQueen.QueenMove(board, clickQueen, keyClickCell.Key);
-                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
                 return board;
             }
             
@@ -59,14 +59,14 @@ namespace ConsoleApp2.Logic.GameActions
                 board = validate.MoveAndBeatChecker(parametrs);
                 board = AnaliseMoveAndBeatQueen(board, keyClickCell.Value);
 
-                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
                 foreach (var cell in board)
                 {
                     board[cell.Key].CanMove = false;
                 }
                 if (board.Where(n => n.Value.CanAttack).Any())
                 {
-                    TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                    TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
                     board[keyClickCell.Key].ClickChecker = true;
                 }
             }
@@ -76,7 +76,7 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickQueen)
         {
-            if (clickQueen.Checker?.Team != TeamCheckers.Player1)
+            if (clickQueen.Checker?.Team != TeamCheckers.PlayerMove)
                 return board;
 
             foreach (var cell in board)

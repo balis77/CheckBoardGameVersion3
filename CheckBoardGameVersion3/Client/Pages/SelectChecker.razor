@@ -1,51 +1,60 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client
+﻿@using CheckBoardGameVersion3.Data.Models
+@using Microsoft.AspNetCore.SignalR.Client
 @if (!PlayGame)
 {
-   <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titleLabel">Employee Quick Add</h5>
+    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">Employee Quick Add</h5>
 
-            </div>
-            <div class="modal-body" style="align-self: center">
-                <button class="btn btn-secondary" @onclick="SetWhite"> White</button>
-                <button class="btn btn-secondary" @onclick="SetBlack">Black</button>
-            </div>
-            <div class="modal-body" style="align-self: center">
-                <button @onclick="StartGame">Play</button>
+                </div>
+                <div class="modal-body" style="align-self: center">
+                    <button class="btn btn-secondary" @onclick="SetWhite"> White</button>
+                    <button class="btn btn-secondary" @onclick="SetBlack">Black</button>
+                </div>
+                <div class="modal-body" style="align-self: center">
+                    <button @onclick="StartGame">Play</button>
+                </div>
             </div>
         </div>
     </div>
-</div> 
 }
 else
 {
-    <CheckBoard hubsConnection="hubsConnection" TableId="TableId" player="Player"></CheckBoard>
+    <CheckBoard hubsConnection="HubsConnection" TableId="@TableId" Player="@Player"></CheckBoard>
 }
 
 @code {
-    public static int Player { get; set; }
+
+    [Parameter] public HubConnection HubsConnection { get; set; }
+    [Parameter] public string TableId { get; set; }
+    [Parameter] public static SetTeam Player { get; set; }
+
     public bool PlayGame;
     public void SetWhite()
     {
-        Player = 1;
+        Player = SetTeam.White;
     }
 
-    public void SetBlack()
+    public async void SetBlack()
     {
-        Player = 2;
+        Player = SetTeam.Black;
     }
-    public void StartGame()
+    public async void StartGame()
     {
-        if (Player.Equals(2)||Player.Equals(1))
-        {
-            PlayGame = true;
-        }
+         PlayGame = true;
+        await SetPlayer();
+
+       
     }
-    [Parameter] public HubConnection hubsConnection { get; set; }
-    [Parameter] public string TableId { get; set; }
+    public async Task SetPlayer()
+    {
+       
+        await HubsConnection.SendAsync("SetSecondPlayerColorDask", TableId, Player);
+    }
+
 }
-    }
+
 
 

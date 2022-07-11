@@ -59,7 +59,7 @@ namespace ConsoleApp2.Logic.GameActions
             if (clickCell.CanMove)
             {
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
-                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
                 
                 return board;
             }
@@ -76,7 +76,7 @@ namespace ConsoleApp2.Logic.GameActions
                 board = _actionCheckerValidator.CheckerMove(board, moveChecker, keyclickCell.Key);
 
                 board = AnaliseCanMoveAndBeat(board, board[keyclickCell.Key]);
-                TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
 
                 foreach (var cell in board)
                 {
@@ -84,7 +84,7 @@ namespace ConsoleApp2.Logic.GameActions
 
                     if (cell.Value.CanAttack)
                     {
-                        TeamCheckers.Player1 = TeamCheckers.setTeam(TeamCheckers.Player1);
+                        TeamCheckers.PlayerMove = TeamCheckers.setTeam(TeamCheckers.PlayerMove);
                         board[keyclickCell.Key].ClickChecker = true;
                     }
                 }
@@ -95,7 +95,7 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickChecker)
         {
-            if (clickChecker.Checker?.Team != TeamCheckers.Player1)
+            if (clickChecker.Checker?.Team != TeamCheckers.PlayerMove)
                 return board;
 
             foreach (var cell in board)

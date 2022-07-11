@@ -1,4 +1,5 @@
-﻿using CheckBoardGameVersion3.Data.Models;
+﻿using CheckBoardGameVersion3.Data.Logic.Validate;
+using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Server.Data;
 using Microsoft.AspNetCore.SignalR;
 
@@ -21,8 +22,9 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
 
-                    await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("TableJoined");
+                    //await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync();
                     tableManager.Tables[tableId]++;
+                    
                 }
             }
             else
@@ -31,9 +33,18 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 tableManager.Tables.Add(tableId, 1);
             }
         }
-        public async Task Move(string tableId,Dictionary<string,Cell> board)
+
+        public async Task Move(string tableId, Dictionary<string, Cell> board,SetTeam playerMove)
         {
-            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("Move", board);
+            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("UpdateBoardOpponent", board,playerMove);
+        }
+
+        public async Task SetSecondPlayerColorDask(string tableId,SetTeam setPlayer)
+        {
+                await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
+                await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("setTeam", setPlayer);
+                tableManager.setTeams.Add(setPlayer);
+
         }
     }
 }

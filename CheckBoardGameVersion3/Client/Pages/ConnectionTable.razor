@@ -1,14 +1,14 @@
-﻿@using Microsoft.AspNetCore.SignalR.Client;
+﻿@using CheckBoardGameVersion3.Data.Models
+@using Microsoft.AspNetCore.SignalR.Client;
 @inject NavigationManager NavigationManager
 
 @if (inBoard)
 {
-    <CheckBoard hubsConnection="hubConnection" TableId="@tableId"></CheckBoard>
+    <CheckBoard hubsConnection="hubConnection" TableId="@tableId" Player="@NextPlayer"></CheckBoard>
 }
-@if (inGame)
+else if (inGame)
 {
-    <SelectChecker hubsConnection="hubConnection" TableId="@tableId"></SelectChecker>
-    
+    <SelectChecker HubsConnection="hubConnection" TableId="@tableId"></SelectChecker>
 }
 else
 {
@@ -22,33 +22,40 @@ else
 @code {
     bool inGame;
     bool inBoard;
-    HubConnection  hubConnection = new HubConnectionBuilder()
+    SetTeam NextPlayer;
+
+    HubConnection hubConnection = new HubConnectionBuilder()
            .WithUrl("https://localhost:7065/connect")
            .Build();
 
-
     protected override async Task OnInitializedAsync()
-    { 
+    {
         await RefreshTables();
     }
 
     List<string> tables = new List<string>();
-    string tableId =default;
+    List<SetTeam> colors = new();
+    string tableId = default;
 
     async Task JoinGame(string tableId)
     {
         await hubConnection.StartAsync();
         this.tableId = tableId;
         await hubConnection.SendAsync("JoinTable", tableId);
+        NextPlayer = colors[0] == SetTeam.Black ? SetTeam.White : SetTeam.Black;
         inBoard = true;
+        inGame = false;
     }
 
     async Task RefreshTables()
     {
         HttpClient client = new HttpClient();
         tables = await client.GetFromJsonAsync<List<string>>
-                 ("https://localhost:7065/api/GetTables");
+                 ("https://localhost:7065/Api/GetTables");
+        colors = await client.GetFromJsonAsync<List<SetTeam>>
+                 ("https://localhost:7065/Api/GetColor");
     }
+
 
     async Task CreateGame()
     {

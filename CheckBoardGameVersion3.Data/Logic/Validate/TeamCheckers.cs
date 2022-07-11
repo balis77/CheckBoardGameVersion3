@@ -10,39 +10,21 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
     public  class TeamCheckers
     {
         public static SetTeam Dask { get; set; }
-        public static SetTeam DaskOpponent { get; set; }
-        public static SetTeam Player1 { get; set; } 
-        public static SetTeam Player2 { get; set; }
+        public static SetTeam PlayerMove { get; set; }
+      
+
         public TeamCheckers(SetTeam setTeam)
         {
-            Player1 = setTeam;
+            PlayerMove = setTeam;
         }
         public TeamCheckers() { }
 
-        public static void SetPlayerGame(string set)
+        public static void SetPlayerGame(SetTeam set)
         {
-            if (set == default)
-            {
-                Player1 = SetTeam.Black;
-                Dask = SetTeam.Black;
-            }
-            if (set == "1")
-            {
-                Player1 = SetTeam.White;
-                Dask = SetTeam.White;
-                DaskOpponent = SetTeam.Black;
-                Player2 = SetTeam.Black;
-            }
-            else
-            {
-                Player1 = SetTeam.Black;
-                Dask = SetTeam.Black;
-                DaskOpponent = SetTeam.White;
-                Player2 = SetTeam.White;
-            }
+            PlayerMove = SetTeam.White;
+            Dask = set;
         }
         public static SetTeam setTeam(SetTeam team)
            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
-        
     }
 }

@@ -40,10 +40,9 @@
             </div>
         }
     </div>
-
 </div>
 <div style="text-align:center">
-    <div> Move : @TeamCheckers.Player1 </div>
+    <div> Move : @TeamCheckers.PlayerMove </div>
     <div>Playing for : @TeamCheckers.Dask</div>
     <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
     <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
@@ -53,8 +52,8 @@
 <button class="btn btn-secondary" @onclick="Delete">Delete Сurrent game</button>
 
 @code {
-    [Parameter] public string player { get; set; }
-    [Parameter] public HubConnection hubsConnection { get; set; }
+    [Parameter] public SetTeam Player { get; set; }
+    [Parameter] public HubConnection HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
 }
 

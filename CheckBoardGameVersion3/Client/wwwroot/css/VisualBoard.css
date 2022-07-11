@@ -1,11 +1,64 @@
 ﻿.row {
-}
+    align-items: center;
+   
 
-.cell {
+    /*text-indent: 10px;*/
+}
+.sukarow {
+    /*height: 10px;*/
+    align-items: center;
+    height: 80px;
+
+}
+.letters {
+    /* width: 80px;
+    text-align: center;
+    margin-top: 50px;*/
     height: 80px;
     width: 80px;
     padding: 10px;
     border: 1px solid black;
+}
+.cell {
+    height: 80px;
+    width: 80px;
+    padding: 10px;
+   
+}
+.SomeIndent {
+    height: 60px;
+    width: 60px;
+    padding: 10px;
+}
+.SomeIndent2 {
+    height: 80px;
+    width: 60px;
+    padding: 10px;
+    border-left: 1px solid black;
+    background: #492D27;
+}
+.indent {
+    height: 60px;
+    width: 80px;
+    padding: 10px;
+    border-bottom: 1px solid black;
+    background: #492D27;
+}
+.indent2 {
+    height: 80px;
+    width: 60px;
+    padding: 20px;
+    text-align: center;
+    border-right: 1px solid black;
+    background: #492D27;
+}
+.indent3 {
+    text-decoration: none;
+    width: 80px;
+    height: 60px;
+    text-align: center;
+    border-top: 1px solid black;
+    background: #492D27;
 }
 
 .checker {
@@ -50,17 +103,38 @@
 }
 
 .row:nth-child(2n) .cell:nth-child(2n+1) {
-    background-color: #999
+    background-color: #5E3E35
 }
 
 .row:nth-child(2n) .cell:nth-child(2n) {
-    background-color: #fff;
+    background-color: #E0C6BD;
 }
 
 .row:nth-child(2n+1) .cell:nth-child(2n+1) {
-    background-color: #fff;
+    background-color: #E0C6BD;
 }
 
 .row:nth-child(2n+1) .cell:nth-child(2n) {
-    background-color: #999
+    background-color: #5E3E35
+}
+.joinGame {
+    border: 5px solid #1C6EA4;
+    width: 200px;
+    height: auto;
+    text-align: center;
+}
+.createGame {
+    border: 5px solid #99001A;
+    width: 200px;
+    height: auto;
+    text-align: center;
+}
+.chessboard {
+    /*flex-basis: content;
+    background: #333;*/
+}
+.box {
+    margin: 0 auto;
+    display: flex;
+    align-items: normal;
 }

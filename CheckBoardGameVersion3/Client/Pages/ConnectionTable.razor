@@ -4,7 +4,7 @@
 
 @if (inBoard)
 {
-    <CheckBoard hubsConnection="hubConnection" TableId="@tableId" Player="@NextPlayer"></CheckBoard>
+    <CheckBoard HubsConnection="hubConnection" TableId="@tableId" Player="@NextPlayer"></CheckBoard>
 }
 else if (inGame)
 {
@@ -12,11 +12,20 @@ else if (inGame)
 }
 else
 {
-    <button @onclick="CreateGame">Create Game</button>
-    @foreach (var table in tables)
-    {
-        <button @onclick="()=>JoinGame(table)">Join table @table</button>
-    }
+    <div style="text-align: -webkit-center">
+        <div class="createGame">
+            <button class="btn btn-primary form-group-append"
+                @onclick="CreateGame">
+                Create Game
+            </button>
+        </div>
+        @foreach (var table in tables)
+        {
+            <div class="joinGame">
+                <button class="btn btn-primary form-group-append" @onclick="()=>JoinGame(table)">Join table @NextPlayer</button>
+            </div>
+        }
+    </div>
 }
 
 @code {
@@ -31,6 +40,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         await RefreshTables();
+        if (colors.Any())
+        {
+            NextPlayer = colors[0] == SetTeam.Black ? SetTeam.White : SetTeam.Black;
+        }
+        
     }
 
     List<string> tables = new List<string>();
@@ -42,7 +56,7 @@ else
         await hubConnection.StartAsync();
         this.tableId = tableId;
         await hubConnection.SendAsync("JoinTable", tableId);
-        NextPlayer = colors[0] == SetTeam.Black ? SetTeam.White : SetTeam.Black;
+        
         inBoard = true;
         inGame = false;
     }

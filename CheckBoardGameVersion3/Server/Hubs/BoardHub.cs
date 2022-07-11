@@ -21,10 +21,7 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 if (tableManager.Tables[tableId] < 2)
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-
-                    //await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync();
                     tableManager.Tables[tableId]++;
-                    
                 }
             }
             else
@@ -34,17 +31,16 @@ namespace CheckBoardGameVersion3.Server.Hubs
             }
         }
 
-        public async Task Move(string tableId, Dictionary<string, Cell> board,SetTeam playerMove)
+        public async Task Move(string tableId, Dictionary<string, Cell> board, SetTeam playerMove)
         {
-            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("UpdateBoardOpponent", board,playerMove);
+            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("UpdateBoardOpponent", board, playerMove);
         }
 
-        public async Task SetSecondPlayerColorDask(string tableId,SetTeam setPlayer)
+        public async Task SetSecondPlayerColorDask(string tableId, SetTeam setPlayer)
         {
-                await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("setTeam", setPlayer);
-                tableManager.setTeams.Add(setPlayer);
-
+            await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
+            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("setTeam", setPlayer);
+            tableManager.setTeams.Add(setPlayer);
         }
     }
 }

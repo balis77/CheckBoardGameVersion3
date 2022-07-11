@@ -95,8 +95,9 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseCanMoveAndBeat(Dictionary<string, Cell> board, Cell clickChecker)
         {
-            if (clickChecker.Checker?.Team != TeamCheckers.PlayerMove)
+            if (clickChecker.Checker?.Team != TeamCheckers.PlayerMove || TeamCheckers.PlayerMove != TeamCheckers.Dask)
                 return board;
+            
 
             foreach (var cell in board)
             {

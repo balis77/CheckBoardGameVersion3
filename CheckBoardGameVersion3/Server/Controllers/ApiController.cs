@@ -20,7 +20,9 @@ namespace CheckBoardGameVersion3.Server.Controllers
         public IEnumerable<string> Get() 
             => _tableManager.Tables.Where(n => n.Value < 2).Select(n => n.Key);
         [HttpGet("GetColor")]
-        public IEnumerable<SetTeam> GetColor() 
-            => _tableManager.setTeams;
+        public IEnumerable<SetTeam> GetColor()
+        {
+            return _tableManager.setTeams;
+        }
     }
 }

@@ -76,7 +76,7 @@ namespace ConsoleApp2.Logic.GameActions
 
         public Dictionary<string, Cell> AnaliseMoveAndBeatQueen(Dictionary<string, Cell> board, Cell clickQueen)
         {
-            if (clickQueen.Checker?.Team != TeamCheckers.PlayerMove)
+            if (clickQueen.Checker?.Team != TeamCheckers.PlayerMove || TeamCheckers.PlayerMove != TeamCheckers.Dask)
                 return board;
 
             foreach (var cell in board)

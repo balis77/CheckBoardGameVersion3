@@ -48,6 +48,7 @@ namespace CheckBoardGameVersion3.Client.Pages
                 TeamCheckers.PlayerMove = player;
                 InvokeAsync(StateHasChanged);
             });
+           await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -67,7 +68,6 @@ namespace CheckBoardGameVersion3.Client.Pages
                     if (cell.Value.LockChecker && !clickChecker.ClickChecker)
                     {
                         board = _queenCheaker.AnaliseMoveAndBeatQueen(Board, cell.Value);
-
                     }
                 }
 

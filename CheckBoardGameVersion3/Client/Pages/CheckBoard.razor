@@ -8,12 +8,13 @@
 <div style="text-align:center">Bot @_boardInformation.CountBlack : @_boardInformation.CountWhite  Player</div>
 <div class="box" style="display:flex; justify-content:space-around">
 
-    <div class="chessboard">
+    <div >
+         <table>
         @for (var i = 0; i < 8; i++)
         {
             int local_I = i;
             var nameMarkup = Markup.MarkupName[local_I];
-
+          
             <div class="row">
                 @for (var j = 0; j < 8; j++)
                 {
@@ -37,8 +38,10 @@
 
                     </div>
                 }
-            </div>
+            0++</div>
+            
         }
+        </table>
     </div>
 </div>
 <div style="text-align:center">

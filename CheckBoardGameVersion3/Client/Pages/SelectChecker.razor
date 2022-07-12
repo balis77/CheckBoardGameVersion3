@@ -4,17 +4,23 @@
 {
     <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titleLabel">Employee Quick Add</h5>
+            <div  class="boxSelectChecker modal-content">
+                <div style="font-family: 'Belleza', sans-serif;" class="modal-header">
+                    <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
 
                 </div>
                 <div class="modal-body" style="align-self: center">
-                    <button class="btn btn-secondary" @onclick="SetWhite"> White</button>
-                    <button class="btn btn-secondary" @onclick="SetBlack">Black</button>
+                    <div style="float: right; margin: 10px 10px 10px 100px" class="checker White" @onclick="SetWhite">
+                        <div class="insideOfTheBox"></div>
+                    </div>
+                   
+                    <div style="float: right; margin: 10px 100px 10px 10px" class="checker Black " @onclick="SetBlack">
+                        <div class="insideOfTheBox"></div>
+                    </div>
                 </div>
                 <div class="modal-body" style="align-self: center">
-                    <button @onclick="StartGame">Play</button>
+                    <a href="#" class="myButton "@onclick="StartGame">Play</a>
+                  
                 </div>
             </div>
         </div>
@@ -27,7 +33,7 @@ else
 
 @code {
 
-    [Parameter] public HubConnection HubsConnection { get; set; }
+    [Parameter] public HubConnection? HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
     [Parameter] public static SetTeam Player { get; set; }
 

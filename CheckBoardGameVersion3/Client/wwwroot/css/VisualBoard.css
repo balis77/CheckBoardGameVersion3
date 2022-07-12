@@ -17,61 +17,126 @@
     height: 80px;
     width: 80px;
     padding: 10px;
-    border: 1px solid black;
+    border: 8px solid #3F2822;
 }
 .cell {
     height: 80px;
     width: 80px;
-    padding: 10px;
-   
+    
+    border: 0.5px solid black;
 }
 .SomeIndent {
     height: 60px;
     width: 60px;
     padding: 10px;
+    background: #492D27;
+    border-bottom-right-radius: 10px;
+    border-bottom: 8px solid #3F2822;
+    border-right: 8px solid #3F2822;
+    box-shadow: -18px -14px 8px -1px rgb(50 50 93 / 15%) inset;
 }
 .SomeIndent2 {
     height: 80px;
     width: 60px;
     padding: 10px;
-    border-left: 1px solid black;
+    border-left: 8px solid #3F2822;
+    border-right: 2px solid black;
     background: #492D27;
+    box-shadow: 10px 0px 15px 1px rgb(50 50 93 / 25%) inset;
+}
+.SomeIndent3 {
+    height: 60px;
+    width: 60px;
+    padding: 10px;
+    background: #492D27;
+    border-top-left-radius: 10px;
+    border-left: 8px solid #3F2822;
+    border-top: 8px solid #3F2822;
+    box-shadow: 18px 14px 8px -1px rgb(50 50 93 / 15%) inset;
+}
+.SomeIndent4 {
+    height: 60px;
+    width: 60px;
+    padding: 10px;
+    background: #492D27;
+    border-top-right-radius: 10px;
+    border-right: 8px solid #3F2822;
+    border-top: 8px solid #3F2822;
+    box-shadow: -18px 14px 8px -1px rgb(50 50 93 / 15%) inset;
+}
+.SomeIndent5 {
+    height: 60px;
+    width: 60px;
+    padding: 10px;
+    background: #492D27;
+    border-bottom-left-radius: 10px;
+    border-bottom: 8px solid #3F2822;
+    border-left: 8px solid #3F2822;
+    box-shadow: 18px -14px 8px -1px rgb(50 50 93 / 15%) inset;
 }
 .indent {
     height: 60px;
     width: 80px;
     padding: 10px;
-    border-bottom: 1px solid black;
+    border-bottom: 8px solid #3F2822;
+    border-top: 2px solid black;
     background: #492D27;
+    box-shadow: 0px -10px 15px 1px rgb(50 50 93 / 15%) inset;
 }
 .indent2 {
     height: 80px;
     width: 60px;
     padding: 20px;
     text-align: center;
-    border-right: 1px solid black;
+    align-items: center;
+    display: flex;
+    border-right: 8px solid #3F2822;
+    border-left: 2px solid black;
     background: #492D27;
+    color: #E0C6BD;
+    font-family: 'Belleza', sans-serif;
+    box-shadow: -10px 0px 15px 1px rgb(50 50 93 / 25%) inset;
 }
 .indent3 {
     text-decoration: none;
     width: 80px;
     height: 60px;
     text-align: center;
-    border-top: 1px solid black;
+    place-content: center;
+    align-items: center;
+    display: flex;
+    border-top: 8px solid #3F2822;
+    border-bottom: 2px solid black;
     background: #492D27;
+    color: #E0C6BD;
+    font-family: 'Belleza', sans-serif;
+    box-shadow: 0px 10px 15px 1px rgb(50 50 93 / 15%) inset;
 }
 
 .checker {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    border: 1px solid black;
-    padding: 21px;
+    border: 1px solid white;
+    transform: translate(-12%,7%);
 }
-
-.cell.active {
-    border: 2px solid blue;
+.insideOfTheBox {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto;
+    transform: translate(-1%,18%);
+    border: 1px solid gray;
 }
+    .insideOfTheBox.active {
+        border: 1px solid green;
+    }
+    .insideOfTheBox.lock {
+        border: 1px solid red;
+    }
+    .cell.active {
+        border: 2px solid blue;
+    }
 
 .cell.beat {
     border: 2px solid red;
@@ -80,10 +145,12 @@
 .checker.Black {
     background: #000;
     color: #fff;
+    border: 1px solid white;
 }
 
 .checker.White {
     background: #fff;
+    border: 1px solid black;
 }
 
 .checker.active {
@@ -95,11 +162,13 @@
 }
 
 .checker.WhiteQueen {
-    background: #FBCEB1
+    background: #FBCEB1;
+    border: 1px solid black;
 }
 
 .checker.BlackQueen {
-    background: #1E213D
+    background: #1E213D;
+    border: 1px solid white;
 }
 
 .row:nth-child(2n) .cell:nth-child(2n+1) {
@@ -130,11 +199,58 @@
     text-align: center;
 }
 .chessboard {
-    /*flex-basis: content;
-    background: #333;*/
+    width: 740px;
+    height: 760px;
+    margin-right: -30%;
 }
 .box {
     margin: 0 auto;
     display: flex;
     align-items: normal;
+    justify-content: space-around;
+}
+.myButton {
+    box-shadow: inset 0px 0px 0px 0px #a6827e;
+    /*background: linear-gradient(to bottom, #7d5d3b 5%, #634b30 100%);*/
+    background-color: #492D27;
+    border-radius: 2px;
+    border: 1px solid black;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: 'Belleza', sans-serif;
+    font-size: 17px;
+    padding: 11px 31px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #4d3534;
+}
+
+    .myButton:hover {
+        background: linear-gradient(to bottom, #492D27 5%, #5E3E35 100%);
+        background-color: #492D27;
+    }
+
+    .myButton:active {
+        position: relative;
+        top: 1px;
+    }
+
+.block {
+    height: 210px;
+    width: 210px;
+    border: 1px solid;
+    text-align: center;
+    margin: 0;
+    border-radius: 5%;
+    color: #E0C6BD;
+    align-items: center;
+    justify-content: center;
+    background: #492D27;
+    font-family: 'Belleza', sans-serif;
+}
+.boxSelectChecker {
+    border: 3px solid #54381e;
+    background: #5E3E35;
+    box-shadow: rgb(50 50 93 / 25%) 0px 30px 60px -12px inset, rgb(0 0 0 / 30%) 0px 18px 36px -18px inset;
+
 }

@@ -2,57 +2,84 @@
 @using CheckBoardGameVersion3.Data.Models
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
 @inject IJSRuntime JSRuntime
+
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
-<h3>CheckBoard</h3>
-<div style="text-align:center">Bot @_boardInformation.CountBlack : @_boardInformation.CountWhite  Player</div>
-<div class="box" style="display:flex; justify-content:space-around">
+<h3 style="text-align: center;color: #E0C6BD;font-family: 'Belleza', sans-serif;">CHECKERS</h3>
+<h4 style="text-align:center;color: #E0C6BD;"> @_boardInformation.CountBlack : @_boardInformation.CountWhite  </h4>
+<div style="display:flex; align-items:center">
+    <div class="box" style="display:flex; justify-content:space-around">
 
-    <div >
-         <table>
-        @for (var i = 0; i < 8; i++)
-        {
-            int local_I = i;
-            var nameMarkup = Markup.MarkupName[local_I];
-          
+        <div class="chessboard">
+
             <div class="row">
-                @for (var j = 0; j < 8; j++)
+                <div class="SomeIndent3"></div>
+                @for (var i = 0; i < 8; i++)
                 {
-                    int local_J = j;
-                    var numberMakup = Markup.MarkupNumber[local_J];
-
-                    string idCell = nameMarkup + numberMakup;
-                    var cell = _repositoryBoard.GetCell(idCell, Board);
-
-                    bool CanMove = Board[idCell].CanMove;
-                    bool canBeat = Board[idCell].CanAttack;
-                    bool clickChecker = Board[idCell].ClickChecker;
-                    bool lockChecker = Board[idCell].LockChecker;
-
-                    <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
-
-                        @if (cell.Checker != null)
-                        {
-                            <div @onclick="()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
-                        }
-
-                    </div>
+                    <div class="indent3">@Markup.MarkupName[i]</div>
                 }
-            0++</div>
-            
-        }
-        </table>
+                <div class="SomeIndent4"></div>
+
+            </div>
+            @for (var i = 0; i < 8; i++)
+            {
+                int local_I = i;
+                var nameMarkup = Data.RepositoryBoard.Markup.MarkupName[local_I];
+
+                <div class="row">
+                    <div class="SomeIndent2"></div>
+                    @for (var j = 0; j < 8; j++)
+                    {
+                        int local_J = j;
+                        var numberMakup = Data.RepositoryBoard.Markup.MarkupNumber[local_J];
+
+                        string idCell = nameMarkup + numberMakup;
+                        var cell = _repositoryBoard.GetCell(idCell, Board);
+
+                        bool CanMove = Board[idCell].CanMove;
+                        bool canBeat = Board[idCell].CanAttack;
+                        bool clickChecker = Board[idCell].ClickChecker;
+                        bool lockChecker = Board[idCell].LockChecker;
+
+                        <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
+
+                            @if (cell.Checker != null)
+                            {
+                                <div @onclick="()=>Board =MoveAnalise(Board,cell)" class="checker @(cell.Checker.Color) @(clickChecker ?"active":"") @(lockChecker ?"lock":"") ">
+                                    <div class="insideOfTheBox @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
+                                </div>
+                            }
+
+                        </div>
+
+                    }
+                    <div class="indent2">@Markup.MarkupNumber[i]</div>
+                </div>
+            }
+            <div class="row">
+                <div class="SomeIndent5"></div>
+                @for (int i = 0; i < 8; i++)
+                {
+                    <div class="indent"></div>
+
+                }
+                <div class="SomeIndent"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div> Move : @TeamCheckers.PlayerMove </div>
+        <div>Playing for : @TeamCheckers.Dask</div>
+        <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
+        <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
+        <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
+        <div>Amount white Queen :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
+        <a href="#" class="myButton" @onclick="Delete">Delete game</a>
     </div>
 </div>
-<div style="text-align:center">
-    <div> Move : @TeamCheckers.PlayerMove </div>
-    <div>Playing for : @TeamCheckers.Dask</div>
-    <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
-    <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
-    <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
-    <div>Amount white Queen :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
-</div>
-<button class="btn btn-secondary" @onclick="Delete">Delete Сurrent game</button>
+
+
 
 @code {
     [Parameter] public SetTeam Player { get; set; }

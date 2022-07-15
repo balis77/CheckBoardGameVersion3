@@ -20,10 +20,8 @@ namespace CheckBoardGameVersion3.Client.Pages
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
-       // private BotChecker _botChecker;
+      //private BotChecker _botChecker;
         private BoardInformation _boardInformation;
-
-        
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,14 +31,16 @@ namespace CheckBoardGameVersion3.Client.Pages
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
            
-            TeamCheckers.SetPlayerGame(Player);
+            TeamCheckers.SetPlayerGame(Dask);
             Board = _repositoryBoard.CreateDesk();
             await Read();
-            HubsConnection.On<SetTeam>("SetTeam", (setTeam) =>
+            HubsConnection.On<string,string>("ReceiveMessage", (nickName,message) =>
             {
-                Player = setTeam;
+                var encodedMsg = $"{nickName}: {message}";
+                
+                messages.Add(encodedMsg);
+                MessageInput = null;
                 InvokeAsync(StateHasChanged);
-
             });
             HubsConnection.On<Dictionary<string, Cell>,SetTeam>("UpdateBoardOpponent", (board,player) =>
             {

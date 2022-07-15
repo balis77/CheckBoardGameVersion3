@@ -63,7 +63,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapBlazorHub();
-app.MapHub<BoardHub>("/connect");
+app.MapHub<BoardHub>("/BoardHub");
 app.MapFallbackToFile("index.html");
 
 app.Run();

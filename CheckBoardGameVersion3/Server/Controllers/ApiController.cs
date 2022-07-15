@@ -17,12 +17,23 @@ namespace CheckBoardGameVersion3.Server.Controllers
         }
 
         [HttpGet("GetTables")]
-        public IEnumerable<string> Get() 
-            => _tableManager.Tables.Where(n => n.Value < 2).Select(n => n.Key);
-        [HttpGet("GetColor")]
-        public IEnumerable<SetTeam> GetColor()
+        public IEnumerable<string> Get()
         {
-            return _tableManager.setTeams;
+            return _tableManager.Tables.Where(n=>n.Value<2).Select(n=>n.Key);
+            
+        }
+        [HttpGet("GetTablesKeys")]
+        public IEnumerable<string> GetKeys()
+        {
+            
+            return _tableManager.Tables.Keys;
+        }
+
+        [HttpGet("GetColor")]
+        public Dictionary<string,SetTeam> GetColor()
+        {
+
+            return _tableManager.SetColorTeam;
         }
     }
 }

@@ -5,6 +5,7 @@ namespace CheckBoardGameVersion3.Server.Data
     public class TableManager
     {
         public Dictionary<string, int> Tables = new();
-        public List<SetTeam> setTeams = new(); 
+        public Dictionary<string, SetTeam> SetColorTeam = new();
+        public Dictionary<string, string> UserName = new();
     }
 }

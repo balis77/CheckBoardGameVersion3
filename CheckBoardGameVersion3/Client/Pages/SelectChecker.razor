@@ -4,31 +4,38 @@
 {
     <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div  class="boxSelectChecker modal-content">
+            <div class="boxSelectChecker modal-content">
                 <div style="font-family: 'Belleza', sans-serif;" class="modal-header">
                     <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
 
                 </div>
-                <div class="modal-body" style="align-self: center">
-                    <div style="float: right; margin: 10px 10px 10px 100px" class="checker White" @onclick="SetWhite">
+                <div class="modal-body" style="align-self: center;display:flex;">
+                    <button style="margin-right: 60px;" class="checker White" @onclick="SetWhite" disabled="@LockWhite">
                         <div class="insideOfTheBox"></div>
-                    </div>
-                   
-                    <div style="float: right; margin: 10px 100px 10px 10px" class="checker Black " @onclick="SetBlack">
+                    </button>
+
+                    <button style="margin-left: 60px;" class="checker Black " @onclick="SetBlack" disabled="@LockBlack">
                         <div class="insideOfTheBox"></div>
+                    </button>
+                </div>
+                <form>
+                    <div style="align-items: center;text-align: center;" class="form-group">
+                        <label>
+                            <input @bind="UserInput" required placeholder="Your name:" />
+
+                        </label>
                     </div>
-                </div>
-                <div class="modal-body" style="align-self: center">
-                    <a href="#" class="myButton "@onclick="StartGame">Play</a>
-                  
-                </div>
+                    <div class="modal-body" style="align-self: center; text-align-last: center;">
+                        <a href="#" class="myButton " @onclick="StartGame">Play</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 }
 else
 {
-    <CheckBoard HubsConnection="HubsConnection" TableId="@TableId" Player="@Player"></CheckBoard>
+    <CheckBoard HubsConnection="HubsConnection" TableId="@TableId" Dask="Player" UserName="@UserInput"></CheckBoard>
 }
 
 @code {
@@ -36,28 +43,67 @@ else
     [Parameter] public HubConnection? HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
     [Parameter] public static SetTeam Player { get; set; }
+    public Dictionary<string, SetTeam> colorSetAnotherPlayer = new();
+    private string? UserInput;
 
     public bool PlayGame;
+
+    public bool LockBlack;
+    public bool LockWhite;
+
     public void SetWhite()
     {
         Player = SetTeam.White;
     }
 
-    public async void SetBlack()
+    public void SetBlack()
     {
         Player = SetTeam.Black;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshTables();
+        if (colorSetAnotherPlayer.ContainsKey(TableId))
+        {
+            var AntorerPlayColorSet = colorSetAnotherPlayer.First(n => n.Key == TableId).Value;
+            if (AntorerPlayColorSet == SetTeam.Black)
+            {
+                LockBlack = true;
+            }
+            if (AntorerPlayColorSet == SetTeam.White)
+            {
+                LockWhite = true;
+            }
+        }
+
+    }
+    async Task RefreshTables()
+    {
+        HttpClient client = new HttpClient();
+        colorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, SetTeam>>
+                 ("https://localhost:7065/Api/GetColor");
+
+    }
+    async Task CreateGame()
+    {
+        await HubsConnection.SendAsync("JoinTable", TableId);
+    }
+
     public async void StartGame()
     {
-         PlayGame = true;
+        PlayGame = true;
+        await CreateGame();
         await SetPlayer();
+        //await JoinGame(TableId);
 
-       
+
     }
+
     public async Task SetPlayer()
     {
-       
         await HubsConnection.SendAsync("SetSecondPlayerColorDask", TableId, Player);
+        await HubsConnection.SendAsync("SetName", TableId, UserInput);
     }
 
 }

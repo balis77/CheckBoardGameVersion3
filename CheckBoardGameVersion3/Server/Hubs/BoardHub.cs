@@ -14,6 +14,10 @@ namespace CheckBoardGameVersion3.Server.Hubs
             this.tableManager = tableManager;
         }
 
+        public async Task SendMessage(string userName, string message, string roomName)
+        {
+            await Clients.Group(roomName).SendAsync("ReceiveMessage", userName, message);
+        }
         public async Task JoinTable(string tableId)
         {
             if (tableManager.Tables.ContainsKey(tableId))
@@ -38,9 +42,16 @@ namespace CheckBoardGameVersion3.Server.Hubs
 
         public async Task SetSecondPlayerColorDask(string tableId, SetTeam setPlayer)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("setTeam", setPlayer);
-            tableManager.setTeams.Add(setPlayer);
+
+            if (!tableManager.SetColorTeam.ContainsKey(tableId))
+            {
+                tableManager.SetColorTeam.Add(tableId, setPlayer);
+            }
+        }
+
+        public async Task SetName(string tableId,string name)
+        {
+            tableManager.UserName.Add(tableId, name);
         }
     }
 }

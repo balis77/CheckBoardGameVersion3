@@ -5,11 +5,48 @@
 
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
-<h3 style="text-align: center;color: #E0C6BD;font-family: 'Belleza', sans-serif;">CHECKERS</h3>
-<h4 style="text-align:center;color: #E0C6BD;"> @_boardInformation.CountBlack : @_boardInformation.CountWhite  </h4>
-<div style="display:flex; align-items:center">
-    <div class="box" style="display:flex; justify-content:space-around">
 
+
+<div style="display:flex; align-items:center">
+    <div class="blockChat">
+        <div class="chat">
+
+            <div id="messagesList">
+
+                @foreach (var message in messages)
+                {
+                    var biba = message.Split(":");
+                    if (biba[0] != UserName)
+                    {
+                        <div style="float: left;text-align-last: left;" class="container">
+                            <p>@message</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="container">
+                            <p>@message</p>
+                        </div>
+                    }
+
+                }
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label style="text-align:center">
+                <input class="WriteMessage" @bind="MessageInput" size="50" />
+            </label>
+            <button class="buttonSend" @onclick="Send">Send</button>
+        </div>
+
+    </div>
+    <div class="box" style="justify-content:space-around">
+        <div style="text-align: center;color: #E0C6BD;">
+            <h3 style="font-family: 'Belleza', sans-serif;margin-top: 40px;">CHECKERS</h3>
+            <h4 style="margin-bottom: 54px;"> @_boardInformation.CountBlack : @_boardInformation.CountWhite  </h4>
+        </div>
         <div class="chessboard">
 
             <div class="row">
@@ -49,9 +86,7 @@
                                     <div class="insideOfTheBox @(clickChecker ?"active":"") @(lockChecker ?"lock":"") "></div>
                                 </div>
                             }
-
                         </div>
-
                     }
                     <div class="indent2">@Markup.MarkupNumber[i]</div>
                 </div>
@@ -61,14 +96,13 @@
                 @for (int i = 0; i < 8; i++)
                 {
                     <div class="indent"></div>
-
                 }
                 <div class="SomeIndent"></div>
-
             </div>
         </div>
     </div>
     <div class="block">
+        <div>NickName : @UserName</div>
         <div> Move : @TeamCheckers.PlayerMove </div>
         <div>Playing for : @TeamCheckers.Dask</div>
         <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
@@ -82,9 +116,17 @@
 
 
 @code {
-    [Parameter] public SetTeam Player { get; set; }
+    [Parameter] public SetTeam Dask { get; set; }
     [Parameter] public HubConnection HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
+    [Parameter] public string UserName { get; set; }
+    private string? MessageInput;
+    private List<string> messages = new List<string>();
+
+    public async Task Send()
+    {
+        await HubsConnection.SendAsync("SendMessage", UserName, MessageInput, TableId);
+    }
 }
 
 

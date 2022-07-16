@@ -48,6 +48,10 @@ namespace CheckBoardGameVersion3.Server.Hubs
             }
         }
 
+        public async Task UpdateJoinTable()
+        {
+            await Clients.All.SendAsync("UpdateTable");
+        }
         public async Task SetName(string tableId,string name)
         {
             _tableManager.UserName.Add(tableId, name);

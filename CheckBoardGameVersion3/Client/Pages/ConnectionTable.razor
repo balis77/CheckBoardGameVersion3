@@ -12,13 +12,19 @@ else
     <div style=" align-items: center;text-align: -webkit-center;">
         <div style="text-align: -webkit-center">
             <div style="display: flex;align-items: center;justify-content: center;">
-                <div  class="blockChat JoinTable">
-                    @foreach (var table in Tables)
-                    {
-                        <div class="joinGame">
-                            <button style="width: 200px;" class="myButton" @onclick="()=>JoinGame(table)">Join table </button>
-                        </div>
-                    }
+                <div>
+                    <div class="blockChat JoinTable">
+                        @foreach (var table in Tables)
+                        {
+                            <div class="joinGame">
+                                <button style="width: 200px;" class="myButton" @onclick="()=>JoinGame(table)">Join table </button>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="joinGame">
+                        <button style="width: 200px;" class="myButton" @onclick="()=>RefreshTables()">Refresh</button>
+                    </div>
                 </div>
                 <div>
                     <div style="text-align: center;color: #E0C6BD;">
@@ -38,12 +44,12 @@ else
 }
 
 @code {
-   public bool InGame;
-   public bool InBoard;
+    public bool InGame;
+    public bool InBoard;
 
-   public List<string> Tables = new List<string>();
-   public List<string> ConnectionTables = new();
-   public string TableId = default;
+    public List<string> Tables = new List<string>();
+    public List<string> ConnectionTables = new();
+    public string TableId = default;
 
     HubConnection HubConnect = new HubConnectionBuilder()
            .WithUrl("https://localhost:7065/BoardHub")
@@ -52,6 +58,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         await RefreshTables();
+        HttpClient client = new HttpClient();
+        HubConnect.On("UpdateTable", () =>
+        {
+            RefreshTables();
+        });
+
     }
 
     async Task JoinGame(string tableId)

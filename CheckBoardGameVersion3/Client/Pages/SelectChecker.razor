@@ -85,6 +85,7 @@ else
     async Task CreateGame()
     {
         await HubsConnection.SendAsync("JoinTable", TableId);
+
     }
 
     public async void StartGame()
@@ -92,12 +93,14 @@ else
         PlayGame = true;
         await CreateGame();
         await SetPlayer();
+        await HubsConnection.SendAsync("UpdateJoinTable");
     }
 
     public async Task SetPlayer()
     {
         await HubsConnection.SendAsync("SetSecondPlayerColorDask", TableId, Player);
         await HubsConnection.SendAsync("SetName", TableId, UserInput);
+       
     }
 
 }

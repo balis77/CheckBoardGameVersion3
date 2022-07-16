@@ -66,12 +66,12 @@
                         string idCell = nameMarkup + numberMakup;
                         var cell = _repositoryBoard.GetCell(idCell, Board);
 
-                        bool CanMove = Board[idCell].CanMove;
+                        bool canMove = Board[idCell].CanMove;
                         bool canBeat = Board[idCell].CanAttack;
                         bool clickChecker = Board[idCell].ClickChecker;
                         bool lockChecker = Board[idCell].LockChecker;
 
-                        <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(CanMove ?"active":"") @(canBeat ? "beat":"")">
+                        <div @onclick="()=>Board =MoveAndBeatChecker( Board,cell)" class="cell @(canMove ?"active":"") @(canBeat ? "beat":"")">
 
                             @if (cell.Checker != null)
                             {

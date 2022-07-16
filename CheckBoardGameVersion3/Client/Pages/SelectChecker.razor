@@ -93,7 +93,6 @@ else
         PlayGame = true;
         await CreateGame();
         await SetPlayer();
-        await HubsConnection.SendAsync("UpdateJoinTable");
     }
 
     public async Task SetPlayer()

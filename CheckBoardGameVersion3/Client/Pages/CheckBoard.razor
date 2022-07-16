@@ -10,13 +10,11 @@
 <div style="display:flex; align-items:center">
     <div class="blockChat">
         <div class="chat">
-
             <div id="messagesList">
-
-                @foreach (var message in messages)
+                @foreach (var message in Messages)
                 {
-                    var biba = message.Split(":");
-                    if (biba[0] != UserName)
+                    var userNameOpponent = message.Split(":");
+                    if (userNameOpponent[0] != UserName)
                     {
                         <div style="float: left;text-align-last: left;" class="container">
                             <p>@message</p>
@@ -28,11 +26,8 @@
                             <p>@message</p>
                         </div>
                     }
-
                 }
-
             </div>
-
         </div>
         <div class="form-group">
             <label style="text-align:center">
@@ -40,15 +35,13 @@
             </label>
             <button class="buttonSend" @onclick="Send">Send</button>
         </div>
-
     </div>
     <div class="box" style="justify-content:space-around">
         <div style="text-align: center;color: #E0C6BD;">
             <h3 style="font-family: 'Belleza', sans-serif;margin-top: 40px;">CHECKERS</h3>
-            <h4 style="margin-bottom: 54px;"> @_boardInformation.CountBlack : @_boardInformation.CountWhite  </h4>
+            <h4 style="margin-bottom: 54px;">@_boardInformation.CountBlack : @_boardInformation.CountWhite: </h4>
         </div>
         <div class="chessboard">
-
             <div class="row">
                 <div class="SomeIndent3"></div>
                 @for (var i = 0; i < 8; i++)
@@ -117,11 +110,11 @@
 
 @code {
     [Parameter] public SetTeam Dask { get; set; }
-    [Parameter] public HubConnection HubsConnection { get; set; }
-    [Parameter] public string TableId { get; set; }
-    [Parameter] public string UserName { get; set; }
+    [Parameter] public HubConnection? HubsConnection { get; set; }
+    [Parameter] public string? TableId { get; set; }
+    [Parameter] public string? UserName { get; set; }
     private string? MessageInput;
-    private List<string> messages = new List<string>();
+    private List<string> Messages = new List<string>();
 
     public async Task Send()
     {

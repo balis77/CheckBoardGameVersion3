@@ -20,7 +20,6 @@ namespace CheckBoardGameVersion3.Client.Pages
         private ActionCheaker _actionCheaker;
         private QueenCheaker _queenCheaker;
         private ValidateBoard _validateBoard;
-      //private BotChecker _botChecker;
         private BoardInformation _boardInformation;
 
         protected override async Task OnInitializedAsync()
@@ -30,25 +29,26 @@ namespace CheckBoardGameVersion3.Client.Pages
             _repositoryBoard = new MockRepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
-           
             TeamCheckers.SetPlayerGame(Dask);
             Board = _repositoryBoard.CreateDesk();
             await Read();
-            HubsConnection.On<string,string>("ReceiveMessage", (nickName,message) =>
+
+            HubsConnection.On<string, string>("ReceiveMessage", (nickName, message) =>
             {
                 var encodedMsg = $"{nickName}: {message}";
-                
-                messages.Add(encodedMsg);
+                Messages.Add(encodedMsg);
                 MessageInput = null;
                 InvokeAsync(StateHasChanged);
             });
-            HubsConnection.On<Dictionary<string, Cell>,SetTeam>("UpdateBoardOpponent", (board,player) =>
+
+            HubsConnection.On<Dictionary<string, Cell>, SetTeam>("UpdateBoardOpponent", (board, player) =>
             {
                 Board = board;
                 TeamCheckers.PlayerMove = player;
                 InvokeAsync(StateHasChanged);
             });
-           await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+
+            await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,7 +99,6 @@ namespace CheckBoardGameVersion3.Client.Pages
 
                 board = _actionCheaker.AnaliseCanMoveAndBeat(Board, clickChecker);
             }
-
             return board;
         }
 
@@ -121,10 +120,10 @@ namespace CheckBoardGameVersion3.Client.Pages
             else
             {
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
-               
+
             }
-          
-            HubsConnection.SendAsync("Move",TableId, Board, TeamCheckers.PlayerMove);
+
+            HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
             return board;
         }
 
@@ -152,8 +151,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         {
             await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
             Board = _repositoryBoard.CreateDesk();
-            await HubsConnection.SendAsync("Move", TableId, Board,TeamCheckers.PlayerMove);
-
+            await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
     }
 

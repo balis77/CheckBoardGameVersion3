@@ -188,13 +188,13 @@
     background-color: #5E3E35
 }
 .joinGame {
-    border: 5px solid #1C6EA4;
+   /* border: 5px solid #1C6EA4;*/
     width: 200px;
     height: auto;
     text-align: center;
 }
 .createGame {
-    border: 5px solid #99001A;
+    /*border: 5px solid #99001A;*/
     width: 200px;
     height: auto;
     text-align: center;
@@ -265,8 +265,6 @@
 
 }
 
-
-
 .container {
     background-color: #E0C6BD;
     border-radius: 5px;
@@ -277,13 +275,11 @@
     color: #5E3E35;
 }
 
-/* Darker chat container */
 .darker {
     border-color: #ccc;
     background-color: #ddd;
 }
 
-/* Clear floats */
 .container::after {
     content: "";
     clear: both;
@@ -296,13 +292,12 @@
     margin-right: 0;
 }
 
-/* Style time text */
+
 .time-right {
     float: right;
     color: #aaa;
 }
 
-/* Style time text */
 .time-left {
     float: left;
     color: #999;
@@ -328,4 +323,10 @@
     float: right;
     background-color: #E0C6BD;
     border-bottom-right-radius: 10%;
+}
+.JoinTable {
+    margin: 5% 2% 0% 0%;
+    box-shadow: rgb(50 50 93 / 95%) 0px 30px 60px -12px inset, rgb(0 0 0 / 90%) 0px 18px 36px -18px inset;
+    width: 250px;
+    height: 500px;
 }

@@ -7,11 +7,11 @@ namespace CheckBoardGameVersion3.Server.Hubs
 {
     public class BoardHub : Hub
     {
-        private readonly TableManager tableManager;
+        private readonly TableManager _tableManager;
 
         public BoardHub(TableManager tableManager)
         {
-            this.tableManager = tableManager;
+           _tableManager = tableManager;
         }
 
         public async Task SendMessage(string userName, string message, string roomName)
@@ -20,18 +20,18 @@ namespace CheckBoardGameVersion3.Server.Hubs
         }
         public async Task JoinTable(string tableId)
         {
-            if (tableManager.Tables.ContainsKey(tableId))
+            if (_tableManager.Tables.ContainsKey(tableId))
             {
-                if (tableManager.Tables[tableId] < 2)
+                if (_tableManager.Tables[tableId] < 2)
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                    tableManager.Tables[tableId]++;
+                    _tableManager.Tables[tableId]++;
                 }
             }
             else
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                tableManager.Tables.Add(tableId, 1);
+                _tableManager.Tables.Add(tableId, 1);
             }
         }
 
@@ -42,16 +42,15 @@ namespace CheckBoardGameVersion3.Server.Hubs
 
         public async Task SetSecondPlayerColorDask(string tableId, SetTeam setPlayer)
         {
-
-            if (!tableManager.SetColorTeam.ContainsKey(tableId))
+            if (!_tableManager.SetColorTeam.ContainsKey(tableId))
             {
-                tableManager.SetColorTeam.Add(tableId, setPlayer);
+                _tableManager.SetColorTeam.Add(tableId, setPlayer);
             }
         }
 
         public async Task SetName(string tableId,string name)
         {
-            tableManager.UserName.Add(tableId, name);
+            _tableManager.UserName.Add(tableId, name);
         }
     }
 }

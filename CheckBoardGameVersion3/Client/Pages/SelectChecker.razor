@@ -7,13 +7,11 @@
             <div class="boxSelectChecker modal-content">
                 <div style="font-family: 'Belleza', sans-serif;" class="modal-header">
                     <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
-
                 </div>
                 <div class="modal-body" style="align-self: center;display:flex;">
                     <button style="margin-right: 60px;" class="checker White" @onclick="SetWhite" disabled="@LockWhite">
                         <div class="insideOfTheBox"></div>
                     </button>
-
                     <button style="margin-left: 60px;" class="checker Black " @onclick="SetBlack" disabled="@LockBlack">
                         <div class="insideOfTheBox"></div>
                     </button>
@@ -43,11 +41,10 @@ else
     [Parameter] public HubConnection? HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
     [Parameter] public static SetTeam Player { get; set; }
-    public Dictionary<string, SetTeam> colorSetAnotherPlayer = new();
+    public Dictionary<string, SetTeam> ColorSetAnotherPlayer = new();
     private string? UserInput;
 
     public bool PlayGame;
-
     public bool LockBlack;
     public bool LockWhite;
 
@@ -64,27 +61,27 @@ else
     protected override async Task OnInitializedAsync()
     {
         await RefreshTables();
-        if (colorSetAnotherPlayer.ContainsKey(TableId))
+        if (ColorSetAnotherPlayer.ContainsKey(TableId))
         {
-            var AntorerPlayColorSet = colorSetAnotherPlayer.First(n => n.Key == TableId).Value;
-            if (AntorerPlayColorSet == SetTeam.Black)
+            var antorerPlayColorSet = ColorSetAnotherPlayer.First(n => n.Key == TableId).Value;
+            if (antorerPlayColorSet == SetTeam.Black)
             {
                 LockBlack = true;
             }
-            if (AntorerPlayColorSet == SetTeam.White)
+            if (antorerPlayColorSet == SetTeam.White)
             {
                 LockWhite = true;
             }
         }
-
     }
+
     async Task RefreshTables()
     {
         HttpClient client = new HttpClient();
-        colorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, SetTeam>>
+        ColorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, SetTeam>>
                  ("https://localhost:7065/Api/GetColor");
-
     }
+
     async Task CreateGame()
     {
         await HubsConnection.SendAsync("JoinTable", TableId);
@@ -95,9 +92,6 @@ else
         PlayGame = true;
         await CreateGame();
         await SetPlayer();
-        //await JoinGame(TableId);
-
-
     }
 
     public async Task SetPlayer()

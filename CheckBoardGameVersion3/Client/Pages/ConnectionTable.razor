@@ -51,12 +51,13 @@ else
     public List<string> ConnectionTables = new();
     public string TableId = default;
 
-    HubConnection HubConnect = new HubConnectionBuilder()
-           .WithUrl("https://localhost:7065/BoardHub")
-           .Build();
-
+    HubConnection HubConnect;
     protected override async Task OnInitializedAsync()
     {
+        HubConnect  = new HubConnectionBuilder()
+           .WithUrl(NavigationManager.ToAbsoluteUri("/BoardHub"))
+           .Build();
+
         await RefreshTables();
         HttpClient client = new HttpClient();
 
@@ -74,7 +75,7 @@ else
     {
         HttpClient client = new HttpClient();
         Tables = await client.GetFromJsonAsync<List<string>>
-                 ("https://localhost:7065/Api/GetTables");
+                 (NavigationManager.ToAbsoluteUri("/Api/GetTables"));
     }
 
     async Task CreateGame()

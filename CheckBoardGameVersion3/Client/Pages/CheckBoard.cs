@@ -50,7 +50,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await Save();

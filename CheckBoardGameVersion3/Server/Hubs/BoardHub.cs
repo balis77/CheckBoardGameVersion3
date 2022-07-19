@@ -11,7 +11,7 @@ namespace CheckBoardGameVersion3.Server.Hubs
 
         public BoardHub(TableManager tableManager)
         {
-           _tableManager = tableManager;
+            _tableManager = tableManager;
         }
 
         public async Task SendMessage(string userName, string message, string roomName)
@@ -47,14 +47,24 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 _tableManager.SetColorTeam.Add(tableId, setPlayer);
             }
         }
-
+       
         public async Task UpdateJoinTable()
         {
             await Clients.All.SendAsync("UpdateTable");
         }
-        public async Task SetName(string tableId,string name)
+        public async Task SetName(string tableId, string name)
         {
             _tableManager.UserName.Add(tableId, name);
+        }
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            var removeUserName = _tableManager.Tables.FirstOrDefault();
+            const int PlayersInRoom = 2;
+            if (removeUserName.Value == PlayersInRoom)
+            {
+                _tableManager.Tables[removeUserName.Key]--;
+            }
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

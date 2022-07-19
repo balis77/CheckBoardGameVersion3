@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "CheckBoardGameVersion3Client20220718143329",
+      "defaultValue": "CheckBoardGameVersion3Server20220718161135",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
@@ -56,7 +56,7 @@
       "properties": {
         "mode": "Incremental",
         "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
           "contentVersion": "1.0.0.0",
           "resources": [
             {

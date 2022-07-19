@@ -46,11 +46,11 @@ app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    RequestPath = "/Files",
-    FileProvider = new PhysicalFileProvider(Path.Combine(environment.ContentRootPath, "Files"))
-});
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    RequestPath = "/Files",
+//    FileProvider = new PhysicalFileProvider(Path.Combine(environment.ContentRootPath, "Files"))
+//});
 
 
 app.UseHttpsRedirection();

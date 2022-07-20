@@ -1,7 +1,9 @@
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Server.Data;
 using CheckBoardGameVersion3.Shared;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CheckBoardGameVersion3.Server.Controllers
 {
@@ -10,7 +12,7 @@ namespace CheckBoardGameVersion3.Server.Controllers
     public class ApiController : ControllerBase
     {
         private readonly TableManager _tableManager;
-
+        Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
         public ApiController(TableManager tableManager)
         {
             _tableManager = tableManager;
@@ -27,5 +29,14 @@ namespace CheckBoardGameVersion3.Server.Controllers
         [HttpGet("GetColor")]
         public Dictionary<string, SetTeam> GetColor() 
             => _tableManager.SetColorTeam;
+
+        [HttpGet("GetHub")]
+        public HubConnection GetConnect()
+        {
+            return _tableManager.hubConnection;
+           // return new HubConnectionBuilder()
+           //.WithUrl(NavigationManager.ToAbsoluteUri("/BoardHub"))
+           //.Build();
+        }
     }
 }

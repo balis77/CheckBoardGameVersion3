@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
 
-
+@page "/CheckBoard/{TableId}/{Player}"
 <div style="display:flex; align-items:center">
     <div class="blockChat">
         <div class="chat">
@@ -14,7 +14,7 @@
                 @foreach (var message in Messages)
                 {
                     var userNameOpponent = message.Split(":");
-                    if (userNameOpponent[0] != UserName)
+                    if (userNameOpponent[0] != Player)
                     {
                         <div style="float: left;text-align-last: left;" class="container">
                             <p>@message</p>
@@ -95,7 +95,7 @@
         </div>
     </div>
     <div class="block">
-        <div>NickName : @UserName</div>
+        <div>NickName : @Player</div>
         <div> Move : @TeamCheckers.PlayerMove </div>
         <div>Playing for : @TeamCheckers.Dask</div>
         <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
@@ -110,15 +110,15 @@
 
 @code {
     [Parameter] public SetTeam Dask { get; set; }
-    [Parameter] public HubConnection? HubsConnection { get; set; }
+    public HubConnection? HubsConnection { get; set; }
     [Parameter] public string? TableId { get; set; }
-    [Parameter] public string? UserName { get; set; }
+    [Parameter] public string? Player { get; set; }
     private string? MessageInput;
     private List<string> Messages = new List<string>();
 
     public async Task Send()
     {
-        await HubsConnection.SendAsync("SendMessage", UserName, MessageInput, TableId);
+        await HubsConnection.SendAsync("SendMessage", Player, MessageInput, TableId);
     }
 }
 

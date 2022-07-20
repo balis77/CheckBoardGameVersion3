@@ -9,6 +9,7 @@ using ConsoleApp2.Logic.GameActions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace CheckBoardGameVersion3.Client.Pages
@@ -24,6 +25,8 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
+
+
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new MockRepositoryBoard();
@@ -32,7 +35,8 @@ namespace CheckBoardGameVersion3.Client.Pages
             TeamCheckers.SetPlayerGame(Dask);
             Board = _repositoryBoard.CreateDesk();
             await Read();
-
+            HttpClient client = new HttpClient();
+            //HubsConnection = await client.GetFromJsonAsync<HubConnection>(NavigationManager.ToAbsoluteUri("/Api/GetHub"));
             HubsConnection.On<string, string>("ReceiveMessage", (nickName, message) =>
             {
                 var encodedMsg = $"{nickName}: {message}";

@@ -1,6 +1,7 @@
 ﻿@using CheckBoardGameVersion3.Data.Models
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
+@page "/SelectChecker/{TableId}"
 @if (!PlayGame)
 {
     <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
@@ -25,7 +26,7 @@
                         </label>
                     </div>
                     <div class="modal-body" style="align-self: center; text-align-last: center;">
-                        <a href="#" class="myButton " @onclick="StartGame">Play</a>
+                        <a href="@($"/CheckBoard/{TableId}/{UserInput}")" class="myButton " @onclick="StartGame">Play</a>
                     </div>
                 </form>
             </div>
@@ -34,12 +35,13 @@
 }
 else
 {
-    <CheckBoard HubsConnection="HubsConnection" TableId="@TableId" Dask="Player" UserName="@UserInput"></CheckBoard>
+
+    @*<CheckBoard HubsConnection="HubsConnection" TableId="@TableId" Dask="Player" Player="@UserInput"></CheckBoard>*@
 }
 
 @code {
 
-    [Parameter] public HubConnection? HubsConnection { get; set; }
+    public HubConnection? HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
     [Parameter] public static SetTeam Player { get; set; }
     public Dictionary<string, SetTeam> ColorSetAnotherPlayer = new();
@@ -81,6 +83,8 @@ else
         HttpClient client = new HttpClient();
         ColorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, SetTeam>>
                  (NavigationManager.ToAbsoluteUri("/Api/GetColor"));
+       HubsConnection = await client.GetFromJsonAsync<HubConnection>(NavigationManager.ToAbsoluteUri("/Api/GetHub"));
+        //HubsConnection = new (hubConnection);
     }
 
     async Task CreateGame()
@@ -100,7 +104,12 @@ else
     {
         await HubsConnection.SendAsync("SetSecondPlayerColorDask", TableId, Player);
         await HubsConnection.SendAsync("SetName", TableId, UserInput);
-       
+        if (UserInput == null)
+        {
+            Random random = new Random();
+            var biba = random.Next(1, 1000);
+            UserInput = $"{biba}";
+        }
     }
 
 }

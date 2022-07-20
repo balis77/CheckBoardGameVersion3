@@ -1,14 +1,8 @@
 ﻿@using CheckBoardGameVersion3.Data.Models
 @using Microsoft.AspNetCore.SignalR.Client;
-@inject NavigationManager NavigationManager
+@inject NavigationManager UrlManager
+    @*<SelectChecker HubsConnection="HubConnect" TableId="@TableId"></SelectChecker>*@
 
-
-@if (InGame)
-{
-    <SelectChecker HubsConnection="HubConnect" TableId="@TableId"></SelectChecker>
-}
-else
-{
     <div style=" align-items: center;text-align: -webkit-center;">
         <div style="text-align: -webkit-center">
             <div style="display: flex;align-items: center;justify-content: center;">
@@ -16,9 +10,9 @@ else
                     <div class="blockChat JoinTable">
                         @foreach (var table in Tables)
                         {
-                            <div class="joinGame">
+                            <a class="joinGame">
                                 <button style="width: 200px;" class="myButton" @onclick="()=>JoinGame(table)">Join table </button>
-                            </div>
+                            </a>
                         }
 
                     </div>
@@ -31,17 +25,17 @@ else
                         <h3 style="font-family: 'Belleza', sans-serif;margin-top: 40px;">CHECKERS ONLINE</h3>
                     </div>
                     <div class="createGame">
-                        <button class="myButton"
-                            @onclick="CreateGame">
+                        <a href="@($"/SelectChecker/{TableId}")" class="myButton"
+                       @onclick="CreateGame">
                             Create Game
-                        </button>
+                        </a>
                     </div>
                     <img src="/Pages/CheckBoard.png" alt="gde fotka suka?" />
                 </div>
             </div>
         </div>
     </div>
-}
+
 
 @code {
     public bool InGame;
@@ -54,20 +48,23 @@ else
     HubConnection HubConnect;
     protected override async Task OnInitializedAsync()
     {
-        HubConnect  = new HubConnectionBuilder()
-           .WithUrl(NavigationManager.ToAbsoluteUri("/BoardHub"))
-           .Build();
 
+        HubConnect = new HubConnectionBuilder()
+           .WithUrl(UrlManager.ToAbsoluteUri("/BoardHub"))
+           .Build();
+        await HubConnect.StartAsync();
         await RefreshTables();
+         await HubConnect.SendAsync("ConnectionHub",HubConnect);
         HttpClient client = new HttpClient();
 
     }
 
     async Task JoinGame(string tableId)
     {
-        await HubConnect.StartAsync();
+
         this.TableId = tableId;
         await HubConnect.SendAsync("JoinTable", tableId);
+
         InGame = true;
     }
 
@@ -75,13 +72,15 @@ else
     {
         HttpClient client = new HttpClient();
         Tables = await client.GetFromJsonAsync<List<string>>
-                 (NavigationManager.ToAbsoluteUri("/Api/GetTables"));
+                 (UrlManager.ToAbsoluteUri("/Api/GetTables"));
     }
 
     async Task CreateGame()
     {
-        await HubConnect.StartAsync();
-        TableId = Guid.NewGuid().ToString();
+         TableId = Guid.NewGuid().ToString();
+       
+       
+        //UrlManager.NavigateTo($"counter/{TableId}");
         InGame = true;
     }
 }

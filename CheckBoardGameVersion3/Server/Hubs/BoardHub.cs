@@ -2,13 +2,14 @@
 using CheckBoardGameVersion3.Data.Models;
 using CheckBoardGameVersion3.Server.Data;
 using Microsoft.AspNetCore.SignalR;
-
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Components;
 namespace CheckBoardGameVersion3.Server.Hubs
 {
     public class BoardHub : Hub
     {
         private readonly TableManager _tableManager;
-
+        NavigationManager NavigationManager;
         public BoardHub(TableManager tableManager)
         {
             _tableManager = tableManager;
@@ -18,8 +19,16 @@ namespace CheckBoardGameVersion3.Server.Hubs
         {
             await Clients.Group(roomName).SendAsync("ReceiveMessage", userName, message);
         }
+
+        public async Task ConnectionHub(HubConnection hubConnection)
+        {
+            _tableManager.hubConnection = hubConnection;
+            //await Clients.All.SendAsync("HubInitilizationConnect",_tableManager.hubConnection);
+        }
         public async Task JoinTable(string tableId)
         {
+           
+
             if (_tableManager.Tables.ContainsKey(tableId))
             {
                 if (_tableManager.Tables[tableId] < 2)
@@ -47,7 +56,7 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 _tableManager.SetColorTeam.Add(tableId, setPlayer);
             }
         }
-       
+
         public async Task UpdateJoinTable()
         {
             await Clients.All.SendAsync("UpdateTable");

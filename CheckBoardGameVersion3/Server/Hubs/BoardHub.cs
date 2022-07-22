@@ -19,8 +19,6 @@ namespace CheckBoardGameVersion3.Server.Hubs
         {
             await Clients.Group(roomName).SendAsync("ReceiveMessage", userName, message);
         }
-
-
         public async Task JoinBoard(string tableId, string userName)
         {
             UsersInTable user = new UsersInTable();
@@ -55,7 +53,6 @@ namespace CheckBoardGameVersion3.Server.Hubs
                 _tablesManager.NameUser.Add(user);
             }
         }
-
 
         public async Task JoinTable(string tableId)
         {
@@ -97,6 +94,7 @@ namespace CheckBoardGameVersion3.Server.Hubs
         {
             _tablesManager.UserName.Add(tableId, name);
         }
+
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var removeUserName = _tablesManager.Tables.FirstOrDefault();

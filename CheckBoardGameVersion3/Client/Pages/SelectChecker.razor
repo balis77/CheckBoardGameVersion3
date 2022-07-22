@@ -10,10 +10,10 @@
                 <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
             </div>
             <div class="modal-body" style="align-self: center;display:flex;">
-                <button style="margin-right: 60px;" class="checker White" @onclick="SetWhite" disabled="@LockWhite">
+                <button style="margin-right: 60px;" class="checker White @(LockWhite ?"lock":"") @(ActiveWhite ?"active":"")" @onclick="SetWhite" disabled="@LockWhite">
                     <div class="insideOfTheBox"></div>
                 </button>
-                <button style="margin-left: 60px;" class="checker Black " @onclick="SetBlack" disabled="@LockBlack">
+                <button style="margin-left: 60px;" class="checker Black @(LockBlack ?"lock":"") @(ActiveBlack ?"active":"")" @onclick="SetBlack" disabled="@LockBlack">
                     <div class="insideOfTheBox"></div>
                 </button>
             </div>
@@ -33,7 +33,6 @@
 </div>
 
 @code {
-
     [Parameter] public string TableId { get; set; }
     public static SetTeam Player { get; set; } 
     public Dictionary<string, string> ColorSetAnotherPlayer = new();
@@ -42,15 +41,21 @@
     public bool PlayGame;
     public bool LockBlack;
     public bool LockWhite;
+    public bool ActiveWhite;
+    public bool ActiveBlack;
 
     public void SetWhite()
     {
         Player = SetTeam.White;
+        ActiveWhite = true;
+        ActiveBlack = false;
     }
 
     public void SetBlack()
     {
         Player = SetTeam.Black;
+        ActiveBlack = true;
+        ActiveWhite = false;
     }
 
     protected override async Task OnInitializedAsync()
@@ -62,10 +67,12 @@
             if (antorerPlayColorSet == "Black")
             {
                 LockBlack = true;
+                Player = SetTeam.White;
             }
             if (antorerPlayColorSet == "White")
             {
                 LockWhite = true;
+                Player = SetTeam.Black;
             }
         }
     }

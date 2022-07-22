@@ -113,7 +113,6 @@ namespace CheckBoardGameVersion3.Client.Pages
             }
             return board;
         }
-
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
             board = _boardInformation.GameOver(Board);
@@ -138,8 +137,6 @@ namespace CheckBoardGameVersion3.Client.Pages
             HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
             return board;
         }
-
-
         public async Task Save()
         {
             string jsonFileBoard = JsonSerializer.Serialize(Board);
@@ -158,7 +155,6 @@ namespace CheckBoardGameVersion3.Client.Pages
             if (!jsonFileBoard.Equals(null))
                 Board = jsonFileBoard;
         }
-
         public async Task Delete()
         {
             await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");

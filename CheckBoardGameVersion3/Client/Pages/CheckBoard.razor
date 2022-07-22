@@ -102,11 +102,9 @@
         <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
         <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
         <div>Amount white Queen :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
-        <a href="#" class="myButton" @onclick="Delete">Delete game</a>
+        <a  class="myButton" @onclick="Delete">Delete game</a>
     </div>
 </div>
-
-
 
 @code {
     [Parameter] public string Dask { get; set; }
@@ -118,10 +116,12 @@
 
     public async Task Send()
     {
-        await HubConnect.SendAsync("SendMessage", User, MessageInput, TableId);
+        if (MessageInput is not null)
+        {
+             await HubConnect.SendAsync("SendMessage", User, MessageInput, TableId);
+        }
     }
 }
-
 
 <PageTitle>Index</PageTitle>
 

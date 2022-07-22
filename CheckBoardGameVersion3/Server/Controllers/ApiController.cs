@@ -27,16 +27,7 @@ namespace CheckBoardGameVersion3.Server.Controllers
             => _tableManager.Tables.Keys;
 
         [HttpGet("GetColor")]
-        public Dictionary<string, SetTeam> GetColor() 
+        public Dictionary<string, string> GetColor()
             => _tableManager.SetColorTeam;
-
-        [HttpGet("GetHub")]
-        public HubConnection GetConnect()
-        {
-            return _tableManager.hubConnection;
-           // return new HubConnectionBuilder()
-           //.WithUrl(NavigationManager.ToAbsoluteUri("/BoardHub"))
-           //.Build();
-        }
     }
 }

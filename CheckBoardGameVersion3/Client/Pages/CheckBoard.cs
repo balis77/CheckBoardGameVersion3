@@ -25,19 +25,21 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-
-
+            HubConnect = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/BoardHub"))
+            .Build();
             _actionCheaker = new ActionCheaker();
             _queenCheaker = new QueenCheaker();
             _repositoryBoard = new MockRepositoryBoard();
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
-            TeamCheckers.SetPlayerGame(Dask);
+            Read();
             Board = _repositoryBoard.CreateDesk();
-            await Read();
-            HttpClient client = new HttpClient();
-            //HubsConnection = await client.GetFromJsonAsync<HubConnection>(NavigationManager.ToAbsoluteUri("/Api/GetHub"));
-            HubsConnection.On<string, string>("ReceiveMessage", (nickName, message) =>
+            await HubConnect.StartAsync();
+            JoinAndCreateTable();
+            TeamCheckers.SetPlayerGame(Dask);
+
+            HubConnect.On<string, string>("ReceiveMessage", (nickName, message) =>
             {
                 var encodedMsg = $"{nickName}: {message}";
                 Messages.Add(encodedMsg);
@@ -45,16 +47,22 @@ namespace CheckBoardGameVersion3.Client.Pages
                 InvokeAsync(StateHasChanged);
             });
 
-            HubsConnection.On<Dictionary<string, Cell>, SetTeam>("UpdateBoardOpponent", (board, player) =>
+            HubConnect.On<Dictionary<string, Cell>, SetTeam>("UpdateBoardOpponent", (board, player) =>
             {
                 Board = board;
                 TeamCheckers.PlayerMove = player;
                 InvokeAsync(StateHasChanged);
             });
 
-            await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            await HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
-        
+
+        private async Task JoinAndCreateTable()
+        {
+            await HubConnect.SendAsync("JoinBoard", TableId, User);
+            await HubConnect.SendAsync("SetSecondPlayerColorDask", TableId, Dask);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await Save();
@@ -127,7 +135,7 @@ namespace CheckBoardGameVersion3.Client.Pages
 
             }
 
-            HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
             return board;
         }
 
@@ -155,7 +163,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         {
             await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
             Board = _repositoryBoard.CreateDesk();
-            await HubsConnection.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            await HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
         }
     }
 

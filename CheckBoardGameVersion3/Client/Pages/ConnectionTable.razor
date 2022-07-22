@@ -1,7 +1,6 @@
 ﻿@using CheckBoardGameVersion3.Data.Models
 @using Microsoft.AspNetCore.SignalR.Client;
 @inject NavigationManager UrlManager
-    @*<SelectChecker HubsConnection="HubConnect" TableId="@TableId"></SelectChecker>*@
 
     <div style=" align-items: center;text-align: -webkit-center;">
         <div style="text-align: -webkit-center">
@@ -38,34 +37,21 @@
 
 
 @code {
-    public bool InGame;
     public bool InBoard;
-
     public List<string> Tables = new List<string>();
-    public List<string> ConnectionTables = new();
     public string TableId = default;
 
     HubConnection HubConnect;
     protected override async Task OnInitializedAsync()
     {
-
-        HubConnect = new HubConnectionBuilder()
-           .WithUrl(UrlManager.ToAbsoluteUri("/BoardHub"))
-           .Build();
-        await HubConnect.StartAsync();
-        await RefreshTables();
-         await HubConnect.SendAsync("ConnectionHub",HubConnect);
-        HttpClient client = new HttpClient();
-
+        await RefreshTables();   
     }
 
     async Task JoinGame(string tableId)
     {
-
         this.TableId = tableId;
-        await HubConnect.SendAsync("JoinTable", tableId);
+        UrlManager.NavigateTo($"/SelectChecker/{TableId}");
 
-        InGame = true;
     }
 
     async Task RefreshTables()
@@ -78,9 +64,7 @@
     async Task CreateGame()
     {
          TableId = Guid.NewGuid().ToString();
-       
-       
-        //UrlManager.NavigateTo($"counter/{TableId}");
-        InGame = true;
+        UrlManager.NavigateTo($"/SelectChecker/{TableId}");
+      
     }
 }

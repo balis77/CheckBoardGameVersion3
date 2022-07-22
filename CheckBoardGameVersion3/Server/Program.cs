@@ -17,7 +17,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<TableManager>();
-
 builder.Services.AddServerSideBlazor();
 builder.Services.AddResponseCompression(opts =>
 {

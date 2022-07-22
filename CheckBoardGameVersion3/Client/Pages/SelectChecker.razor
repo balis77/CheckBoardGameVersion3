@@ -1,50 +1,42 @@
 ﻿@using CheckBoardGameVersion3.Data.Models
 @using Microsoft.AspNetCore.SignalR.Client
-@inject NavigationManager NavigationManager
+@inject NavigationManager UrlManager
 @page "/SelectChecker/{TableId}"
-@if (!PlayGame)
-{
-    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="boxSelectChecker modal-content">
-                <div style="font-family: 'Belleza', sans-serif;" class="modal-header">
-                    <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
-                </div>
-                <div class="modal-body" style="align-self: center;display:flex;">
-                    <button style="margin-right: 60px;" class="checker White" @onclick="SetWhite" disabled="@LockWhite">
-                        <div class="insideOfTheBox"></div>
-                    </button>
-                    <button style="margin-left: 60px;" class="checker Black " @onclick="SetBlack" disabled="@LockBlack">
-                        <div class="insideOfTheBox"></div>
-                    </button>
-                </div>
-                <form>
-                    <div style="align-items: center;text-align: center;" class="form-group">
-                        <label>
-                            <input @bind="UserInput" required placeholder="Your name:" />
 
-                        </label>
-                    </div>
-                    <div class="modal-body" style="align-self: center; text-align-last: center;">
-                        <a href="@($"/CheckBoard/{TableId}/{UserInput}")" class="myButton " @onclick="StartGame">Play</a>
-                    </div>
-                </form>
+<div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="boxSelectChecker modal-content">
+            <div style="font-family: 'Belleza', sans-serif;" class="modal-header">
+                <h5 style="margin-left: auto; margin-right: auto;color: aliceblue;" class="modal-title" id="titleLabel">Select Checker</h5>
             </div>
+            <div class="modal-body" style="align-self: center;display:flex;">
+                <button style="margin-right: 60px;" class="checker White" @onclick="SetWhite" disabled="@LockWhite">
+                    <div class="insideOfTheBox"></div>
+                </button>
+                <button style="margin-left: 60px;" class="checker Black " @onclick="SetBlack" disabled="@LockBlack">
+                    <div class="insideOfTheBox"></div>
+                </button>
+            </div>
+            <form>
+                <div style="align-items: center;text-align: center;" class="form-group">
+                    <label>
+                        <input @bind="UserInput" required placeholder="Your name:" />
+
+                    </label>
+                </div>
+                <div class="modal-body" style="align-self: center; text-align-last: center;">
+                    <a  class="myButton " @onclick="StartGame">Play</a>
+                </div>
+            </form>
         </div>
     </div>
-}
-else
-{
-
-    @*<CheckBoard HubsConnection="HubsConnection" TableId="@TableId" Dask="Player" Player="@UserInput"></CheckBoard>*@
-}
+</div>
 
 @code {
 
-    public HubConnection? HubsConnection { get; set; }
     [Parameter] public string TableId { get; set; }
-    [Parameter] public static SetTeam Player { get; set; }
-    public Dictionary<string, SetTeam> ColorSetAnotherPlayer = new();
+    public static SetTeam Player { get; set; } = SetTeam.White;
+    public Dictionary<string, string> ColorSetAnotherPlayer = new();
     private string? UserInput;
 
     public bool PlayGame;
@@ -67,51 +59,39 @@ else
         if (ColorSetAnotherPlayer.ContainsKey(TableId))
         {
             var antorerPlayColorSet = ColorSetAnotherPlayer.First(n => n.Key == TableId).Value;
-            if (antorerPlayColorSet == SetTeam.Black)
+            if (antorerPlayColorSet == "Black")
             {
                 LockBlack = true;
             }
-            if (antorerPlayColorSet == SetTeam.White)
+            if (antorerPlayColorSet == "White")
             {
                 LockWhite = true;
             }
         }
     }
 
-    async Task RefreshTables()
+    private async Task RefreshTables()
     {
         HttpClient client = new HttpClient();
-        ColorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, SetTeam>>
-                 (NavigationManager.ToAbsoluteUri("/Api/GetColor"));
-       HubsConnection = await client.GetFromJsonAsync<HubConnection>(NavigationManager.ToAbsoluteUri("/Api/GetHub"));
-        //HubsConnection = new (hubConnection);
+        ColorSetAnotherPlayer = await client.GetFromJsonAsync<Dictionary<string, string>>
+                 (UrlManager.ToAbsoluteUri("/Api/GetColor"));
     }
 
-    async Task CreateGame()
+    private async void StartGame()
     {
-        await HubsConnection.SendAsync("JoinTable", TableId);
-
+        SetPlayer();
+        UrlManager.NavigateTo($"/CheckBoard/{TableId}/{UserInput}/{Player}");
     }
 
-    public async void StartGame()
+    public  void SetPlayer()
     {
-        PlayGame = true;
-        await CreateGame();
-        await SetPlayer();
-    }
-
-    public async Task SetPlayer()
-    {
-        await HubsConnection.SendAsync("SetSecondPlayerColorDask", TableId, Player);
-        await HubsConnection.SendAsync("SetName", TableId, UserInput);
-        if (UserInput == null)
+        if (UserInput is null)
         {
             Random random = new Random();
             var biba = random.Next(1, 1000);
-            UserInput = $"{biba}";
+            UserInput = $"Guest:{biba}";
         }
     }
-
 }
 
 

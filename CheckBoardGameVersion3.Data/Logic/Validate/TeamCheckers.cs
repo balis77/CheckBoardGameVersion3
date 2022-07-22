@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CheckBoardGameVersion3.Data.Logic.Validate
 {
-    public  class TeamCheckers
+    public class TeamCheckers
     {
         public static SetTeam Dask { get; set; }
         public static SetTeam PlayerMove { get; set; }
-      
+
 
         public TeamCheckers(SetTeam setTeam)
         {
@@ -19,13 +19,20 @@ namespace CheckBoardGameVersion3.Data.Logic.Validate
         }
         public TeamCheckers() { }
 
-        public static void SetPlayerGame(SetTeam set)
+        public static void SetPlayerGame(string set)
         {
+            if (set == SetTeam.Black.ToString())
+            {
+                Dask = SetTeam.Black;
+            }
+            if (set == SetTeam.White.ToString())
+            {
+                Dask = SetTeam.White;
+            }
             PlayerMove = SetTeam.White;
-            Dask = set;
         }
         public static SetTeam setTeam(SetTeam team)
            => team == SetTeam.White ? SetTeam.Black : SetTeam.White;
-       
+
     }
 }

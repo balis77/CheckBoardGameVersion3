@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
 
-@page "/CheckBoard/{TableId}/{Player}"
+@page "/CheckBoard/{TableId}/{User}/{Dask}"
 <div style="display:flex; align-items:center">
     <div class="blockChat">
         <div class="chat">
@@ -14,7 +14,7 @@
                 @foreach (var message in Messages)
                 {
                     var userNameOpponent = message.Split(":");
-                    if (userNameOpponent[0] != Player)
+                    if (userNameOpponent[0] != User)
                     {
                         <div style="float: left;text-align-last: left;" class="container">
                             <p>@message</p>
@@ -95,7 +95,7 @@
         </div>
     </div>
     <div class="block">
-        <div>NickName : @Player</div>
+        <div>NickName : @User</div>
         <div> Move : @TeamCheckers.PlayerMove </div>
         <div>Playing for : @TeamCheckers.Dask</div>
         <div>Amount black checkers : @_boardInformation.AmountBlackCheckers(Board) </div>
@@ -109,16 +109,16 @@
 
 
 @code {
-    [Parameter] public SetTeam Dask { get; set; }
-    public HubConnection? HubsConnection { get; set; }
+    [Parameter] public string Dask { get; set; }
+    public HubConnection? HubConnect { get; set; }
     [Parameter] public string? TableId { get; set; }
-    [Parameter] public string? Player { get; set; }
+    [Parameter] public string? User { get; set; }
     private string? MessageInput;
     private List<string> Messages = new List<string>();
 
     public async Task Send()
     {
-        await HubsConnection.SendAsync("SendMessage", Player, MessageInput, TableId);
+        await HubConnect.SendAsync("SendMessage", User, MessageInput, TableId);
     }
 }
 

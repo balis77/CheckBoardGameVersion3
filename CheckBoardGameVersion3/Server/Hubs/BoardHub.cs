@@ -8,11 +8,11 @@ namespace CheckBoardGameVersion3.Server.Hubs
 {
     public class BoardHub : Hub
     {
-        private readonly TableManager _tableManager;
+        private readonly TableManager _tablesManager;
         NavigationManager NavigationManager;
         public BoardHub(TableManager tableManager)
         {
-            _tableManager = tableManager;
+            _tablesManager = tableManager;
         }
 
         public async Task SendMessage(string userName, string message, string roomName)
@@ -20,27 +20,59 @@ namespace CheckBoardGameVersion3.Server.Hubs
             await Clients.Group(roomName).SendAsync("ReceiveMessage", userName, message);
         }
 
-        public async Task ConnectionHub(HubConnection hubConnection)
-        {
-            _tableManager.hubConnection = hubConnection;
-            //await Clients.All.SendAsync("HubInitilizationConnect",_tableManager.hubConnection);
-        }
-        public async Task JoinTable(string tableId)
-        {
-           
 
-            if (_tableManager.Tables.ContainsKey(tableId))
+        public async Task JoinBoard(string tableId, string userName)
+        {
+            UsersInTable user = new UsersInTable();
+            if (_tablesManager.Tables.ContainsKey(tableId))
             {
-                if (_tableManager.Tables[tableId] < 2)
+                if (_tablesManager.Tables[tableId] < 3)
                 {
+                    bool repetitionUser = false;
+                    foreach (var table in _tablesManager.NameUser)
+                    {
+                        if (table.Name == userName)
+                        {
+                            repetitionUser = true;
+                        }
+                    }
+                    if (!repetitionUser)
+                    {
+                        var number = _tablesManager.NameUser.Count();
+                        user.AddUser(tableId, userName, number++);
+                        _tablesManager.NameUser.Add(user);
+                        _tablesManager.Tables[tableId]++;
+                    }
                     await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                    _tableManager.Tables[tableId]++;
                 }
             }
             else
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                _tableManager.Tables.Add(tableId, 1);
+                _tablesManager.Tables.Add(tableId, 1);
+
+                user.AddUser(tableId, userName, 1);
+                _tablesManager.NameUser.Add(user);
+            }
+        }
+
+
+        public async Task JoinTable(string tableId)
+        {
+           
+
+            if (_tablesManager.Tables.ContainsKey(tableId))
+            { 
+                if (_tablesManager.Tables[tableId] < 2)
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
+                    _tablesManager.Tables[tableId]++;
+                }
+            }
+            else
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
+                _tablesManager.Tables.Add(tableId, 1);
             }
         }
 
@@ -49,11 +81,11 @@ namespace CheckBoardGameVersion3.Server.Hubs
             await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("UpdateBoardOpponent", board, playerMove);
         }
 
-        public async Task SetSecondPlayerColorDask(string tableId, SetTeam setPlayer)
+        public async Task SetSecondPlayerColorDask(string tableId, string setPlayer)
         {
-            if (!_tableManager.SetColorTeam.ContainsKey(tableId))
+            if (!_tablesManager.SetColorTeam.ContainsKey(tableId))
             {
-                _tableManager.SetColorTeam.Add(tableId, setPlayer);
+                _tablesManager.SetColorTeam.Add(tableId, setPlayer);
             }
         }
 
@@ -63,15 +95,15 @@ namespace CheckBoardGameVersion3.Server.Hubs
         }
         public async Task SetName(string tableId, string name)
         {
-            _tableManager.UserName.Add(tableId, name);
+            _tablesManager.UserName.Add(tableId, name);
         }
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var removeUserName = _tableManager.Tables.FirstOrDefault();
+            var removeUserName = _tablesManager.Tables.FirstOrDefault();
             const int PlayersInRoom = 2;
             if (removeUserName.Value == PlayersInRoom)
             {
-                _tableManager.Tables[removeUserName.Key]--;
+                _tablesManager.Tables[removeUserName.Key]--;
             }
             await base.OnDisconnectedAsync(exception);
         }

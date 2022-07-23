@@ -9,7 +9,7 @@ namespace CheckBoardGameVersion3.Server.Hubs
     public class BoardHub : Hub
     {
         private readonly TableManager _tablesManager;
-        NavigationManager NavigationManager;
+        
         public BoardHub(TableManager tableManager)
         {
             _tablesManager = tableManager;
@@ -54,28 +54,19 @@ namespace CheckBoardGameVersion3.Server.Hubs
             }
         }
 
-        public async Task JoinTable(string tableId)
+
+        public async Task SetPlayerMove(string tableId,Dictionary<string,Cell> board)
         {
-           
-
-            if (_tablesManager.Tables.ContainsKey(tableId))
-            { 
-                if (_tablesManager.Tables[tableId] < 2)
-                {
-                    await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                    _tablesManager.Tables[tableId]++;
-                }
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, tableId);
-                _tablesManager.Tables.Add(tableId, 1);
-            }
+            var playerTableId = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId);
+            //_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
+            await Clients.Group(tableId).SendAsync("UpdateBoardOpponent", board, playerTableId.ColorMove);
         }
-
         public async Task Move(string tableId, Dictionary<string, Cell> board, SetTeam playerMove)
         {
-            await Clients.GroupExcept(tableId, Context.ConnectionId).SendAsync("UpdateBoardOpponent", board, playerMove);
+            var playerTableId = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId);
+            //_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
+            playerTableId.ColorMove = playerMove;
+            await Clients.Group(tableId).SendAsync("UpdateBoardOpponent", board, playerMove);
         }
 
         public async Task SetSecondPlayerColorDask(string tableId, string setPlayer)
@@ -86,24 +77,39 @@ namespace CheckBoardGameVersion3.Server.Hubs
             }
         }
 
-        public async Task UpdateJoinTable()
+        public async Task UpdateJoinTable(Dictionary<string,Cell> board)
         {
-            await Clients.All.SendAsync("UpdateTable");
+            await Clients.All.SendAsync("UpdateTable",board);
         }
         public async Task SetName(string tableId, string name)
         {
-            _tablesManager.UserName.Add(tableId, name);
+            _tablesManager.KeyUser.Add(tableId, name);
         }
+
+        //public async Task SaveBoard(string tableId,Dictionary<string,Cell> board)
+        //{
+        //    if (_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId) != null)
+        //    {
+        //        _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
+        //    }
+           
+        //}
+
+        //public async Task ReadBoard(string tableId)
+        //{
+           
+        //        await Clients.Group(tableId).SendAsync("ReadBoard", _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board);
+
+        //}
+        //public async Task DeleteBoard(string tableId)
+        //{
+        //    _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = null;
+        //    await Clients.Group(tableId).SendAsync("DeleteBoard");
+        //}
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var removeUserName = _tablesManager.Tables.FirstOrDefault();
-            const int PlayersInRoom = 2;
-            if (removeUserName.Value == PlayersInRoom)
-            {
-                _tablesManager.Tables[removeUserName.Key]--;
-            }
-            await base.OnDisconnectedAsync(exception);
+            
         }
     }
 }

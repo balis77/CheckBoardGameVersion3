@@ -1,9 +1,11 @@
 
 using CheckBoardGameVersion3.Server.Data;
 using CheckBoardGameVersion3.Server.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration; // allows both to access and to set up the config
@@ -15,7 +17,46 @@ IWebHostEnvironment environment = builder.Environment;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddSignalR();
+
+builder.Services.AddSignalR(opt =>
+{
+    opt.StreamBufferCapacity = 2048;
+    
+    opt.KeepAliveInterval = System.TimeSpan.FromSeconds(1);
+    opt.HandshakeTimeout = System.TimeSpan.FromSeconds(1);
+    opt.ClientTimeoutInterval = System.TimeSpan.FromSeconds(1);
+    
+    if (!environment.IsDevelopment())
+        opt.EnableDetailedErrors = true;
+});
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//            .AddJwtBearer(options =>
+//            {
+//                options.TokenValidationParameters = new TokenValidationParameters
+//                {
+//                    ValidateIssuer = true,
+//                    ValidateAudience = true,
+//                    ValidateLifetime = true,
+//                    ValidateIssuerSigningKey = true,
+//                    ValidIssuer = builder.Configuration["JwtIssuer"],
+//                    ValidAudience = builder.Configuration["JwtAudience"],
+//                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]))
+//                };
+//                options.Events = new JwtBearerEvents
+//                {
+//                    OnMessageReceived = context =>
+//                    {
+//                        var accessToken = context.Request.Query["access_token"];
+//                        if (!string.IsNullOrEmpty(accessToken))
+//                        {
+//                            context.Token = accessToken;
+//                        }
+//                        return Task.CompletedTask;
+//                    }
+//                };
+//            });
+
 builder.Services.AddSingleton<TableManager>();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddResponseCompression(opts =>
@@ -23,7 +64,6 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-
 
 var app = builder.Build();
 
@@ -61,9 +101,10 @@ app.UseRouting();
 
 
 app.MapRazorPages();
+app.MapHub<BoardHub>("/BoardHub");
 app.MapControllers();
 app.MapBlazorHub();
-app.MapHub<BoardHub>("/BoardHub");
+
 app.MapFallbackToFile("index.html");
 
 app.Run();

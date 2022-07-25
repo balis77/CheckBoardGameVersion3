@@ -114,9 +114,11 @@ namespace CheckBoardGameVersion3.Server.Hubs
             await Clients.Group(tableId).SendAsync("CountSave", blackCount, whiteCount);
         }
       
-        public async override Task OnDisconnectedAsync(Exception? exception)
+        public  override Task OnDisconnectedAsync(Exception? exception)
         {
-           await Clients.AllExcept(Context.ConnectionId).SendAsync("DisconnectUser");
+            Clients.AllExcept(Context.ConnectionId).SendAsync("DisconnectUser");
+
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

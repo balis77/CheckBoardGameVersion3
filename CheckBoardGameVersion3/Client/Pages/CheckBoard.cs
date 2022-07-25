@@ -52,7 +52,7 @@ namespace CheckBoardGameVersion3.Client.Pages
         {
             HubConnect.On("DisconnectUser", () =>
             {
-                Messages.Add($"{User}:DisConnect");
+                Messages.Add($"Another User :DisConnect");
                 InvokeAsync(StateHasChanged);
 
             });

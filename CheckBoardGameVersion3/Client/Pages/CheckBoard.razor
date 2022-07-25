@@ -2,6 +2,7 @@
 @using CheckBoardGameVersion3.Data.Models
 @using CheckBoardGameVersion3.Data.RepositoryBoard;
 @inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
@@ -101,7 +102,7 @@
         <div>Amount white checkers : @_boardInformation.AmountWhiteCheckers(Board)</div>
         <div>Amount black Queen :@_boardInformation.AmountBlackQueenCheckers(Board)</div>
         <div>Amount white Queen :@_boardInformation.AmountWhiteQueenCheckers(Board)</div>
-        <a  class="myButton" @onclick="Delete">Delete game</a>
+        <a class="myButton" @onclick="Delete">Delete game</a>
     </div>
 </div>
 
@@ -117,8 +118,17 @@
     {
         if (MessageInput is not null)
         {
-             await HubConnect.SendAsync("SendMessage", User, MessageInput, TableId);
+            await HubConnect.SendAsync("SendMessage", User, MessageInput, TableId);
         }
+    }
+    public void Dispose()
+    {
+        HubConnect.DisposeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await HubConnect.DisposeAsync();
     }
 }
 

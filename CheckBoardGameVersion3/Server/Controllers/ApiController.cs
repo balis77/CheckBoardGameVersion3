@@ -12,7 +12,6 @@ namespace CheckBoardGameVersion3.Server.Controllers
     public class ApiController : ControllerBase
     {
         private readonly TableManager _tableManager;
-        Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
         public ApiController(TableManager tableManager)
         {
             _tableManager = tableManager;

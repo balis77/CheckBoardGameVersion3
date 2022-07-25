@@ -20,42 +20,28 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR(opt =>
 {
-    opt.StreamBufferCapacity = 2048;
-    
-    opt.KeepAliveInterval = System.TimeSpan.FromSeconds(1);
-    opt.HandshakeTimeout = System.TimeSpan.FromSeconds(1);
+    //opt.SupportedProtocols;
+    //opt.StreamBufferCapacity;
     opt.ClientTimeoutInterval = System.TimeSpan.FromSeconds(1);
-    
+    //opt.MaximumParallelInvocationsPerClient;
+    //opt.EnableDetailedErrors;
+    opt.HandshakeTimeout = System.TimeSpan.FromSeconds(1);
+    opt.KeepAliveInterval = System.TimeSpan.FromSeconds(1);
+    //opt.MaximumParallelInvocationsPerClient;
+    //opt.MaximumReceiveMessageSize = 20480;
+    //opt.StreamBufferCapacity;
+    //opt.SupportedProtocols;
+
+    //opt.StreamBufferCapacity = 2048;
+
+    //opt.KeepAliveInterval = System.TimeSpan.FromSeconds(1);
+    //opt.HandshakeTimeout = System.TimeSpan.FromSeconds(1);
+    //opt.ClientTimeoutInterval = System.TimeSpan.FromSeconds(1);
+
     if (!environment.IsDevelopment())
         opt.EnableDetailedErrors = true;
 });
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//            .AddJwtBearer(options =>
-//            {
-//                options.TokenValidationParameters = new TokenValidationParameters
-//                {
-//                    ValidateIssuer = true,
-//                    ValidateAudience = true,
-//                    ValidateLifetime = true,
-//                    ValidateIssuerSigningKey = true,
-//                    ValidIssuer = builder.Configuration["JwtIssuer"],
-//                    ValidAudience = builder.Configuration["JwtAudience"],
-//                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]))
-//                };
-//                options.Events = new JwtBearerEvents
-//                {
-//                    OnMessageReceived = context =>
-//                    {
-//                        var accessToken = context.Request.Query["access_token"];
-//                        if (!string.IsNullOrEmpty(accessToken))
-//                        {
-//                            context.Token = accessToken;
-//                        }
-//                        return Task.CompletedTask;
-//                    }
-//                };
-//            });
 
 builder.Services.AddSingleton<TableManager>();
 builder.Services.AddServerSideBlazor();

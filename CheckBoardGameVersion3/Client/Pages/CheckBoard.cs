@@ -50,11 +50,16 @@ namespace CheckBoardGameVersion3.Client.Pages
 
         private async Task EventHandlerHubConnection()
         {
+            HubConnect.On("ConnectUser", () =>
+            {
+                Messages.Add($"User : Connect");
+                InvokeAsync(StateHasChanged);
+            });
+
             HubConnect.On("DisconnectUser", () =>
             {
-                Messages.Add($"Another User :DisConnect");
+                Messages.Add($"User : Disconnect");
                 InvokeAsync(StateHasChanged);
-
             });
 
             HubConnect.On<string, string>("ReceiveMessage", (nickName, message) =>
@@ -128,7 +133,7 @@ namespace CheckBoardGameVersion3.Client.Pages
             await HubConnect.SendAsync("JoinBoard", TableId, User);
             await HubConnect.SendAsync("SetSecondPlayerColorDask", TableId, Dask);
             await HubConnect.SendAsync("LoadCount",TableId);
-            await HubConnect.SendAsync("SendMessage", User, "Connected", TableId);
+            //await HubConnect.SendAsync("SendMessage", User, "Connected", TableId);
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
@@ -235,8 +240,11 @@ namespace CheckBoardGameVersion3.Client.Pages
         }
         public async Task Delete()
         {
-            await HubConnect.SendAsync("Delete", TableId, Board);
+            await HubConnect.StopAsync();
+
+            //await HubConnect.SendAsync("Delete", TableId, Board);
         }
+
     }
 
 

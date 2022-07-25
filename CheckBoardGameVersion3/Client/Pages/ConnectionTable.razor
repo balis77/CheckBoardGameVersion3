@@ -2,37 +2,37 @@
 @using Microsoft.AspNetCore.SignalR.Client;
 @inject NavigationManager UrlManager
 
-    <div style=" align-items: center;text-align: -webkit-center;">
-        <div style="text-align: -webkit-center">
-            <div style="display: flex;align-items: center;justify-content: center;">
-                <div>
-                    <div class="blockChat JoinTable">
-                        @foreach (var table in Tables)
-                        {
-                            <a class="joinGame">
-                                <button style="width: 200px;" class="myButton" @onclick="()=>JoinGame(table)">Join table </button>
-                            </a>
-                        }
-                    </div>
-                    <div class="joinGame">
-                        <button style="width: 200px;" class="myButton" @onclick="()=>RefreshTables()">Refresh</button>
-                    </div>
-                </div>
-                <div>
-                    <div style="text-align: center;color: #E0C6BD;">
-                        <h3 style="font-family: 'Belleza', sans-serif;margin-top: 40px;">CHECKERS ONLINE</h3>
-                    </div>
-                    <div class="createGame">
-                        <a href="@($"/SelectChecker/{TableId}")" class="myButton"
-                       @onclick="CreateGame">
-                            Create Game
+<div style=" align-items: center;text-align: -webkit-center;">
+    <div style="text-align: -webkit-center">
+        <div style="display: flex;align-items: center;justify-content: center;">
+            <div>
+                <div class="blockChat JoinTable">
+                    @foreach (var table in Tables)
+                    {
+                        <a class="joinGame">
+                            <button style="width: 200px;" class="myButton" @onclick="()=>JoinGame(table)">Join table </button>
                         </a>
-                    </div>
-                    <img src="/Pages/CheckBoard.png" alt="gde fotka suka?" />
+                    }
                 </div>
+                <div class="joinGame">
+                    <button style="width: 200px;" class="myButton" @onclick="()=>RefreshTables()">Refresh</button>
+                </div>
+            </div>
+            <div>
+                <div style="text-align: center;color: #E0C6BD;">
+                    <h3 style="font-family: 'Belleza', sans-serif;margin-top: 40px;">CHECKERS ONLINE</h3>
+                </div>
+                <div class="createGame">
+                    <a href="@($"/SelectChecker/{TableId}")" class="myButton"
+                       @onclick="CreateGame">
+                        Create Game
+                    </a>
+                </div>
+                <img src="/Pages/CheckBoard.png" alt="gde fotka suka?" />
             </div>
         </div>
     </div>
+</div>
 
 
 @code {
@@ -43,27 +43,27 @@
     HubConnection HubConnect;
     protected override async Task OnInitializedAsync()
     {
-        await RefreshTables();   
+        await RefreshTables();
     }
 
-    async Task JoinGame(string tableId)
+    private async Task JoinGame(string tableId)
     {
         this.TableId = tableId;
         UrlManager.NavigateTo($"/SelectChecker/{TableId}");
 
     }
 
-    async Task RefreshTables()
+    private async Task RefreshTables()
     {
         HttpClient client = new HttpClient();
         Tables = await client.GetFromJsonAsync<List<string>>
                  (UrlManager.ToAbsoluteUri("/Api/GetTables"));
     }
 
-    async Task CreateGame()
+    private async Task CreateGame()
     {
-         TableId = Guid.NewGuid().ToString();
+        TableId = Guid.NewGuid().ToString();
         UrlManager.NavigateTo($"/SelectChecker/{TableId}");
-      
+
     }
 }

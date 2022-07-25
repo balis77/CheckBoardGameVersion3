@@ -113,12 +113,16 @@ namespace CheckBoardGameVersion3.Server.Hubs
             int whiteCount = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).CountWhite;
             await Clients.Group(tableId).SendAsync("CountSave", blackCount, whiteCount);
         }
-      
-        public  override Task OnDisconnectedAsync(Exception? exception)
-        {
-            Clients.AllExcept(Context.ConnectionId).SendAsync("DisconnectUser");
 
-            return base.OnDisconnectedAsync(exception);
+        public override async Task OnConnectedAsync()
+        {
+           await Clients.AllExcept(Context.ConnectionId).SendAsync("ConnectUser");
+            await base.OnConnectedAsync();
+        }
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+           await Clients.AllExcept(Context.ConnectionId).SendAsync("DisconnectUser");
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

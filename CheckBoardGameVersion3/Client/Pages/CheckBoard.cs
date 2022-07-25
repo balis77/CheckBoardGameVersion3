@@ -16,6 +16,9 @@ namespace CheckBoardGameVersion3.Client.Pages
 {
     public partial class CheckBoard
     {
+        public const int MAXIMUN_SCORE = 3;
+        public const int LACK_OF_CHECKER = 0;
+
         public Dictionary<string, Cell> Board { get; set; } = new Dictionary<string, Cell>();
         private MockRepositoryBoard _repositoryBoard;
         private ActionCheaker _actionCheaker;
@@ -23,6 +26,10 @@ namespace CheckBoardGameVersion3.Client.Pages
         private ValidateBoard _validateBoard;
         private BoardInformation _boardInformation;
 
+
+        
+        public int CountWhite { get; set; }
+        public int CountBlack { get; set; }
         protected override async Task OnInitializedAsync()
         {
             HubConnect = new HubConnectionBuilder()
@@ -32,16 +39,14 @@ namespace CheckBoardGameVersion3.Client.Pages
             GenerationBoardAndCheckers();
             await HubConnect.StartAsync();
             await JoinAndCreateTable();
-            
-
             TeamCheckers.SetPlayerGame(Dask);
-            
+
             EventHandlerHubConnection();
             HubConnect.SendAsync("SetPlayerMove", TableId, Board);
-           
+            await Read();
         }
 
-        private void EventHandlerHubConnection()
+        private async Task EventHandlerHubConnection()
         {
             HubConnect.On<string, string>("ReceiveMessage", (nickName, message) =>
             {
@@ -63,13 +68,40 @@ namespace CheckBoardGameVersion3.Client.Pages
                 TeamCheckers.PlayerMove = player;
                 InvokeAsync(StateHasChanged);
             });
-            //HubConnect.On("DeleteBoard", () =>
-            //    {
-            //        TeamCheckers.SetPlayerGame(Dask);
-            //        Board = _repositoryBoard.CreateDesk();
-            //        HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            HubConnect.On<string, Dictionary<string, Cell>>("SaveBoard", (tableId, board) =>
+            {
+                string jsonFileBoard = JsonSerializer.Serialize(board);
+                JSRuntime.InvokeVoidAsync("localStorage.setItem", $"{tableId}", jsonFileBoard);
+                InvokeAsync(StateHasChanged);
+            });
+            HubConnect.On<string>("ReadBoard", async (tableId) =>
+            {
+                string currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", $"{tableId}");
 
-            //    });
+                if (currentInputValue == null)
+                    return;
+
+                var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Cell>>(currentInputValue);
+
+                if (!jsonFileBoard.Equals(null))
+                    Board = jsonFileBoard;
+
+                await InvokeAsync(StateHasChanged);
+            });
+            HubConnect.On<string, Dictionary<string, Cell>>("DeleteBoard", (tableId, board) =>
+            {
+                JSRuntime.InvokeAsync<string>("localStorage.removeItem", $"{tableId}");
+                Board = _repositoryBoard.CreateDesk();
+                TeamCheckers.SetPlayerGame(Dask);
+                HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+                InvokeAsync(StateHasChanged);
+            });
+            HubConnect.On<int, int>("CountSave", ( blackCount, whiteCount) =>
+            {
+                CountBlack = blackCount;
+                CountWhite = whiteCount;
+                InvokeAsync(StateHasChanged);
+            });
         }
 
         private void GenerationBoardAndCheckers()
@@ -80,21 +112,14 @@ namespace CheckBoardGameVersion3.Client.Pages
             _validateBoard = new ValidateBoard();
             _boardInformation = new BoardInformation();
             Board = _repositoryBoard.CreateDesk();
-            Read();
-
         }
 
         private async Task JoinAndCreateTable()
         {
             await HubConnect.SendAsync("JoinBoard", TableId, User);
             await HubConnect.SendAsync("SetSecondPlayerColorDask", TableId, Dask);
+            await HubConnect.SendAsync("LoadCount",TableId);
         }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await Save();
-        }
-
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
             board = _validateBoard.ValidateFullBoard(board);
@@ -140,58 +165,67 @@ namespace CheckBoardGameVersion3.Client.Pages
             }
             return board;
         }
+       
+        public void GameOver( string player)
+        {
+            int numberBlackChecker = Board.Where(n => n.Value?.Checker?.Team == SetTeam.Black).Count();
+            int numberWhiteChecker = Board.Where(n => n.Value?.Checker?.Team == SetTeam.White).Count();
+
+            if (numberBlackChecker.Equals(LACK_OF_CHECKER))
+            {
+                CountWhite++;
+                Board = _repositoryBoard.CreateDesk();
+                TeamCheckers.SetPlayerGame(player);
+                HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+                HubConnect.SendAsync("SaveCount", TableId, CountBlack, CountWhite);
+            }
+            if (numberWhiteChecker.Equals(LACK_OF_CHECKER))
+            {
+                CountBlack++;
+                Board = _repositoryBoard.CreateDesk();
+                TeamCheckers.SetPlayerGame(player);
+                HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+                HubConnect.SendAsync("SaveCount", TableId, CountBlack, CountWhite);
+            }
+            if (CountBlack.Equals(MAXIMUN_SCORE) || CountWhite.Equals(MAXIMUN_SCORE))
+            {
+                CountBlack = 0;
+                CountWhite = 0;
+            }
+            InvokeAsync(StateHasChanged);
+        }
         public Dictionary<string, Cell> MoveAndBeatChecker(Dictionary<string, Cell> board, Cell clickCell)
         {
-            board = _boardInformation.GameOver(Board);
+            GameOver(Dask);
             var checkerClick = board.FirstOrDefault(n => n.Value.ClickChecker);
 
             if (clickCell.Checker != null || checkerClick.Key == null)
-            {
                 return board;
-            }
+            
 
             if (checkerClick.Value?.Checker?.Color == CheckerColor.BlackQueen
                 || checkerClick.Value?.Checker?.Color == CheckerColor.WhiteQueen)
-            {
                 board = _queenCheaker.MoveAndBeatQueen(Board, clickCell);
-            }
             else
-            {
                 board = _actionCheaker.MoveAndBeatCheckers(Board, clickCell);
-            }
-
+            
             HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            Save();
+
             return board;
         }
         public async Task Save()
         {
-            //await HubConnect.SendAsync("SaveBoard", TableId, Board);
-
-            string jsonFileBoard = JsonSerializer.Serialize(Board);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "CheckBoard", jsonFileBoard);
+            await HubConnect.SendAsync("Save", TableId, Board);
         }
 
         public async Task Read()
         {
-            //await HubConnect.SendAsync("ReadBoard", TableId);
-
-            string currentInputValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "CheckBoard");
-
-            if (currentInputValue == null)
-                return;
-
-            var jsonFileBoard = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, Cell>>(currentInputValue);
-
-            if (!jsonFileBoard.Equals(null))
-                Board = jsonFileBoard;
+            await HubConnect.SendAsync("Read", TableId);
         }
         public async Task Delete()
         {
-            //HubConnect.SendAsync("DeleteBoard",TableId);
-            await JSRuntime.InvokeAsync<string>("localStorage.removeItem", "CheckBoard");
-            Board = _repositoryBoard.CreateDesk();
-            TeamCheckers.SetPlayerGame(Dask);
-            await HubConnect.SendAsync("Move", TableId, Board, TeamCheckers.PlayerMove);
+            await HubConnect.SendAsync("Delete", TableId, Board);
         }
     }
 

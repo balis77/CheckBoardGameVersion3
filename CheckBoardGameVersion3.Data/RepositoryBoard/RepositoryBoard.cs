@@ -67,7 +67,7 @@ namespace CheckBoardGameVersion3.Data.RepositoryBoard
                         InCellId = cordinateInTheDesk,
                         Color = CheckerColor.Black,
                         Team = SetTeam.Black
-                        
+
                     };
                 }
             }

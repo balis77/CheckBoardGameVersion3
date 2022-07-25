@@ -4,6 +4,9 @@ using CheckBoardGameVersion3.Server.Data;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
+using Microsoft.JSInterop;
+
 namespace CheckBoardGameVersion3.Server.Hubs
 {
     public class BoardHub : Hub
@@ -54,17 +57,14 @@ namespace CheckBoardGameVersion3.Server.Hubs
             }
         }
 
-
         public async Task SetPlayerMove(string tableId,Dictionary<string,Cell> board)
         {
             var playerTableId = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId);
-            //_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
             await Clients.Group(tableId).SendAsync("UpdateBoardOpponent", board, playerTableId.ColorMove);
         }
         public async Task Move(string tableId, Dictionary<string, Cell> board, SetTeam playerMove)
         {
             var playerTableId = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId);
-            //_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
             playerTableId.ColorMove = playerMove;
             await Clients.Group(tableId).SendAsync("UpdateBoardOpponent", board, playerMove);
         }
@@ -86,30 +86,32 @@ namespace CheckBoardGameVersion3.Server.Hubs
             _tablesManager.KeyUser.Add(tableId, name);
         }
 
-        //public async Task SaveBoard(string tableId,Dictionary<string,Cell> board)
-        //{
-        //    if (_tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId) != null)
-        //    {
-        //        _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = board;
-        //    }
-           
-        //}
-
-        //public async Task ReadBoard(string tableId)
-        //{
-           
-        //        await Clients.Group(tableId).SendAsync("ReadBoard", _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board);
-
-        //}
-        //public async Task DeleteBoard(string tableId)
-        //{
-        //    _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).Board = null;
-        //    await Clients.Group(tableId).SendAsync("DeleteBoard");
-        //}
-
-        public override async Task OnDisconnectedAsync(Exception? exception)
+        public async Task Save(string tableId, Dictionary<string, Cell> board)
         {
-            
+            await Clients.Group(tableId).SendAsync("SaveBoard", tableId, board);
+        }
+
+        public async Task Read(string tableId)
+        {
+            await Clients.Group(tableId).SendAsync("ReadBoard", tableId);
+        }
+
+        public async Task Delete(string tableId,Dictionary<string,Cell> board)
+        {
+            await Clients.Group(tableId).SendAsync("DeleteBoard",tableId,board);
+        }
+
+        public async Task SaveCount(string tableId,int blackCount,int whiteCount)
+        {
+            _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).CountBlack = blackCount;
+            _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).CountWhite = whiteCount;
+            await Clients.Group(tableId).SendAsync("CountSave",blackCount,whiteCount);
+        }
+        public async Task LoadCount(string tableId)
+        {
+            int blackCount = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).CountBlack;
+            int whiteCount = _tablesManager.NameUser.FirstOrDefault(n => n.TableId == tableId).CountWhite;
+            await Clients.Group(tableId).SendAsync("CountSave", blackCount, whiteCount);
         }
     }
 }

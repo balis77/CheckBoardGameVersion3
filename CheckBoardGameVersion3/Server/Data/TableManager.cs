@@ -20,6 +20,9 @@ namespace CheckBoardGameVersion3.Server.Data
 
         public SetTeam ColorMove { get; set; }
 
+        public int CountBlack { get; set; }
+
+        public int CountWhite { get; set; }
         public Dictionary<string,Cell> Board { get; set; }
         public void AddUser(string tableId, string name, int number)
         {

@@ -37,17 +37,26 @@ namespace CheckBoardGameVersion3.Client.Pages
             .Build();
 
             GenerationBoardAndCheckers();
+            
+
+
+            EventHandlerHubConnection();
             await HubConnect.StartAsync();
             await JoinAndCreateTable();
             TeamCheckers.SetPlayerGame(Dask);
-
-            EventHandlerHubConnection();
             HubConnect.SendAsync("SetPlayerMove", TableId, Board);
             await Read();
         }
 
         private async Task EventHandlerHubConnection()
         {
+            HubConnect.On("DisconnectUser", () =>
+            {
+                Messages.Add($"{User}:DisConnect");
+                InvokeAsync(StateHasChanged);
+
+            });
+
             HubConnect.On<string, string>("ReceiveMessage", (nickName, message) =>
             {
                 var encodedMsg = $"{nickName}: {message}";
@@ -119,6 +128,7 @@ namespace CheckBoardGameVersion3.Client.Pages
             await HubConnect.SendAsync("JoinBoard", TableId, User);
             await HubConnect.SendAsync("SetSecondPlayerColorDask", TableId, Dask);
             await HubConnect.SendAsync("LoadCount",TableId);
+            await HubConnect.SendAsync("SendMessage", User, "Connected", TableId);
         }
         public Dictionary<string, Cell> MoveAnalise(Dictionary<string, Cell> board, Cell clickChecker)
         {
